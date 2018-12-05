@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2c184d</color>
+    <color name="primary_dark">@color/black</color>
+    <color name="accent">#ae80ff</color>
+
+    <color name="slide_first">#E91E63</color>
+    <color name="slide_first_dark">#880E4F</color>
+    <color name="slide_second">#019588</color>
+    <color name="slide_second_dark">#005148</color>
+    <color name="slide_third">#4052b5</color>
+    <color name="slide_third_dark">#1a237e</color>
+    <color name="slide_fourth">#673ab7</color>
+    <color name="slide_fourth_dark">#2c184d</color>
+
+    <color name="background">@color/black</color>
+    <color name="bottomButtonBg">#7F232E33</color>
+    <color name="text_value">#757575</color>
+    <color name="text_main">#eeeeee</color>
+    <!--标题块的背景色-->
+    <color name="title_bg">#2c184d</color>
+    <!--图片数量背景色-->
+    <color name="bg_text_view_count">#77000000</color>
+</resources>

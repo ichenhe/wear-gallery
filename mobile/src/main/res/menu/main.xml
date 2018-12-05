@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_hide"
+        android:icon="@drawable/ic_bar_hide"
+        android:title="@string/menu_hide"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_setting"
+        android:icon="@drawable/ic_bar_settings"
+        android:title="@string/menu_setting"
+        app:showAsAction="always" />
+
+</menu>

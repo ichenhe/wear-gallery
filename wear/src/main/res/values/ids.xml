@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="photo_view_tag_is_original" type="id" />
+    <item name="tag_big_imaged_isshowhd" type="id" />
+
+    <!--用于 FrMobileGalleryList-->
+    <item name="first_image_path" type="id" />
+    <!--用于 AtyBigImage-->
+    <item name="file_path" type="id" />
+</resources>

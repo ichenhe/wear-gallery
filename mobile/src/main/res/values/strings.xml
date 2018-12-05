@@ -1,0 +1,124 @@
+<resources>
+    <string name="app_name">WearGallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="close_confirm">Press again to exit</string>
+    <string name="confirm">Confirm</string>
+    <string name="permission_err">Insufficient permission</string>
+    <string name="err_database">Data query fail</string>
+    <string name="tip">Tip</string>
+
+    <string name="app_none_transfer_available">!neither mms nor gms is available!</string>
+
+    <plurals name="mi_label_grant_permission">
+        <item quantity="one">Grant permission</item>
+        <item quantity="other">Grant permissions</item>
+    </plurals>
+    <string name="intro_permission_title">PERMISSION</string>
+    <string name="intro_permission_content">We need to access the stored permissions to scan the image.</string>
+    <string name="intro_install_title">INSTALL ON WATCH</string>
+    <string name="intro_install_content">Since Wear OS, installing watch apps through bluetooth was no more supported. You have to manually download and install WearGallery from the watch application market. Or you can install it with ADB.</string>
+    <string name="intro_auto_run_title">AUTO RUN</string>
+    <string name="intro_auto_run_content">Please be sure to allow the application to start automatically, otherwise the watch will not be able to load the pictures properly.</string>
+    <string name="intro_enjoy_title" translatable="false">ENJOY</string>
+    <string name="intro_enjoy_content">Wear Gallery 5\n\n the BEST gallery in watch</string>
+
+    <string name="menu_setting">Settings</string>
+    <string name="menu_hide">Hide</string>
+    <string name="menu_send">Send to watch</string>
+
+    <string name="main_hide_bar_select_all">All</string>
+    <string name="main_hide_bar_select_none">Inverse</string>
+    <string name="main_hide_bar_hide">Hide(%1$d)</string>
+    <string name="main_pics_num">(%1$d)</string>
+    <string name="main_hide_gallery_title">Hide?</string>
+    <string name="main_hide_gallery_content">Confirm to hide these %1$d albums.\nYou can UNDO this operation in Settings window.</string>
+
+    <string name="grid_pics_ok">Send to watch(%1$d)</string>
+    <string name="grid_pics_select_none_send">Please select one picture at least</string>
+    <string name="grid_pics_select_none_preview">No picture selected</string>
+    <string name="grid_pics_preview">View selected</string>
+    <string name="grid_pics_select_photo_max">You can select %1$d pictures at most</string>
+    <string name="grid_pics_send_ing">Sending pictures to watch(%1$d/%2$d)…\nPlease do nothing during the process.</string>
+    <string name="grid_pics_send_ing_pos">Background processing</string>
+    <string name="grid_pics_send_success_title">Send completed</string>
+    <string name="grid_pics_send_success_content">%1$d pictures completely send.</string>
+    <string name="grid_pics_send_failed_title">Send failed</string>
+    <string name="grid_pics_send_failed_content">%1$s\nSuccessfully sent %2$d pictures.</string>
+
+    <string name="preview_pics_select">Select</string>
+
+    <string name="setting_current_mode">Current mode: %1$s</string>
+    <string name="mode_mms" translatable="false">Ticwear</string>
+    <string name="mode_gms" translatable="false">Wear OS</string>
+    <string name="mode_unknown">UNKNOWN</string>
+    <string name="setting_watch_cache">Watch\'s cache</string>
+    <string name="setting_watch_local_image">Watch\'s received images</string>
+    <string name="setting_cache_original">HD(offline) pictures</string>
+    <string name="setting_check_update">Check for updates</string>
+    <string name="setting_del_all">Delete All</string>
+    <string name="setting_del_item">Delete</string>
+    <string name="setting_cache_size" translatable="false">(%1$s)</string>
+    <string name="setting_hide_gallery">Hidden albums</string>
+    <string name="setting_hide_gallery_num">%1$d albums have been hidden.</string>
+    <string name="setting_phone_show_tips_about_watch">Tip when watch is been operated</string>
+    <string name="setting_force_tw">Force Ticwear mode</string>
+    <string name="setting_force_tw_what">WHAT?</string>
+    <string name="setting_force_tw_restart">We have to stop the Wear Gallery completely and restart it to load new config.</string>
+    <string name="setting_title">Settings</string>
+    <string name="setting_calculate_cache_size_err">[unknown size]</string>
+    <string name="setting_del_watch_cache">It\'s going to delete all cache on your watch.\nReceived images are not affected.</string>
+    <string name="setting_del_watch_images">It\'s going to delete offline(received) images on your watch.</string>
+    <string name="setting_del_cache_watch">Delete?</string>
+    <string name="setting_del_cache_watch_neg">No</string>
+    <string name="setting_del_cache_watch_pos">Yes</string>
+    <string name="setting_del_cache_ing">Deleting…</string>
+    <string name="setting_del_cache_ok">Delete succeed</string>
+    <string name="setting_del_watch_cache_communicate_err">Deleting failed</string>
+    <string name="setting_del_watch_cache_communicate_err_des">Connect to watch time out.</string>
+
+    <string name="hide_title">Hidden galleries</string>
+    <string name="hide_none_tip">No hidden album\n\nLong Press a album to hide it.</string>
+    <string name="hide_show">UNHIDE</string>
+
+    <string name="watch_operation_search_gallery_ing">Scanning albums</string>
+    <string name="watch_operation_search_gallery_err">Error collected during scanning local pics</string>
+    <string name="watch_operation_version_different">Version conflict</string>
+    <string name="watch_operation_get_pics_list_ing">Loading pics list</string>
+    <string name="watch_operation_send_hd_picture_ing">Loading HD version</string>
+    <string name="watch_operation_send_hd_picture_fail">Read HD image failed</string>
+
+    <string name="send_images_create_bitmap_null">Failed to read picture.</string>
+    <string name="send_images_send_data_fail">Send picture failed.</string>
+    <string name="send_images_send_data_time_out">Watch Communication timeout.</string>
+    <string name="send_images_unknown_error">Unknown error.</string>
+
+    <string name="notify_send_images_title">Sending pictures to watch…</string>
+    <string name="notify_send_images_ticker">Sending pictures to watch…</string>
+    <string name="notify_send_images_content">Sent:%1$d All:%2$d</string>
+    <string name="notify_send_images_success_title">Pictures have been sent.</string>
+    <string name="notify_send_images_success_content">%1$d pictures have been sent.</string>
+    <string name="notify_send_images_failed_title">Sending failed</string>
+    <string name="notify_send_images_failed_content">%1$s \n%2$d pictures have been sent suuessfully.</string>
+
+    <string name="share_image_path_null">Failed to get file path</string>
+    <string name="share_image_label">Send to watch</string>
+
+    <string name="about_title">About</string>
+    <string name="about_thank_title">Thanks</string>
+    <string name="about_thank_content">Equipment support: @Mobvoi·TicWatch\nIcon: @Lance.Moe @碱式碳酸铜\nTranslate: @海棠花未眠 @碱式碳酸铜\nWebsite: @울고 또\nAND YOU.</string>
+    <string name="about_feedback_title">Feedback</string>
+    <string name="about_feedback_content">Weibo：@0晨鹤0\nE-mail：me@chenhe.cc</string>
+    <string name="about_alpha_title">Follow &#38; Discuss</string>
+    <string name="about_alpha_content">Telegram channel: https://t.me/weargallery_news\nWelcome to join QQ group：549321774</string>
+
+    <string name="update_no_web_view">Please install a web browser first.</string>
+
+    <string name="notify_channel_name">Send Images</string>
+    <string name="notify_channel_description">Show progress of sending images.</string>
+
+    <string name="links_title">Android Links</string>
+    <string name="links_chooser_browser">Choose browser</string>
+    <string name="links_introduction_title">What is Android Links?</string>
+    <string name="links_introduction_content" translatable="false">Android 圈其实很多开发者开发了很多优秀的应用，不乏非常有价值的产品，国内生态又特别不好，Android 独立开发者真是非常艰难。\n「Android 应用友链」公益计划，做 Android 开发者之间的应用友情链接，抱团共赢未来。再小的个体，也是力量，欢迎个人开发者的应用加入。\nhttps://androidlinks.org/\n腕间图库将如约保持免费无广告~</string>
+    <string name="setting_force_tw_tip">If you installed both WearOS and Ticwear(Mobvoi) on your phone at the same time, only the watch with WearOS can use Wear Gallery correctly. Open it to force the use of Ticwear.</string>
+</resources>

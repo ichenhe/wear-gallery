@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cc232e33"
+    android:clickable="true"
+    android:focusable="true">
+
+    <android.support.wearable.view.ProgressSpinner
+        android:id="@+id/psWearLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:color_sequence="@color/accent" />
+
+    <ViewStub
+        android:id="@+id/vsWearLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:inflatedId="@+id/retryLayout"
+        android:layout="@layout/wear_loading_retry" />
+</FrameLayout>

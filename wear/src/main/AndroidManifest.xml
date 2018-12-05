@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cc.chenhe.weargallery">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!--@android:style/Theme.DeviceDefault-->
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ico_app"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Ticwear"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="true" />
+
+        <!--@android:style/Theme.DeviceDefault.Light-->
+        <activity
+            android:name=".activity.AtyMain"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.WearGallery">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.AtyIntroduce"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Intro" />
+        <activity
+            android:name=".activity.AtyBigImage"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.AtyLocalBigImage"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.AtyReceivingPics"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.AtyWebServer"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".watchface.AtyConfig"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="cc.chenhe.weargallery.watchface.CONFIG_ACTIVITY" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.AtySwitchGuide"
+            android:launchMode="singleTop" />
+
+        <service
+            android:name="cc.chenhe.weargallery.watchface.WatchFaceService"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/preview" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="cc.chenhe.weargallery.watchface.CONFIG_ACTIVITY" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.mobvoi.android.wearable.WearableListenerServiceGoogleImpl">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_WATCH_CANCHE_SIZE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_RESET_TIP"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_DEL_CACHE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/DEL_OFFLINE_IMAGE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_WATCH_INIT"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_GALLERY"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_MICRO_PICTURE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_HIDE_GALLERY"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_FILE_NAME_LIST"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_SINGLE_PICTURE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_ORIGINAL_PICTURE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_DEL_PHONE_PICTURE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_SEND_PICS"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_CONFIRM_RECEIVE_PICS"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_SEND_PICS_FINISH"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_SEND_PICS_CANCEL"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_NEED_UPDATE"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".MobileListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.mobvoi.android.wearable.BIND_LISTENER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.mobvoi.android.wearable.MESSAGE_RECEIVED" />
+                <action android:name="com.mobvoi.android.wearable.DATA_CHANGED" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="false" />
+
+    </application>
+
+</manifest>

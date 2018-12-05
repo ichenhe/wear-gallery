@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>腕间图库局域网传输</title>
+  <link rel="stylesheet" href="../layui/css/layui.css">
+
+  <style>
+    body {
+      margin-bottom: 60px;
+    }
+
+    #upload {
+      display: block
+    }
+
+    .container {
+      padding-top: 60px;
+      margin-left: 10%;
+      margin-right: 10%;
+    }
+
+    .title {
+      font-size: 40px;
+    }
+
+    .layui-upload-drag {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="layui-row layui-col-space15">
+      <div class="title">图片上传</div>
+      <div>上传过程中请勿关闭手表窗口。</div>
+    </div>
+
+    <hr>
+
+    <div class="layui-upload-drag" id="upload">
+      <i class="layui-icon"></i>
+      <p>点击上传，或将文件拖拽到此处</p>
+    </div>
+
+    <div class="layui-upload-list">
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th>文件名</th>
+            <th>大小</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody id="demoList"></tbody>
+      </table>
+    </div>
+
+    <div style="background-color: #F2F2F2; margin-top: 10%;">
+      <div class="layui-card-body" style="color: rgba(119,136,153,0.8);">
+        Copyright Ⓒ 2018 <a href="http://wg.chenhe.cc/">Wear Gallery</a> All rights reserved.
+      </div>
+    </div>
+  </div>
+
+  <script src="../layui/layui.js"></script>
+  <script>
+    layui.use('upload', function () {
+      var $ = layui.jquery
+      var upload = layui.upload;
+      var demoListView = $('#demoList')
+
+      //执行实例
+      var uploadInst = upload.render({
+        elem: '#upload' //绑定元素
+        , url: '/upload' //上传接口
+        , accept: 'images'
+        , field: 'image'
+        , multiple: true
+        , choose: function (obj) {
+          //选择文件回调
+          obj.preview(function (index, file, result) {
+            var tr = $(['<tr id="upload-' + index + '">'
+              , '<td>' + file.name + '</td>'
+              , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+              , '<td>上传中...</td>'
+              , '</tr>'].join(''));
+
+            demoListView.append(tr);
+          });
+        }
+        , before: function (obj) {
+
+        }
+        , done: function (res, index, upload) {
+          //上传完毕回调
+          if (res.code == 0) { //上传成功
+            var tr = demoListView.find('tr#upload-' + index)
+              , tds = tr.children();
+            tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+            return;
+          }
+          this.error(index, upload);
+        }
+        , error: function (index, upload) {
+          //请求异常回调
+          var tr = demoListView.find('tr#upload-' + index)
+            , tds = tr.children();
+          tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:title="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPicsFolder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- 下方确定按钮 -->
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/llHideBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tvSelectAll"
+            style="@style/text_view_btn_simple"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/main_hide_bar_select_all"
+            title:layout_constraintBottom_toBottomOf="parent"
+            title:layout_constraintStart_toStartOf="parent"
+            title:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvHide"
+            style="@style/text_view_btn"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="14dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/main_hide_bar_hide"
+            title:layout_constraintBottom_toBottomOf="parent"
+            title:layout_constraintEnd_toEndOf="parent"
+            title:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>

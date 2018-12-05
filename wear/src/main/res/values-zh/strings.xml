@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">腕间图库</string>
+    <string name="tip">提示</string>
+    <string name="retry">重试</string>
+    <string name="no_more_show">不再提示</string>
+
+    <string name="intro_gif_title">GIF</string>
+    <string name="intro_gif_content">支持动画 :)</string>
+    <string name="intro_lan_title">内网传输</string>
+    <string name="intro_lan_content">IOS 用户救星</string>
+    <string name="intro_wf_title">表盘</string>
+    <string name="intro_wf_content">自定义图片</string>
+    <string name="intro_enjoy_title">不负众望·再起航</string>
+    <string name="intro_enjoy_content">腕间图库 5</string>
+
+    <string name="drawer_local_gallery">本地图片</string>
+    <string name="drawer_phone_gallery">手机图片</string>
+    <string name="drawer_explore">扩展</string>
+
+    <string name="ui_main_hide_gallery_content">即将隐藏该相册，请确认已连接手机。</string>
+    <string name="ui_main_hide_gallery_title">确认隐藏</string>
+    <string name="ui_main_license_checking">正在验证授权</string>
+    <string name="ui_main_license_disallow_other">授权验证失败\n请到GooglePlay购买正版</string>
+    <string name="ui_main_license_disallow_retry_internet">授权验证失败\n请检查网络\n点击重试</string>
+    <string name="ui_main_load_gallery_err">加载失败\n点击重试</string>
+    <string name="ui_main_load_gallery_err_tip">点我查看解决方案</string>
+    <string name="ui_main_load_gallery_ing">正在加载图库</string>
+    <string name="ui_main_local">手表本地</string>
+    <string name="main_load_gallery_err_toast">获取图库列表超时</string>
+    <string name="main_load_version_conflict_title">提示</string>
+    <string name="main_load_version_conflict_content">当前手机手表版本不一致，请尝试更新。</string>
+    <string name="main_load_gallery_err_scan_toast">手机扫描图片出错</string>
+    <string name="main_load_gallery_err_permission_toast">手机权限不足</string>
+    <string name="main_load_gallery_err_permission_title">错误</string>
+    <string name="main_load_gallery_err_permission_content">由于权限限制，手机无法扫描图片。请打开手机app授权。</string>
+    <string name="main_local_err_permission_title">错误</string>
+    <string name="main_local_err_permission_content">读写sd卡权限是扫描本地图片所必须的，请授予。</string>
+    <string name="main_retry_title">重试</string>
+    <string name="main_retry_content">- 此功能仅限 Android 用户；IOS 请使用局域网传输。\n- 必须在手机安装腕间图库并允许自启。\n- 请检查手机手表的连接。</string>
+
+    <string name="gallery_list_parse_gallery_list_data_err">图库数据异常\n请重试</string>
+    <string name="gallery_list_hide_fail">隐藏失败</string>
+    <string name="gallery_list_hide_ok">隐藏成功</string>
+    <string name="gallery_list_title">手机图片</string>
+
+    <string name="local_gallery_list_received">腕图接收</string>
+    <string name="local_gallery_list_title">本地图片</string>
+
+    <string name="big_image_load_ing">加载中</string>
+    <string name="big_image_get_pics_list_err">获取图片列表失败</string>
+    <string name="big_image_load_micro_picture_err">缩略图%1$s加载失败</string>
+    <string name="big_image_load_hd_ing">高清图加载中</string>
+    <string name="big_image_load_hd_ok">已显示高清图</string>
+    <string name="big_image_load_hd_err">高清图传输失败</string>
+    <string name="big_image_del_phone_picture_ok">已删除</string>
+    <string name="big_image_del_phone_picture_time_out">删除超时</string>
+    <string name="big_image_del_phone_picture_err">删除失败</string>
+    <string name="big_image_del_phone_picture_no_permission">删除失败\n暂不支持删除扩展sd卡中图片</string>
+
+    <string name="receiving_pics_success">图片接收完成</string>
+    <string name="receiving_pics_cancel">取消发送</string>
+    <string name="receiving_pics_failed_send_receipt_msg">图片接收出错:-1</string>
+    <string name="receiving_pics_failed_wait_next_data_time_out">图片接收出错:-2</string>
+    <string name="receiving_pics_text">正在接收图片(%1$s)\n完成前请不要进行其他操作</string>
+
+    <string name="settings_lan_transfer">局域网传输</string>
+    <string name="settings_always_on">图片屏幕常亮</string>
+    <string name="settings_max_brightness">锁定最高亮度</string>
+    <string name="settings_dialog_always_on">本功能需要系统支持。对于某些设备请确认已经打开系统设置里面的「始终开启屏幕」。</string>
+    <string name="settings_err_permission_write_settings_title">警告</string>
+    <string name="settings_err_permission_write_settings_content">调整屏幕亮度需要相应权限，请授予。</string>
+    <string name="settings_err_permission_write_settings_content_not_support">当前系统暂不支持此功能</string>
+    <string name="settings_del_cache">清除缓存</string>
+    <string name="settings_del_local_image">删除离线图片</string>
+    <string name="settings_del_all_cache_ok">已清除</string>
+    <string name="settings_del_local_image_confirm">所有接收的图片（包括缓存的高清图）将被删除。\n确定这样？</string>
+    <string name="settings_about">关于</string>
+
+    <string name="server_title">连接到 Wi-Fi</string>
+    <string name="server_trying">正在尝试连接…</string>
+    <string name="server_timeout">等待超时\n请尝试手动添加。</string>
+    <string name="server_start_wifi_setting_failed">请手动进入设置页面连接</string>
+    <string name="server_add_wifi">添加网络</string>
+    <string name="server_ip">浏览器访问下面地址\n%1$s</string>
+    <string name="server_help">无法访问？</string>
+    <string name="server_failed">服务器启动失败 :(</string>
+    <string name="server_help_msg">- 确保手表与手机/pc处于同一局域网(WiFi)内。\n- 传输期间请勿关闭手表窗口。\n- 确保没有被设备的防火墙拦截。</string>
+
+    <string name="update_dialog_title">提示</string>
+    <string name="update_dialog_content_normal">发现新版本。建议打开手机App更新。</string>
+    <string name="update_dialog_content_must">发现新版本。请先打开手机App更新。</string>
+
+    <string name="wf_not_support_gif">暂不支持gif动图</string>
+    <string name="wf_config_title">表盘设置</string>
+    <string name="wf_config_set_image">设置图片</string>
+    <string name="wf_config_always_on">常亮模式下显示</string>
+    <string name="wf_config_time_visible">显示时间</string>
+    <string name="wf_config_time_style">时间样式</string>
+    <string name="wf_switch_guide">需要手动将系统表盘切换为「%1$s」才能看到效果哦。</string>
+
+    <string name="wf_time_title">时间样式</string>
+    <string name="wf_time_analog_mode">模拟指针</string>
+    <string name="wf_time_position">大小与位置</string>
+    <string name="wf_time_content">显示格式</string>
+    <string name="wf_time_color">颜色</string>
+    <string name="wf_time_content_title">时间格式</string>
+    <string name="wf_time_content_tip">YYYY：年份\nMM：月份\ndd：日期\nHH/hh：小时(0–23)/(1–12)\nmm：分钟\nss：秒钟\n更多自行探索</string>
+    <string name="wf_time_color_title">时间颜色</string>
+
+</resources>

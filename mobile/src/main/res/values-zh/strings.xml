@@ -1,0 +1,119 @@
+<resources>
+    <string name="app_name">腕间图库</string>
+    <string name="cancel">取消</string>
+    <string name="close_confirm">再按一次返回键退出程序</string>
+    <string name="confirm">确认</string>
+    <string name="permission_err">权限不足</string>
+    <string name="err_database">数据查询出错</string>
+
+    <string name="app_none_transfer_available">！Wear通讯服务不可用！</string>
+
+    <plurals name="mi_label_grant_permission">
+        <item quantity="other">请求权限</item>
+    </plurals>
+    <string name="intro_permission_title">一些权限</string>
+    <string name="intro_permission_content">我们需要访问存储的权限来扫描图片。</string>
+    <string name="intro_install_title">安装到手表</string>
+    <string name="intro_install_content">从 Wear OS 开始，系统不再支持通过蓝牙自动同步安装应用，你必须手动从手表应用商店安装腕间图库。或者使用 ADB 来安装。</string>
+    <string name="intro_auto_run_title">自启动</string>
+    <string name="intro_auto_run_content">请务必允许本应用的自启动（后台运行）与关联唤醒，否则手表将无法正常加载图片。\n请放心，腕间图库绝无任何恶意后台驻留。</string>
+    <string name="intro_enjoy_content">腕间图库5\n\n不负众望 · 再起航</string>
+
+    <string name="menu_setting">设置</string>
+    <string name="menu_hide">隐藏相册</string>
+    <string name="menu_send">发送到手表</string>
+
+    <string name="main_hide_bar_select_all">全选</string>
+    <string name="main_hide_bar_select_none">反选</string>
+    <string name="main_hide_bar_hide">隐藏(%1$d)</string>
+    <string name="main_pics_num">(%1$d)</string>
+    <string name="main_hide_gallery_title">隐藏？</string>
+    <string name="main_hide_gallery_content">确定隐藏这%1$d个相册吗？\n你可以在设置中取消隐藏。</string>
+
+    <string name="grid_pics_ok">发送到手表(%1$d)</string>
+    <string name="grid_pics_select_none_send">请至少选中一张图片</string>
+    <string name="grid_pics_select_none_preview">暂未选中任何图片</string>
+    <string name="grid_pics_preview">查看已选中</string>
+    <string name="grid_pics_select_photo_max">您最多只能选%1$d张图片</string>
+    <string name="grid_pics_send_ing">正在发送到手表(%1$d/%2$d)\n期间请不要进行其他操作</string>
+    <string name="grid_pics_send_ing_pos">转到后台</string>
+    <string name="grid_pics_send_success_title">发送完毕</string>
+    <string name="grid_pics_send_success_content">%1$d张图片已成功发送到手表。</string>
+    <string name="grid_pics_send_failed_title">发送出错</string>
+    <string name="grid_pics_send_failed_content">%1$s\n已成功发送%2$d张。</string>
+
+    <string name="preview_pics_select">选择</string>
+
+    <string name="setting_current_mode">当前模式：%1$s</string>
+    <string name="mode_unknown">未知</string>
+    <string name="setting_watch_cache">手表端缓存文件</string>
+    <string name="setting_watch_local_image">手表离线图片</string>
+    <string name="setting_cache_original">高清图(离线图片)</string>
+    <string name="setting_check_update">检查更新</string>
+    <string name="setting_del_all">全部删除</string>
+    <string name="setting_del_item">删除</string>
+    <string name="setting_hide_gallery">隐藏相册</string>
+    <string name="setting_hide_gallery_num">已隐藏%1$d个相册</string>
+    <string name="setting_phone_show_tips_about_watch">手表操作时手机提示</string>
+    <string name="setting_title">设置</string>
+    <string name="setting_calculate_cache_size_err">[大小计算失败]</string>
+    <string name="setting_del_watch_cache">即将删除手表端所有缓存。\n接收的图片与其他离线图片不受影响。</string>
+    <string name="setting_del_watch_images">即将删除手表端离线图片（包括接收的图片）。</string>
+    <string name="setting_del_cache_watch">确定删除？</string>
+    <string name="setting_del_cache_watch_neg">不删了</string>
+    <string name="setting_del_cache_watch_pos">删除</string>
+    <string name="setting_del_cache_ing">删除中</string>
+    <string name="setting_del_cache_ok">删除成功</string>
+    <string name="setting_del_watch_cache_communicate_err">删除失败</string>
+    <string name="setting_del_watch_cache_communicate_err_des">手表通讯超时</string>
+    <string name="setting_force_tw">强制 Ticwear 模式</string>
+    <string name="setting_force_tw_what">啥？</string>
+    <string name="setting_force_tw_tip">如果你在手机上同时安装了 WearOS 和 出门问问，那么只有 WearOS 系统的手表才能正常使用腕间图库。如果你需要在 Ticwear 上使用，请开启此选项并强制重启手机图库。</string>
+    <string name="setting_force_tw_restart">必须彻底关闭腕间图库并重启来使配置生效。</string>
+
+    <string name="hide_title">隐藏的相册</string>
+    <string name="hide_none_tip">暂无隐藏的相册\n\n你可以在相册列表界面长按以将其隐藏</string>
+    <string name="hide_show">取消隐藏</string>
+
+    <string name="watch_operation_search_gallery_ing">正在扫描图库</string>
+    <string name="watch_operation_search_gallery_err">扫描本地图片出错</string>
+    <string name="watch_operation_version_different">版本不一致</string>
+    <string name="watch_operation_get_pics_list_ing">正在获取图片列表</string>
+    <string name="watch_operation_send_hd_picture_ing">正在传输高清图</string>
+    <string name="watch_operation_send_hd_picture_fail">读取高清图失败</string>
+
+    <string name="send_images_create_bitmap_null">读取图片失败。</string>
+    <string name="send_images_send_data_fail">发送图片数据失败。</string>
+    <string name="send_images_send_data_time_out">手表响应超时。</string>
+    <string name="send_images_unknown_error">未知错误。</string>
+
+    <string name="notify_send_images_title">正在发送图片…</string>
+    <string name="notify_send_images_ticker">正在发送图片…</string>
+    <string name="notify_send_images_content">已发:%1$d 总共:%2$d</string>
+    <string name="notify_send_images_success_title">图片发送完毕</string>
+    <string name="notify_send_images_success_content">已成功发送%1$d张图片。</string>
+    <string name="notify_send_images_failed_title">图片发送出错</string>
+    <string name="notify_send_images_failed_content">%1$s 已发：%2$d张</string>
+
+    <string name="share_image_path_null">获取图片路径出错</string>
+    <string name="share_image_label">发送到手表</string>
+
+    <string name="about_title">特别感谢·关于</string>
+    <string name="about_thank_title">特别感谢</string>
+    <string name="about_thank_content">设备支持：@出门问问·TicWatch\n图标：@Lance.Moe @碱式碳酸铜\n翻译：@海棠花未眠 @碱式碳酸铜\n网站：@울고 또\nAND 各内测朋友以及正在使用的你我Ta</string>
+    <string name="about_feedback_title">我要吐槽</string>
+    <string name="about_feedback_content">腕间图库支持的反馈渠道为：\n新浪微博：@0晨鹤0\n邮箱：me@chenhe.cc\n其他渠道例如论坛、贴吧等可能不会及时回复。</string>
+    <string name="about_alpha_title">离我再近些吧</string>
+    <string name="about_alpha_content">欢迎加入企鹅交流群：549321774\n尝鲜·反馈尽在腕X伐木累~\n\nTelegram 频道：https://t.me/weargallery_news</string>
+
+    <string name="update_no_web_view">请先安装浏览器</string>
+
+    <string name="notify_channel_name">发送图片</string>
+    <string name="notify_channel_description">显示发送图片的进度。</string>
+
+    <string name="links_title">Android 应用友链</string>
+    <string name="links_chooser_browser">选择浏览器</string>
+    <string name="links_introduction_title">什么是 Android 应用友链</string>
+    <string name="tip">提示</string>
+
+</resources>

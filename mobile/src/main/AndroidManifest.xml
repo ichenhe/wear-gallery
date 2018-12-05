@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cc.chenhe.weargallery">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- Required for complications to receive complication data and open the provider chooser. -->
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ico_app"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AtyIntroduce"
+            android:theme="@style/Theme.Intro" />
+        <activity android:name=".AtyGridPics" />
+        <activity android:name=".AtyPreviewPics" />
+        <activity android:name=".AtySetting" />
+        <activity android:name=".AtyHideFolders" />
+        <activity android:name=".AtyAndroidLinks" />
+        <activity
+            android:name=".AtyShareImage"
+            android:label="@string/share_image_label">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".SendPicsService" />
+        <service android:name="com.mobvoi.android.wearable.WearableListenerServiceGoogleImpl">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_WATCH_CANCHE_SIZE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_RESET_TIP"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_DEL_CACHE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/DEL_OFFLINE_IMAGE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_WATCH_INIT"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_GALLERY"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_MICRO_PICTURE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_HIDE_GALLERY"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_FILE_NAME_LIST"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_SINGLE_PICTURE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_GET_ORIGINAL_PICTURE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_DEL_PHONE_PICTURE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_SEND_PICS"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_CONFIRM_RECEIVE_PICS"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_SEND_PICS_FINISH"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_SEND_PICS_CANCEL"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/PATH_NEED_UPDATE"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/test"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+        <service android:name=".WatchListenerService">
+            <intent-filter>
+                <action android:name="com.mobvoi.android.wearable.BIND_LISTENER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.mobvoi.android.wearable.MESSAGE_RECEIVED" />
+                <action android:name="com.mobvoi.android.wearable.DATA_CHANGED" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.WearGallery" parent="Theme.Ticwear">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+
+    <style name="btn_base">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+    </style>
+
+    <style name="btn_text" parent="btn_base">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="btn_outlined" parent="btn_base">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:background">@drawable/shape_btn_outlined</item>
+    </style>
+
+    <style name="btn_contained" parent="btn_base">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/shape_btn_contained</item>
+    </style>
+
+    <style name="tv_btn_base">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+    </style>
+
+    <style name="tv_btn_outlined" parent="tv_btn_base">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:background">@drawable/shape_btn_outlined</item>
+    </style>
+
+    <style name="tv_btn_contained" parent="tv_btn_base">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/shape_btn_contained</item>
+    </style>
+
+    <style name="item_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/content_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/content_horizontal_padding</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="iv_icon">
+        <item name="android:background">@drawable/shape_ico_bg</item>
+        <item name="android:layout_width">42dp</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+</resources>
