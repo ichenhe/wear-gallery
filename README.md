@@ -11,9 +11,8 @@
 
 - [Google Play](https://play.google.com/store/apps/details?id=cc.chenhe.weargallery)
 - [酷安网](https://www.coolapk.com/apk/cc.chenhe.weargallery)
-- [问问应用商店](https://www.chumenwenwen.com/h5/app_download/index.html)
 
-**提示：** 上述链接均为手机安装包。对于 Wear OS 系统，请访问**手表端**自带的应用商店进行安装。或者前往[发布页面](https://www.chumenwenwen.com/h5/app_download/index.html)下载手表端 apk 后使用 adb 或其他方式进行安装。
+**提示：** 上述链接均为手机安装包。对于 Wear OS 系统，请访问**手表端**自带的应用商店进行安装。或者前往[发布页面](https://github.com/liangchenhe55/wear-gallery/releases)下载手表端 apk 后使用 adb 或其他方式进行安装。
 
 ## 代码有点糟
 
