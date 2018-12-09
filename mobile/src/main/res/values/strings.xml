@@ -106,8 +106,8 @@
     <string name="about_title">About</string>
     <string name="about_thank_title">Thanks</string>
     <string name="about_thank_content">Equipment support: @Mobvoi·TicWatch\nIcon: @Lance.Moe @碱式碳酸铜\nTranslate: @海棠花未眠 @碱式碳酸铜\nWebsite: @울고 또\nAND YOU.</string>
-    <string name="about_feedback_title">Feedback</string>
-    <string name="about_feedback_content">Weibo：@0晨鹤0\nE-mail：me@chenhe.cc</string>
+    <string name="about_os_title">Open Source</string>
+    <string name="about_os_content">Wear Gallery has already open source on GitHub: https://github.com/liangchenhe55/wear-gallery</string>
     <string name="about_alpha_title">Follow &#38; Discuss</string>
     <string name="about_alpha_content">Telegram channel: https://t.me/weargallery_news\nWelcome to join QQ group：549321774</string>
 

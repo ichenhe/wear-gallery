@@ -101,10 +101,10 @@
     <string name="about_title">特别感谢·关于</string>
     <string name="about_thank_title">特别感谢</string>
     <string name="about_thank_content">设备支持：@出门问问·TicWatch\n图标：@Lance.Moe @碱式碳酸铜\n翻译：@海棠花未眠 @碱式碳酸铜\n网站：@울고 또\nAND 各内测朋友以及正在使用的你我Ta</string>
-    <string name="about_feedback_title">我要吐槽</string>
-    <string name="about_feedback_content">腕间图库支持的反馈渠道为：\n新浪微博：@0晨鹤0\n邮箱：me@chenhe.cc\n其他渠道例如论坛、贴吧等可能不会及时回复。</string>
+    <string name="about_os_title">开放源代码</string>
+    <string name="about_os_content">腕间图库已经完全开源：https://github.com/liangchenhe55/wear-gallery\n\n问题反馈请前往 GitHub issues.\n欢迎 Fork/PR. 求 Star (๑•ᴗ•๑)</string>
     <string name="about_alpha_title">离我再近些吧</string>
-    <string name="about_alpha_content">欢迎加入企鹅交流群：549321774\n尝鲜·反馈尽在腕X伐木累~\n\nTelegram 频道：https://t.me/weargallery_news</string>
+    <string name="about_alpha_content">欢迎加入企鹅交流群：549321774\n警告：交流群不是客服群，我没有义务提供服务，伸手党请滚蛋。\n\nTelegram 频道：https://t.me/weargallery_news</string>
 
     <string name="update_no_web_view">请先安装浏览器</string>
 

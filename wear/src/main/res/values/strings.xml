@@ -80,7 +80,7 @@
     <string name="settings_del_local_image_confirm">All received(cached) HD images will be deleted.\nConform?</string>
     <string name="settings_about">About</string>
 
-    <string name="about_domain" translatable="false">https://wg.chenhe.cc/\nTelegram: Wear Gallery News</string>
+    <string name="about_domain" translatable="false">GitHub: wear-gallery\nTelegram: Wear Gallery News</string>
 
     <string name="server_title">Connect to Wi-Fi</string>
     <string name="server_trying">Trying…</string>

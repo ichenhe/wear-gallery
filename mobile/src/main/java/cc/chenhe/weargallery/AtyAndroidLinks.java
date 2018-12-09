@@ -49,8 +49,8 @@ public class AtyAndroidLinks extends AbsAboutActivity implements OnRecommendedCl
         items.add(new Category(getString(R.string.about_thank_title)));
         items.add(new Card(getString(R.string.about_thank_content)));
 
-        items.add(new Category(getString(R.string.about_feedback_title)));
-        items.add(new Card(getString(R.string.about_feedback_content)));
+        items.add(new Category(getString(R.string.about_os_title)));
+        items.add(new Card(getString(R.string.about_os_content)));
 
         items.add(new Category(getString(R.string.about_alpha_title)));
         items.add(new Card(getString(R.string.about_alpha_content)));
