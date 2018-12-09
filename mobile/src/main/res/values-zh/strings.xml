@@ -17,7 +17,8 @@
     <string name="intro_install_content">从 Wear OS 开始，系统不再支持通过蓝牙自动同步安装应用，你必须手动从手表应用商店安装腕间图库。或者使用 ADB 来安装。</string>
     <string name="intro_auto_run_title">自启动</string>
     <string name="intro_auto_run_content">请务必允许本应用的自启动（后台运行）与关联唤醒，否则手表将无法正常加载图片。\n请放心，腕间图库绝无任何恶意后台驻留。</string>
-    <string name="intro_enjoy_content">腕间图库5\n\n不负众望 · 再起航</string>
+    <string name="intro_os_title">开放源代码</string>
+    <string name="intro_os_content">已在GitHub开源：wear-gallery\n同样请在GitHub提交 issues 或获取最新版本 apk.</string>
 
     <string name="menu_setting">设置</string>
     <string name="menu_hide">隐藏相册</string>

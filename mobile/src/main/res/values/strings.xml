@@ -19,8 +19,8 @@
     <string name="intro_install_content">Since Wear OS, installing watch apps through bluetooth was no more supported. You have to manually download and install WearGallery from the watch application market. Or you can install it with ADB.</string>
     <string name="intro_auto_run_title">AUTO RUN</string>
     <string name="intro_auto_run_content">Please be sure to allow the application to start automatically, otherwise the watch will not be able to load the pictures properly.</string>
-    <string name="intro_enjoy_title" translatable="false">ENJOY</string>
-    <string name="intro_enjoy_content">Wear Gallery 5\n\n the BEST gallery in watch</string>
+    <string name="intro_os_title" translatable="false">Open Source</string>
+    <string name="intro_os_content">Find on GitHub: wear-gallery</string>
 
     <string name="menu_setting">Settings</string>
     <string name="menu_hide">Hide</string>

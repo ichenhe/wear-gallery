@@ -10,8 +10,8 @@
     <string name="intro_lan_content">IOS friendly</string>
     <string name="intro_wf_title">WATCH FACE</string>
     <string name="intro_wf_content">Custom image</string>
-    <string name="intro_enjoy_title">ENJOY</string>
-    <string name="intro_enjoy_content">WearGallery 5</string>
+    <string name="intro_os_title">OpenSource</string>
+    <string name="intro_os_content">on GitHub:\nwear-gallery</string>
 
     <string name="drawer_local_gallery">Local</string>
     <string name="drawer_phone_gallery">Phone</string>

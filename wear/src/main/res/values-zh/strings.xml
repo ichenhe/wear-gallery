@@ -10,8 +10,8 @@
     <string name="intro_lan_content">IOS 用户救星</string>
     <string name="intro_wf_title">表盘</string>
     <string name="intro_wf_content">自定义图片</string>
-    <string name="intro_enjoy_title">不负众望·再起航</string>
-    <string name="intro_enjoy_content">腕间图库 5</string>
+    <string name="intro_os_title">开源</string>
+    <string name="intro_os_content">on GitHub:\nwear-gallery</string>
 
     <string name="drawer_local_gallery">本地图片</string>
     <string name="drawer_phone_gallery">手机图片</string>

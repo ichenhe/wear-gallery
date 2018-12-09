@@ -40,8 +40,8 @@ public class AtyIntroduce extends IntroActivity {
                 .build());
 
         addSlide(new SimpleSlide.Builder()
-                .title(R.string.intro_enjoy_title)
-                .description(R.string.intro_enjoy_content)
+                .title(R.string.intro_os_title)
+                .description(R.string.intro_os_content)
                 .background(R.color.slide_fourth)
                 .backgroundDark(R.color.slide_fourth_dark)
                 .build());
