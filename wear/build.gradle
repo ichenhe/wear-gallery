@@ -18,8 +18,8 @@ android {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 215010101 //minSdk(21)+v(410)+buildV(03)+MultipleAPK(01)
-        versionName "v5.1.1209"
+        versionCode 215010201 //minSdk(21)+v(410)+buildV(03)+MultipleAPK(01)
+        versionName "v5.1.1210"
         buildConfigField("int", "FEATURE_VERSION", "50009")
         buildConfigField("String", "BUGLY_ID", localProp.getProperty('bugly.id'))
     }

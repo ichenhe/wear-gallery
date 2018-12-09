@@ -19,8 +19,8 @@ android {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 195010100
-        versionName "v5.1.1209"
+        versionCode 195010200
+        versionName "v5.1.1210"
         //特征码，用于检测手表手机版本匹配。
         buildConfigField("int", "FEATURE_VERSION", "50009")
         buildConfigField("String", "BUGLY_ID", localProp.getProperty('bugly.id'))
