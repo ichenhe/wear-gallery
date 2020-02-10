@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 group = 'com.davemorrissey.labs'
 archivesBaseName = 'subsampling-scale-image-view'
@@ -19,9 +21,13 @@ configurations {
 }
 
 dependencies {
-    javadocs 'androidx.annotation:annotation:1.0.0'
-    javadocs 'androidx.exifinterface:exifinterface:1.0.0'
-    implementation 'androidx.annotation:annotation:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
+    javadocs "androidx.annotation:annotation:$annotationVersion"
+    javadocs "androidx.exifinterface:exifinterface:$exifinterfaceVersion"
+    implementation "androidx.annotation:annotation:$annotationVersion"
+    implementation "androidx.exifinterface:exifinterface:$exifinterfaceVersion"
+    implementation "androidx.core:core-ktx:$ktxVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
-
+repositories {
+    mavenCentral()
+}

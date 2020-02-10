@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
@@ -22,5 +24,10 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleDependency
     api 'com.alibaba:fastjson:1.1.70.android'
-    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation "androidx.annotation:annotation:$annotationVersion"
+    implementation "androidx.core:core-ktx:$ktxVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
