@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 /**
  * 解决换行排版混乱问题
  */
-public class MyTextView extends android.support.v7.widget.AppCompatTextView {
+public class MyTextView extends androidx.appcompat.widget.AppCompatTextView {
     private int mLineY;
     private int mViewWidth;
 

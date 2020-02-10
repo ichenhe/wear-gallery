@@ -8,7 +8,7 @@
 
     <include layout="@layout/toolbar" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPicsFolder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -16,7 +16,7 @@
 
     <!-- 下方确定按钮 -->
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llHideBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,5 +46,5 @@
             title:layout_constraintBottom_toBottomOf="parent"
             title:layout_constraintEnd_toEndOf="parent"
             title:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

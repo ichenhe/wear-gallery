@@ -2,7 +2,7 @@ package cc.chenhe.weargallery.uilts;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 public class WfSettings {

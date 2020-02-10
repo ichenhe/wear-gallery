@@ -19,9 +19,9 @@ configurations {
 }
 
 dependencies {
-    javadocs 'com.android.support:support-annotations:27.1.0'
-    javadocs 'com.android.support:exifinterface:27.1.0'
-    implementation 'com.android.support:support-annotations:27.1.0'
-    implementation 'com.android.support:exifinterface:27.1.0'
+    javadocs 'androidx.annotation:annotation:1.0.0'
+    javadocs 'androidx.exifinterface:exifinterface:1.0.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
 }
 

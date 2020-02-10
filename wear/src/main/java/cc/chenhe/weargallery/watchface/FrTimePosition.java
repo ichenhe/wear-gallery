@@ -3,7 +3,7 @@ package cc.chenhe.weargallery.watchface;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Message;
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.View;
