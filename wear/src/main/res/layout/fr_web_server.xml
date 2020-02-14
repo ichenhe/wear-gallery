@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="model"
+            type="cc.chenhe.weargallery.ui.webserver.WebServerViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/connectLayout"
+                layout="@layout/fr_web_server_connect"
+                app:model="@{model}" />
+
+            <ViewStub
+                android:id="@+id/serverRunningStub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@id/layoutServerRunning"
+                android:layout="@layout/fr_web_server_running"
+                app:serverErrorMsg="@{model.serverErrorMsg}"
+                app:serverIp="@{model.serverIp}"
+                app:serverState="@{model.serverState}"
+                app:serverStateColor="@{model.getServerStateColor(model.serverState)}"
+                app:serverStateMsg="@{model.getServerStateMsg(model.serverState)}" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</layout>

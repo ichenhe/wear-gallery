@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/menu_images_check_all"
+        android:icon="@drawable/ic_check_all"
+        android:title="@string/images_menu_check_all"
+        android:visible="false"
+        app:iconTint="?attr/colorOnSurface"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
+        android:id="@+id/menu_send"
+        android:icon="@drawable/ic_send"
+        android:title="@string/menu_send"
+        android:visible="false"
+        app:iconTint="?attr/colorOnSurface"
+        app:showAsAction="ifRoom"
+        tools:visible="true" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_bar_settings"
+        android:title="@string/menu_setting"
+        app:iconTint="?attr/colorOnSurface"
+        app:showAsAction="never" />
+</menu>

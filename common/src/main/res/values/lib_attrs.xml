@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--common attrs-->
+    <attr name="checkedColor" format="color" tools:ignore="ResourceName" />
+
+    <declare-styleable name="CircleCheckBox" tools:ignore="ResourceName">
+        <attr name="normalColor" format="color" />
+        <attr name="checkedColor" />
+        <attr name="outlineColor" format="color" />
+        <attr name="outlineStrokeWidth" format="dimension" />
+        <attr name="outlineMargin" format="boolean" />
+        <attr name="android:checked" />
+    </declare-styleable>
+    <attr name="circleCheckBoxStyle" format="reference" tools:ignore="ResourceName" />
+
+    <declare-styleable name="MaskImageView" tools:ignore="ResourceName">
+        <attr name="checkedColor" />
+        <attr name="android:checked" />
+    </declare-styleable>
+    <attr name="maskImageViewStyle" format="reference" tools:ignore="ResourceName" />
+
+</resources>

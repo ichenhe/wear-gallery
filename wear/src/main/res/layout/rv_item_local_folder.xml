@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.WearVision.ListItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground">
+
+    <me.panpf.sketch.SketchImageView
+        android:id="@+id/itemImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#B2FF59"
+        tools:ignore="ContentDescription"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/folderName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toEndOf="@+id/itemImage"
+        android:maxLines="4"
+        android:textAppearance="@style/TextAppearance.WearVision.Body1"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/itemImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemImage"
+        app:layout_constraintTop_toTopOf="@+id/itemImage"
+        tools:text="未知相册" />
+
+    <TextView
+        android:id="@+id/itemImageCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/mask"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.WearVision.Body2"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="@dimen/wv_text_size_small_2"
+        app:layout_constraintBottom_toBottomOf="@+id/itemImage"
+        app:layout_constraintEnd_toEndOf="@+id/itemImage"
+        app:layout_constraintStart_toStartOf="@+id/itemImage"
+        tools:text="134" />
+</androidx.constraintlayout.widget.ConstraintLayout>

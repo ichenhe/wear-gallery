@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@id/wv_parentPanel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@id/wv_topPanel"
+        style="?attr/wv_windowAppBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@id/wv_titleFrame"
+            style="?attr/wv_windowAppBarContentStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_scrollFlags="scroll"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@android:id/icon"
+                style="?wv_windowIconStyle"
+                android:contentDescription="@null"
+                tools:background="#aaa" />
+
+            <TextView
+                android:id="@android:id/title"
+                style="?android:attr/windowTitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:singleLine="true"
+                android:textAlignment="center"
+                tools:text="Title" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <cc.chenhe.weargallery.wearvision.widget.ObservableScrollView
+        android:id="@id/wv_scrollView"
+        style="?attr/wv_dialogContentStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:paddingBottom="60dp">
+
+        <LinearLayout
+            android:id="@id/wv_contentPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@android:id/message"
+                style="?attr/wv_dialogMessageStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Dialog content message in here." />
+
+            <FrameLayout
+                android:id="@android:id/custom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@id/wv_skipLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="start|center_vertical"
+                android:minHeight="@dimen/wv_alert_dialog_skip_button_height"
+                android:orientation="horizontal"
+                android:padding="@dimen/wv_alert_dialog_skip_button_padding"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <CheckBox
+                    android:id="@id/wv_skipCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/wv_ic_radio"
+                    android:clickable="false"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8" />
+
+                <TextView
+                    android:id="@id/wv_skipText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/wv_alert_dialog_dont_show_me_again" />
+            </LinearLayout>
+        </LinearLayout>
+    </cc.chenhe.weargallery.wearvision.widget.ObservableScrollView>
+
+    <!-- Icon buttons -->
+    <!-- FAB's margin is changed programmatically. -->
+
+    <cc.chenhe.weargallery.wearvision.widget.MinimizableFloatingActionButton
+        android:id="@id/wv_negativeButton"
+        style="?attr/wv_negativeIconButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        tools:layout_marginBottom="@dimen/wv_alert_dialog_padding_bottom"
+        tools:layout_marginEnd="@dimen/wv_alert_dialog_button_padding_horizontal_pair"
+        tools:layout_marginStart="@dimen/wv_alert_dialog_button_padding_horizontal_pair" />
+
+    <cc.chenhe.weargallery.wearvision.widget.MinimizableFloatingActionButton
+        android:id="@id/wv_positiveButton"
+        style="?attr/wv_positiveIconButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        tools:layout_marginBottom="@dimen/wv_alert_dialog_padding_bottom"
+        tools:layout_marginEnd="@dimen/wv_alert_dialog_button_padding_horizontal_pair"
+        tools:layout_marginStart="@dimen/wv_alert_dialog_button_padding_horizontal_pair" />
+</cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>

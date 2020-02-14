@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_images"
+        android:icon="@drawable/ic_nav_image"
+        android:title="@string/nav_menu_images" />
+
+    <item
+        android:id="@+id/nav_folders"
+        android:icon="@drawable/ic_nav_album"
+        android:title="@string/nav_menu_folders" />
+</menu>

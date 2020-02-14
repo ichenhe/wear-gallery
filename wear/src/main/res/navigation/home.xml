@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home"
+    app:startDestination="@id/pagerFr">
+
+    <fragment
+        android:id="@+id/pagerFr"
+        android:name="cc.chenhe.weargallery.ui.main.PagerFr"
+        android:label="PagerFr"
+        tools:layout="@layout/fr_pager">
+        <action
+            android:id="@+id/action_pagerFr_to_mobileImageDetailFr"
+            app:destination="@id/mobileImageDetailFr" />
+        <action
+            android:id="@+id/action_pagerFr_to_displayPreferenceFr"
+            app:destination="@id/displayPreferenceFr" />
+        <action
+            android:id="@+id/action_pagerFr_to_frAbout"
+            app:destination="@id/aboutFr" />
+        <action
+            android:id="@+id/action_pagerFr_to_localImageDetailFr"
+            app:destination="@id/localImageDetailFr" />
+        <action
+            android:id="@+id/action_pagerFr_to_transferPreferenceFr"
+            app:destination="@id/transferPreferenceFr" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mobileImageDetailFr"
+        android:name="cc.chenhe.weargallery.ui.imagedetail.mobile.MobileImageDetailFr"
+        android:label="MobileImageDetailFr"
+        tools:layout="@layout/fr_image_detail">
+        <argument
+            android:name="bucketId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayPreferenceFr"
+        android:name="cc.chenhe.weargallery.ui.explore.DisplayPreferenceFr"
+        android:label="DisplayPreferenceFr" />
+    <fragment
+        android:id="@+id/aboutFr"
+        android:name="cc.chenhe.weargallery.ui.explore.AboutFr"
+        android:label="FrAbout"
+        tools:layout="@layout/fr_about">
+        <action
+            android:id="@+id/action_aboutFr_to_licensesFr"
+            app:destination="@id/licensesFr" />
+    </fragment>
+    <fragment
+        android:id="@+id/localImageDetailFr"
+        android:name="cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailFr"
+        android:label="LocalImageDetailFr"
+        tools:layout="@layout/fr_image_detail">
+        <argument
+            android:name="sourceType"
+            app:argType="cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailFr$Source" />
+        <argument
+            android:name="bucketId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/transferPreferenceFr"
+        android:name="cc.chenhe.weargallery.ui.explore.TransferPreferenceFr"
+        android:label="TransferPreferenceFr">
+        <action
+            android:id="@+id/action_transferPreferenceFr_to_webServerFr"
+            app:destination="@id/webServerFr" />
+    </fragment>
+    <fragment
+        android:id="@+id/webServerFr"
+        android:name="cc.chenhe.weargallery.ui.webserver.WebServerFr"
+        android:label="WebServerFr"
+        tools:layout="@layout/fr_web_server" />
+    <fragment
+        android:id="@+id/licensesFr"
+        android:name="cc.chenhe.weargallery.ui.LicensesFr"
+        android:label="LicensesFr"
+        tools:layout="@layout/fr_licenses" />
+</navigation>

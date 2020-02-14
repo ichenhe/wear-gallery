@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Chenhe
+  ~
+  ~ This file has been modified.
+  ~
+  ~ Copyright (c) 2016 Mobvoi Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <style name="Widget">
+        <item name="android:textAppearance">?android:textAppearance</item>
+    </style>
+
+    <style name="Widget.WearVision" />
+
+    <style name="Widget.WearVision.AppBarLayout" parent="Widget.Design.AppBarLayout">
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="Widget.WearVision.ListView">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:paddingBottom">@dimen/wv_list_padding_bottom</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:overScrollMode">never</item>
+        <item name="android:scrollbarSize">0dp</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+    </style>
+
+    <style name="Widget.WearVision.ListView.Dialog">
+        <item name="android:paddingStart">@dimen/wv_alert_dialog_message_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/wv_alert_dialog_message_padding_horizontal</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="Widget.WearVision.ListItem">
+        <item name="android:paddingTop">@dimen/wv_list_item_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/wv_list_item_padding_vertical</item>
+        <item name="android:minHeight">?android:listPreferredItemHeight</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/wv_list_item_padding_horizontal_start</item>
+        <item name="android:paddingEnd">@dimen/wv_list_item_padding_horizontal_end</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:clipToPadding">false</item>
+    </style>
+
+    <style name="Widget.WearVision.CompoundButton" parent="android:Widget.CompoundButton">
+        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Widget.WearVision.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/wv_ic_check</item>
+    </style>
+
+    <style name="Widget.WearVision.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/wv_ic_radio</item>
+    </style>
+
+    <style name="Widget.WearVision.FloatingActionButton" parent="Widget.Design.FloatingActionButton">
+        <item name="elevation">6dp</item>
+        <item name="fabSize">normal</item>
+        <item name="pressedTranslationZ">6dp</item>
+        <item name="rippleColor">?android:colorControlHighlight</item>
+        <item name="borderWidth">0dp</item>
+    </style>
+
+    <style name="Widget.WearVision.FloatingActionButton.Dialog">
+        <item name="backgroundTint">?android:attr/colorAccent</item>
+        <item name="elevation">0dp</item>
+        <item name="android:alpha">@dimen/wv_alert_dialog_button_alpha</item>
+    </style>
+
+    <style name="Widget.WearVision.FloatingActionButton.Dialog.Negative">
+        <item name="android:backgroundTint">@color/wv_basic_gold_grey_darken</item>
+    </style>
+
+</resources>

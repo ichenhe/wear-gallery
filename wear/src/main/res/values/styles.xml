@@ -1,35 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.WearGallery" parent="Theme.Ticwear">
+    <style name="Theme.WearGallery" parent="Theme.WearVision">
         <item name="android:colorPrimary">@color/primary</item>
+        <item name="colorSecondary">@color/primary</item>
+        <item name="colorPrimary">@color/primary</item>
         <item name="android:colorAccent">@color/accent</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="android:dialogTheme">@style/Dialog</item>
+        <item name="android:alertDialogTheme">@style/AlertDialog</item>
     </style>
 
-    <style name="btn_base">
-        <item name="android:textSize">14sp</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingStart">20dp</item>
-        <item name="android:paddingEnd">20dp</item>
+    <style name="Dialog" parent="Theme.WearVision.Dialog">
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
-    <style name="btn_text" parent="btn_base">
-        <item name="android:textColor">@color/accent</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+    <style name="AlertDialog" parent="Theme.WearVision.Dialog.Alert">
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
-    <style name="btn_outlined" parent="btn_base">
-        <item name="android:textColor">@color/accent</item>
-        <item name="android:background">@drawable/shape_btn_outlined</item>
+    <style name="Widget.ImageView" />
+
+    <style name="Widget.ImageView.Button">
+        <item name="android:padding">@dimen/image_button_padding</item>
+        <item name="android:background">@drawable/shape_image_button_bg</item>
+        <item name="tint">@color/image_operation_button</item>
     </style>
 
-    <style name="btn_contained" parent="btn_base">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">@drawable/shape_btn_contained</item>
+    <style name="Widget.ImageView.Button.WatchFaceTextStyle">
+        <item name="android:alpha">0.8</item>
     </style>
 
-    <style name="tv_btn_base">
+    <style name="Widget.ImageView.ImageDetailMenuButton">
+        <item name="android:layout_width">@dimen/image_detail_operation_button_size</item>
+        <item name="android:layout_height">@dimen/image_detail_operation_button_size</item>
+        <item name="android:tint">@color/image_operation_button</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="Widget.ImageView.Button.ImageDetailZoomButton">
+        <item name="android:layout_width">@dimen/image_detail_zoom_button_size</item>
+        <item name="android:layout_height">@dimen/image_detail_zoom_button_size</item>
+        <item name="android:background">@drawable/shape_zoom_button_bg</item>
+    </style>
+
+    <style name="Widget.TextView" />
+
+    <style name="Widget.TextView.Button">
         <item name="android:textSize">12sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -39,32 +59,13 @@
         <item name="android:paddingEnd">12dp</item>
     </style>
 
-    <style name="tv_btn_outlined" parent="tv_btn_base">
-        <item name="android:textColor">@color/accent</item>
-        <item name="android:background">@drawable/shape_btn_outlined</item>
-    </style>
-
-    <style name="tv_btn_contained" parent="tv_btn_base">
+    <style name="Widget.TextView.Button.Contained">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">@drawable/shape_btn_contained</item>
     </style>
 
-    <style name="item_container">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingStart">@dimen/content_horizontal_padding</item>
-        <item name="android:paddingEnd">@dimen/content_horizontal_padding</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-    </style>
-
-    <style name="iv_icon">
-        <item name="android:background">@drawable/shape_ico_bg</item>
-        <item name="android:layout_width">42dp</item>
-        <item name="android:layout_height">42dp</item>
-        <item name="android:padding">8dp</item>
+    <style name="TextAppearance.Title" parent="TextAppearance.WearVision.Subhead">
+        <item name="android:textSize">@dimen/wv_text_size_medium_1</item>
     </style>
 
 </resources>

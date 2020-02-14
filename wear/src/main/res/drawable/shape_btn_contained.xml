@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/grey">
     <item>
-        <shape xmlns:android="http://schemas.android.com/apk/res/android"
-            android:shape="rectangle">
-            <solid android:color="@color/accent" />
+        <shape android:shape="rectangle">
+            <solid android:color="#55565A" />
             <stroke
                 android:width="0dp"
-                android:color="@color/primary" />
-            <corners android:radius="5dp" />
+                android:color="#55565A" />
+            <corners android:radius="20dp" />
         </shape>
     </item>
 </ripple>

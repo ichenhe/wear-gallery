@@ -1,8 +1,14 @@
 <resources>
-    <string name="app_name">WearGallery</string>
+
+    <string name="app_name">Wear Gallery</string>
     <string name="tip">Tip</string>
     <string name="retry">Retry</string>
-    <string name="no_more_show">Don\'t show again</string>
+    <string name="help">Need help?</string>
+    <string name="empty">No content</string>
+    <string name="app_hw_title">Error</string>
+    <string name="app_hw_message">Wear Gallery does not want to run on HuaWei devices.\nScan the QR code to learn more.</string>
+
+    <string name="dialog_scan_to_visit">Please scan the QR code to visit.</string>
 
     <string name="intro_gif_title">GIF</string>
     <string name="intro_gif_content">Supported :)</string>
@@ -17,100 +23,99 @@
     <string name="drawer_phone_gallery">Phone</string>
     <string name="drawer_explore">Explore</string>
 
-    <string name="ui_gallery_folder_name" translatable="false">%1$s(%2$d)</string>
+    <string name="image_operation_rotate_left">Rotate left</string>
+    <string name="image_operation_rotate_right">Rotate right</string>
+    <string name="image_operation_hd">Load HD</string>
+    <string name="image_operation_delete">Delete</string>
+    <string name="image_detail_zoom_in">Zoom in</string>
+    <string name="image_detail_zoom_out">Zoom out</string>
 
-    <string name="ui_main_hide_gallery_content">The album will be hidden, please make sure the phone is connected.</string>
-    <string name="ui_main_hide_gallery_title">Confirm</string>
-    <string name="ui_main_license_checking">Validating authorization</string>
-    <string name="ui_main_license_disallow_other">License verification failed.\nPlease go to Google Play to buy genuine.</string>
-    <string name="ui_main_license_disallow_retry_internet">License verification failed.\nPlease check your network.\nClick to retry.</string>
-    <string name="ui_main_load_gallery_err">Load failed\nTap to try again</string>
-    <string name="ui_main_load_gallery_err_tip">Click me to see solutions</string>
-    <string name="ui_main_load_gallery_ing">Loading</string>
-    <string name="ui_main_local">WatchLocal</string>
-    <string name="main_load_gallery_err_toast">Time-out</string>
-    <string name="main_load_version_conflict_title">Warning</string>
-    <string name="main_load_version_conflict_content">Version conflict between watch and phone.\nPlease try to check update.</string>
-    <string name="main_load_gallery_err_scan_toast">Mobile collect pics failed</string>
-    <string name="main_load_gallery_err_permission_toast">Mobile insufficient permission</string>
-    <string name="main_load_gallery_err_permission_title">Error</string>
-    <string name="main_load_gallery_err_permission_content">Please run APP on mobile to authorize first.</string>
-    <string name="main_local_err_permission_title">Error</string>
-    <string name="main_local_err_permission_content">Read and write sd card permissions are necessary to scan the local image, please grant.</string>
-    <string name="main_retry_title">Retry</string>
-    <string name="main_retry_content">- Only for Android; IOS need to use LAN Transfer.\n- WearGallery must be installed on the phone.\n- Please check the connection between the phone and the watch.</string>
+    <string name="local_err_permission_title">Error</string>
+    <string name="local_err_permission_content">Read and write sd card permissions are necessary to scan the local image, please grant.</string>
+    <string name="mobile_load_gallery_err_tip">Help</string>
+    <string name="mobile_load_gallery_err_content">- Only for Android phone; IOS need to use LAN Transfer.\n- Wear Gallery must be installed on the phone (By GooglePlay or scan the QR code below).\n- Please check the Wear OS connection.\n- Make sure the phone/watch app version is the same.</string>
 
-    <string name="gallery_list_parse_gallery_list_data_err">Abnormal Data\nPlease retry</string>
-    <string name="gallery_list_hide_fail">Hide fail</string>
-    <string name="gallery_list_hide_ok">Hide success</string>
-    <string name="gallery_list_title">Phone</string>
+    <string name="image_detail_load_ing">Loading</string>
+    <string name="image_detail_load_hd_ing">loading hd</string>
+    <string name="image_detail_count" translatable="false">%1$d/%2$d</string>
 
-    <string name="local_gallery_list_received">WG Received</string>
-    <string name="local_gallery_list_title">Local</string>
+    <string name="preference_display">Display</string>
+    <string name="preference_always_on">Keep screen on</string>
+    <string name="preference_always_on_summary">Only when displaying pictures in full screen.</string>
+    <string name="preference_show_phone_images">Display phone page</string>
+    <string name="preference_transfer">Transfer</string>
+    <string name="preference_transfer_lan">LAN</string>
+    <string name="preference_transfer_net">Internet</string>
+    <string name="preference_transfer_disclaimer">Disclaimer</string>
+    <string name="preference_transfer_disclaimer_content"># LAN Transfer\n1. Need to be unimpeded between your LAN equipment.\n2. This app is sent in clear and your data may be obtained by others in the same network.</string>
+    <string name="preference_about">About</string>
 
-    <string name="big_image_load_ing">Loading</string>
-    <string name="big_image_count" translatable="false">%1$d/%2$d</string>
-    <string name="big_image_gif" translatable="false">GIF</string>
-    <string name="big_image_get_pics_list_err">Load list failed</string>
-    <string name="big_image_load_micro_picture_err">Thumbnail %1$s Load failed</string>
-    <string name="big_image_load_hd_ing">Loading HD version</string>
-    <string name="big_image_load_hd_ok">HD√</string>
-    <string name="big_image_load_hd_err">Load HD failed</string>
-    <string name="big_image_del_phone_picture_ok">Deleted</string>
-    <string name="big_image_del_phone_picture_time_out">Deleted time-out</string>
-    <string name="big_image_del_phone_picture_err">Failed to delete</string>
-    <string name="big_image_del_phone_picture_no_permission">Delete failed.\nTemporarily does not support removing expansion sd card picture.</string>
-
-    <string name="receiving_pics_success">Receive complete</string>
-    <string name="receiving_pics_cancel">Canceled</string>
-    <string name="receiving_pics_failed_send_receipt_msg">Receive failed:-1</string>
-    <string name="receiving_pics_failed_wait_next_data_time_out">Receive failed:-2</string>
-    <string name="receiving_pics_text">Receiving pictures(%1$s)…\nPlease do nothing during the process.</string>
-
-    <string name="settings_lan_transfer">LAN transfer</string>
-    <string name="settings_always_on">Keep watch awake when show picture</string>
-    <string name="settings_max_brightness">Lock the highest luminance when show picture</string>
-    <string name="settings_dialog_always_on">ALWAYS ON need your system support. For some devices, please make sure it has been turned on in the system settings.</string>
-    <string name="settings_del_all_cache_ok">Done</string>
-    <string name="settings_err_permission_write_settings_title">Waring</string>
-    <string name="settings_err_permission_write_settings_content">To adjust the screen brightness requires permission, please authorize.</string>
-    <string name="settings_err_permission_write_settings_content_not_support">The system does not support this function.</string>
-    <string name="settings_del_cache">Clear cache</string>
-    <string name="settings_del_local_image">Delete local images</string>
-    <string name="settings_del_local_image_confirm">All received(cached) HD images will be deleted.\nConform?</string>
-    <string name="settings_about">About</string>
-
-    <string name="about_domain" translatable="false">GitHub: wear-gallery\nTelegram: Wear Gallery News</string>
+    <string name="about_github" translatable="false">GitHub: wear-gallery</string>
+    <string name="about_telegram" translatable="false">Telegram: Wear Gallery News</string>
+    <string name="about_licence">Licenses</string>
+    <string name="about_thank">Thanks</string>
+    <string name="about_thank_content">Equipment: @TicWatch\nPM: @果冻\nIcon: @五音律吕 @一佳一 @Lance.Moe @碱式碳酸铜\nTranslate: @海棠花未眠 @碱式碳酸铜</string>
 
     <string name="server_title">Connect to Wi-Fi</string>
     <string name="server_trying">Trying…</string>
     <string name="server_timeout">Timeout\nplease add network manually.</string>
     <string name="server_start_wifi_setting_failed">please open settings manually</string>
-    <string name="server_add_wifi">Add network</string>
-    <string name="server_ip">Visit the website\n%1$s</string>
-    <string name="server_help">Unable visit?</string>
-    <string name="server_failed">Start failed :(</string>
+    <string name="server_add_wifi">WiFi settings</string>
+    <string name="server_ip">Visit the website:\n%1$s</string>
+    <string name="server_state_running">Running</string>
+    <string name="server_state_stop">Stop</string>
+    <string name="server_state_fail">Fail</string>
+    <string name="server_help">Unable visit</string>
+    <string name="server_failed">Start failed:\n%1$s</string>
     <string name="server_help_msg">- Make sure the watch is in the same LAN(WiFi) as the phone/pc.\n- Do not close the watch window during transmission.\n- Make sure it is not blocked by the firewall.</string>
 
-    <string name="update_dialog_title">Tip</string>
-    <string name="update_dialog_content_normal">New version found.Please update on mobile APP.</string>
-    <string name="update_dialog_content_must">New version found.Please update on mobile APP.</string>
+    <string name="pick_image_title">Pick</string>
+    <string name="pick_image_folder_name" translatable="false">%1$s (%2$d)</string>
+    <string name="pick_image_all">All</string>
+    <string name="pick_image_folder">Album</string>
 
+    <string name="wf_preference_title">Watch Face</string>
+    <string name="wf_preference_image">Background</string>
+    <string name="wf_preference_type">Style type</string>
+    <string name="wf_preference_position">Position &amp; Size</string>
+    <string name="wf_preference_format">Time format</string>
+    <string name="wf_preference_format_reset">RESET</string>
+    <string name="wf_preference_format_reset_done">done</string>
+    <string-array name="wf_preference_type_entries">
+        <item>Analog</item>
+        <item>Digital</item>
+    </string-array>
+    <string name="wf_preference_type_entry_value_analog" translatable="false">analog</string>
+    <string name="wf_preference_type_entry_value_digital" translatable="false">digital</string>
+    <string-array name="wf_preference_type_entry_values">
+        <item>@string/wf_preference_type_entry_value_analog</item>
+        <item>@string/wf_preference_type_entry_value_digital</item>
+    </string-array>
+    <string name="wf_preference_color">Time color</string>
+    <string name="wf_preference_color_hint">hex color</string>
+    <string name="wf_preference_color_error">invalid color</string>
+    <string name="wf_preference_cot" translatable="false">Powered by COT</string>
+    <string name="wf_preference_intent_err">please search in app market</string>
+    <string name="wf_text_line" translatable="false">&#160;&#160;↓</string><!--space is necessary-->
+    <string name="wf_text_hour">hour</string>
+    <string name="wf_text_min">min</string>
+    <string name="wf_text_colon" translatable="false">&#160;&#160;:</string>
+    <string name="wf_text_year">year</string>
+    <string name="wf_text_month">month</string>
+    <string name="wf_text_day">day</string>
+    <string name="wf_text_slash" translatable="false">&#160;&#160;/</string>
     <string name="wf_not_support_gif">Gif is not supported</string>
-    <string name="wf_config_title">WF Config</string>
-    <string name="wf_config_set_image">Select image</string>
-    <string name="wf_config_always_on">Visible in ambient mode</string>
-    <string name="wf_config_time_visible">Time visible</string>
-    <string name="wf_config_time_style">Time style</string>
-    <string name="wf_switch_guide">Please switch the system watchface to [%1$s] manually.</string>
 
-    <string name="wf_time_title">Time Style</string>
-    <string name="wf_time_analog_mode">Analog mode</string>
-    <string name="wf_time_position">Position &amp; size</string>
-    <string name="wf_time_content">Format</string>
-    <string name="wf_time_color">Color</string>
-    <string name="wf_time_content_title">Time Format</string>
-    <string name="wf_time_content_tip">YYYY: year\nMM: month\ndd: day in month\nHH/hh: hour(0–23)/(1–12)\nmm: minute\nss: second\nand more…</string>
-    <string name="wf_time_color_title">Color</string>
+    <string name="upgrade_message">Upgrading…\nDon\'t exit Wear Gallery.</string>
+
+    <string name="notify_channel_permission_name">Permissions</string>
+    <string name="notify_channel_permission_description">Tips for requesting permissions.</string>
+    <string name="notify_channel_upgrade_name">Upgrade</string>
+    <string name="notify_channel_upgrade_description">Progress for upgrade and data migration.</string>
+
+    <string name="notify_permission_title">Require Permissions</string>
+    <string name="notify_permission_text">Click to grant permissions.</string>
+    <string name="notify_upgrade_title">Upgrading</string>
+    <string name="notify_upgrade_text">Wear Gallery is upgrading and migrating data. Don\'t force stop the app.</string>
 
 </resources>

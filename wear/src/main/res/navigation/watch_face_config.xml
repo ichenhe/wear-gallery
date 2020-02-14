@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/watch_face_config"
+    app:startDestination="@id/preferenceFr">
+
+    <fragment
+        android:id="@+id/preferenceFr"
+        android:name="cc.chenhe.weargallery.watchface.PreferenceFr"
+        android:label="PreferenceFr">
+        <action
+            android:id="@+id/action_preferenceFr_to_timeTextStyleFr"
+            app:destination="@id/timeTextStyleFr" />
+        <action
+            android:id="@+id/action_preferenceFr_to_timeTextFr"
+            app:destination="@id/timeTextFr" />
+        <action
+            android:id="@+id/action_preferenceFr_to_timeTextColorFr"
+            app:destination="@id/timeTextColorFr" />
+    </fragment>
+    <fragment
+        android:id="@+id/timeTextStyleFr"
+        android:name="cc.chenhe.weargallery.watchface.style.TimeTextStyleFr"
+        android:label="TimeTextStyleFr"
+        tools:layout="@layout/wf_fr_time_text_style" />
+    <fragment
+        android:id="@+id/timeTextFr"
+        android:name="cc.chenhe.weargallery.watchface.style.TimeTextFr"
+        android:label="TimeTextFr"
+        tools:layout="@layout/wf_fr_time_text" />
+    <fragment
+        android:id="@+id/timeTextColorFr"
+        android:name="cc.chenhe.weargallery.watchface.style.TimeTextColorFr"
+        android:label="TimeTextColorFr"
+        tools:layout="@layout/wf_fr_time_text_color" />
+</navigation>

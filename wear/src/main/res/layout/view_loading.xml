@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="cc.chenhe.weargallery.uilts.UtilsKt" />
+
+        <variable
+            name="resource"
+            type="cc.chenhe.weargallery.common.bean.Resource" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@id/loadingLayout"
+        visibleGone="@{UtilsKt.shouldShowLoadingLayout(resource)}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.wearable.view.ProgressSpinner
+            android:id="@+id/progressBar2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:color_sequence="@color/accent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

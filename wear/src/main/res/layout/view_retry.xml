@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cc.chenhe.weargallery.uilts.UtilsKt" />
+
+        <variable
+            name="resource"
+            type="cc.chenhe.weargallery.common.bean.Resource" />
+
+        <variable
+            name="callback"
+            type="cc.chenhe.weargallery.ui.common.RetryCallback" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@id/retryLayout"
+        visibleGone="@{UtilsKt.shouldShowRetryLayout(resource)}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@id/retryButton"
+            style="@style/Widget.ImageView.Button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/retry"
+            android:onClick="@{()->callback.retry()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:srcCompat="@drawable/ic_retry" />
+
+        <TextView
+            android:id="@id/retryMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/retry"
+            android:textAppearance="@style/TextAppearance.WearVision.Caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/retryButton" />
+
+        <TextView
+            android:id="@id/retryHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="4dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/help"
+            android:textAppearance="@style/TextAppearance.WearVision.Caption"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/retryMessage"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

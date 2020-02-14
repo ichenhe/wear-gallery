@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CircleCheckBox" parent="DefaultCircleCheckBoxStyle">
+        <item name="normalColor">@color/black</item>
+        <item name="checkedColor">@color/white</item>
+        <item name="outlineColor">@color/white</item>
+        <item name="outlineMargin">false</item>
+    </style>
+</resources>

@@ -1,29 +1,24 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'bugly'
-
-Properties localProp = new Properties()
-InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
-localProp.load(inputStream)
-
-bugly {
-    appId = localProp.getProperty('bugly.id')
-    appKey = localProp.getProperty('key')
-    appChannel = ''
-}
+apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 215010201 //minSdk(21)+v(410)+buildV(03)+MultipleAPK(01)
         versionName "v5.1.1210"
-        buildConfigField("int", "FEATURE_VERSION", "50009")
-        buildConfigField("String", "BUGLY_ID", localProp.getProperty('bugly.id'))
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
     buildTypes {
         release {
@@ -31,11 +26,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
-        abortOnError false
+    viewBinding {
+        enabled = true
     }
     dataBinding {
         enabled = true
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+        jvmTarget = 1.8
+        freeCompilerArgs += ['-Xopt-in=kotlin.RequiresOptIn']
     }
 }
 
@@ -43,32 +46,45 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/core-3.3.3.jar')
     implementation project(':common')
-    implementation 'cc.chenhe:wear-tools:1.0.2'
-    //noinspection GradleDependency
-    implementation 'com.google.android.gms:play-services-wearable:10.2.0'
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation 'com.google.android.support:wearable:2.3.0'
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
-    implementation "androidx.annotation:annotation:$annotationVersion"
-    implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'com.ticwear:ticdesign:1.1.0'
-    implementation 'cc.chenhe:watch-face-helper:2.0.3'
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    //noinspection GradleDependency
-    implementation 'com.heinrichreimersoftware:material-intro:1.6'
-    implementation 'org.nanohttpd:nanohttpd:2.3.1'
-    implementation 'com.tencent.bugly:crashreport:2.6.6.1'
-
-    //图片
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-//    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
-    implementation project(':subsampling-scale-image-view')
+    implementation project(':wearvision')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.core:core-ktx:$ktxVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version" //添加了双击二段缩放
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "androidx.fragment:fragment:$fragmentVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
+    implementation "androidx.viewpager2:viewpager2:$viewpager2Version"
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation "androidx.preference:preference-ktx:$preferenceVersion"
+    implementation "androidx.annotation:annotation:$annotationVersion"
+    implementation "androidx.palette:palette:$paletteVersion"
+    implementation "androidx.exifinterface:exifinterface:$exifinterfaceVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
-}
-repositories {
-    mavenCentral()
+    implementation "org.koin:koin-core:$koinVersion"
+    implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
+
+    implementation "cc.chenhe:wear-msger:$wearMsgerVersion"
+    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+    implementation 'com.google.android.support:wearable:2.6.0'
+    compileOnly 'com.google.android.wearable:wearable:2.6.0'
+    implementation 'cc.chenhe:watch-face-helper:2.0.3'
+    implementation "com.heinrichreimersoftware:material-intro:$materialIntroVersion"
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    implementation "me.panpf:sketch:$sketchVersion"
+    implementation "me.panpf:sketch-gif:$sketchVersion"
+
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.amshove.kluent:kluent-android:$kluentVersion"
+    testImplementation "org.koin:koin-test:$koinVersion"
 }

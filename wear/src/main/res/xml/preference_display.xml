@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <cc.chenhe.weargallery.ui.explore.TitlePreference
+        app:layout="@layout/preference_title"
+        app:title="@string/preference_display" />
+
+    <SwitchPreferenceCompat
+        app:defaultValue="true"
+        app:key="show_phone_images"
+        app:title="@string/preference_show_phone_images" />
+
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:key="keep_screen_on"
+        app:summary="When displaying pictures in full screen."
+        app:title="@string/preference_always_on" />
+</PreferenceScreen>

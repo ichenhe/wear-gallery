@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/Widget.ListItem"
+    android:background="?attr/selectableItemBackground">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/folderCardView"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        app:cardCornerRadius="@dimen/folders_preview_corner_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <cc.chenhe.weargallery.common.view.MaskImageView
+            android:id="@+id/folderPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:background="#03A9F4"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/folderTitle"
+        style="@style/text_view_primary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/folderPath"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/folderCardView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Camera (238)" />
+
+    <TextView
+        android:id="@+id/folderPath"
+        style="@style/text_view_secondary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/folderTitle"
+        app:layout_constraintTop_toBottomOf="@+id/folderTitle"
+        tools:text="/sdcard/DCIM/demo" />
+</androidx.constraintlayout.widget.ConstraintLayout>

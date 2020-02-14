@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <cc.chenhe.weargallery.ui.explore.TitlePreference
+        app:layout="@layout/preference_title"
+        app:title="@string/drawer_explore" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_display"
+        app:key="preference_display"
+        app:title="@string/preference_display" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_transfer"
+        app:key="preference_transfer"
+        app:title="@string/preference_transfer" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_wf_type"
+        app:key="preference_watchface"
+        app:title="@string/wf_preference_title" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_about"
+        app:key="preference_about"
+        app:title="@string/preference_about" />
+</PreferenceScreen>

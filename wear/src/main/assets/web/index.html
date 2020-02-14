@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>腕间图库局域网传输</title>
+    <title>Wear Gallery LAN Transfer</title>
   <link rel="stylesheet" href="../layui/css/layui.css">
 
   <style>
@@ -36,24 +36,24 @@
 
   <div class="container">
     <div class="layui-row layui-col-space15">
-      <div class="title">图片上传</div>
-      <div>上传过程中请勿关闭手表窗口。</div>
+        <div class="title">Upload</div>
+        <div>Do not close the server window on your watch during upload.</div>
     </div>
 
     <hr>
 
     <div class="layui-upload-drag" id="upload">
       <i class="layui-icon"></i>
-      <p>点击上传，或将文件拖拽到此处</p>
+        <p>Click, or drag picture files here.</p>
     </div>
 
     <div class="layui-upload-list">
       <table class="layui-table">
         <thead>
           <tr>
-            <th>文件名</th>
-            <th>大小</th>
-            <th>状态</th>
+              <th>File Name</th>
+              <th>Size</th>
+              <th>State</th>
           </tr>
         </thead>
         <tbody id="demoList"></tbody>
@@ -62,7 +62,8 @@
 
     <div style="background-color: #F2F2F2; margin-top: 10%;">
       <div class="layui-card-body" style="color: rgba(119,136,153,0.8);">
-        Copyright Ⓒ 2018 <a href="http://wg.chenhe.cc/">Wear Gallery</a> All rights reserved.
+          Copyright Ⓒ 2020 <a href="https://github.com/liangchenhe55/wear-gallery/">Wear Gallery</a> All rights
+          reserved.
       </div>
     </div>
   </div>
@@ -101,7 +102,7 @@
           if (res.code == 0) { //上传成功
             var tr = demoListView.find('tr#upload-' + index)
               , tds = tr.children();
-            tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+            tds.eq(2).html('<span style="color: #5FB878;">Success</span>');
             return;
           }
           this.error(index, upload);
@@ -110,7 +111,7 @@
           //请求异常回调
           var tr = demoListView.find('tr#upload-' + index)
             , tds = tr.children();
-          tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+          tds.eq(2).html('<span style="color: #FF5722;">Error</span>');
         }
       });
     });

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cc.chenhe.weargallery.ui.webserver.WebServerViewModel" />
+
+        <variable
+            name="model"
+            type="cc.chenhe.weargallery.ui.webserver.WebServerViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        visibleGone="@{model.networkState != WebServerViewModel.NETWORK_STATE_AVAILABLE}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_wifi_0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvConnectTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/server_title"
+            android:textColor="@color/text_main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <TextView
+            android:id="@+id/tvConnectStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:text="@{model.networkState == WebServerViewModel.NETWORK_STATE_TRYING ? @string/server_trying : @string/server_timeout}"
+            android:textAppearance="@style/TextAppearance.WearVision.Body2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pbConnectNetwork"
+            app:layout_constraintTop_toBottomOf="@+id/tvConnectTip"
+            tools:text="@string/server_trying" />
+
+        <ProgressBar
+            android:id="@+id/pbConnectNetwork"
+            style="?android:attr/progressBarStyleSmall"
+            visibleGone="@{model.networkState == WebServerViewModel.NETWORK_STATE_TRYING}"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvConnectStatus"
+            app:layout_constraintEnd_toStartOf="@+id/tvConnectStatus"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvConnectStatus" />
+
+        <LinearLayout
+            android:id="@+id/addNetworkLayout"
+            style="@style/Widget.WearVision.ListItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvConnectStatus">
+
+            <ImageView
+                android:layout_width="@dimen/wv_list_item_icon_size_small"
+                android:layout_height="@dimen/wv_list_item_icon_size_small"
+                android:contentDescription="@string/server_add_wifi"
+                android:src="@drawable/ic_add_circle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="@string/server_add_wifi"
+                android:textAppearance="?android:attr/textAppearanceListItem" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

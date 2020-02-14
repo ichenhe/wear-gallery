@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Chenhe
+  ~
+  ~ This file has been modified.
+  ~
+  ~ Copyright (c) 2016 Mobvoi Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <style name="Theme.WearVisionBase" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/Animation.WearVision.Activity.Translucent</item>
+        <!-- translucent makes animation of activity wrong, try to find a way to disable
+            translucent, but show background activity content when swipe to dismiss. -->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="Theme.WearVision" parent="Theme.WearVisionBase">
+
+        <item name="android:textColorPrimary">@color/primary_text_dark</item>
+        <item name="android:textColorSecondary">@color/secondary_text_dark</item>
+        <item name="android:textColorTertiary">@color/secondary_text_dark</item>
+        <item name="android:textColorHint">@color/hint_foreground_dark</item>
+        <item name="android:textColorAlertDialogListItem">@color/primary_text_dark</item>
+
+        <!-- Text styles -->
+        <item name="android:textAppearance">@style/TextAppearance.WearVision</item>
+        <item name="android:textAppearanceInverse">@style/TextAppearance.WearVision.Inverse</item>
+
+        <item name="android:textAppearanceLarge">@style/TextAppearance.WearVision.Subhead</item>
+        <item name="android:textAppearanceLargeInverse">@style/TextAppearance.WearVision.Subhead.Inverse</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.WearVision.Body1</item>
+        <item name="android:textAppearanceMediumInverse">@style/TextAppearance.WearVision.Body1.Inverse</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.WearVision.Caption</item>
+        <item name="android:textAppearanceSmallInverse">@style/TextAppearance.WearVision.Caption.Inverse</item>
+
+        <item name="android:textAppearanceButton">@style/TextAppearance.WearVision.Button</item>
+
+        <!-- =================================================================================
+             = Widgets
+             =================================================================================-->
+
+        <item name="android:listViewStyle">@style/Widget.WearVision.ListView</item>
+        <item name="appBarLayoutStyle">@style/Widget.WearVision.AppBarLayout</item>
+        <item name="android:checkboxStyle">@style/Widget.WearVision.CompoundButton.CheckBox</item>
+        <item name="android:radioButtonStyle">@style/Widget.WearVision.CompoundButton.RadioButton</item>
+
+        <item name="android:lineSpacingMultiplier">@dimen/wv_text_line_spacing_multiplier</item>
+        <item name="android:lineSpacingExtra">@dimen/wv_text_line_spacing_extra</item>
+
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">false</item>
+        <!-- We need the windows to be translucent for SwipeToDismiss layout
+             to work properly. -->
+        <item name="android:windowSwipeToDismiss">true</item>
+        <!-- Required to force windowInsets dispatch through application UI. -->
+        <item name="android:windowOverscan">true</item>
+
+        <item name="android:windowTitleStyle">@style/WindowTitle.WearVision</item>
+        <item name="wv_windowAppBarStyle">@style/WindowAppBar.WearVision</item>
+        <item name="wv_windowAppBarContentStyle">@style/WindowAppBarContent.WearVision.Small</item>
+        <item name="wv_windowIconStyle">@style/WindowIcon.WearVision</item>
+        <item name="wv_dialogContentStyle">@style/Widget.WearVision.ListView.Dialog</item>
+        <item name="wv_dialogMessageStyle">@style/TextAppearance.WearVision.DialogContent</item>
+
+        <item name="android:colorAccent">@color/wv_color_accent</item>
+        <item name="colorAccent">@color/wv_color_accent</item>
+        <item name="android:colorControlNormal">@color/wv_color_control_normal</item>
+        <item name="colorControlNormal">@color/wv_color_control_normal</item>
+        <item name="android:colorControlActivated">?colorAccent</item>
+        <item name="colorControlActivated">?colorAccent</item>
+        <item name="android:colorEdgeEffect">?colorAccent</item>
+        <item name="android:disabledAlpha">@dimen/disabled_alpha_dark</item>
+
+        <!-- List attributes -->
+        <item name="android:listPreferredItemHeight">@dimen/wv_item_preferred_height</item>
+        <item name="android:listPreferredItemHeightSmall">@dimen/wv_item_preferred_height_small</item>
+        <item name="android:listPreferredItemHeightLarge">@dimen/wv_item_preferred_height_large</item>
+        <item name="android:textAppearanceListItem">@style/TextAppearance.WearVision.Subhead</item>
+        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.WearVision.Subhead</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.WearVision.Body1</item>
+        <item name="android:listPreferredItemPaddingLeft">@dimen/wv_list_item_padding_horizontal</item>
+        <item name="android:listPreferredItemPaddingRight">@dimen/wv_list_item_padding_horizontal</item>
+        <item name="android:listPreferredItemPaddingStart">@dimen/wv_list_item_padding_horizontal</item>
+        <item name="android:listPreferredItemPaddingEnd">@dimen/wv_list_item_padding_horizontal</item>
+
+
+        <!-- Preference -->
+        <item name="preferenceFragmentCompatStyle">@style/PreferenceFragment.WearVision</item>
+        <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList.WearVision</item>
+        <item name="preferenceStyle">@style/Preference.WearVision</item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.WearVision.Switch</item>
+        <item name="dialogPreferenceStyle">@style/Preference.WearVision.Dialog</item>
+
+        <!-- Dialog attributes -->
+        <item name="android:dialogTheme">@style/Theme.WearVision.Dialog</item>
+
+        <!-- AlertDialog attributes -->
+        <item name="android:alertDialogTheme">@style/Theme.WearVision.Dialog.Alert</item>
+
+        <item name="wv_listLayout">@layout/wv_dialog_alert_list</item>
+        <item name="wv_positiveIconButtonStyle">@style/Widget.WearVision.FloatingActionButton.Dialog</item>
+        <item name="wv_neutralIconButtonStyle">@style/Widget.WearVision.FloatingActionButton.Dialog</item>
+        <item name="wv_negativeIconButtonStyle">@style/Widget.WearVision.FloatingActionButton.Dialog.Negative</item>
+
+    </style>
+
+    <!-- Dialog themes -->
+
+    <style name="Theme.WearVision.BaseDialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@style/Animation.WearVision.Dialog</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowSwipeToDismiss">false</item>
+
+        <item name="android:colorBackgroundCacheHint">@null</item>
+
+        <!-- List -->
+        <item name="android:listDivider">@null</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/wv_ic_radio</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/wv_ic_check</item>
+    </style>
+
+
+    <!-- Material theme for dialog windows and activities, which is used by the
+         {@link android.app.Dialog} class.  This changes the window to be
+         floating (not fill the entire screen), and puts a frame around its
+         contents.  You can set this theme on an activity if you would like to
+         make an activity that looks like a Dialog. -->
+    <style name="Theme.WearVision.Dialog" parent="Theme.WearVision.BaseDialog" />
+
+    <style name="Theme.WearVision.Dialog.BaseAlert">
+        <item name="android:windowTitleStyle">@style/WindowTitle.WearVision</item>
+        <item name="wv_windowIconStyle">@style/WindowIcon.WearVision</item>
+        <item name="wv_windowAppBarStyle">@style/WindowAppBar.WearVision</item>
+        <item name="wv_windowAppBarContentStyle">@style/WindowAppBarContent.WearVision.Small</item>
+        <item name="wv_dialogContentStyle">@style/Widget.WearVision.ListView.Dialog</item>
+        <item name="wv_dialogMessageStyle">@style/TextAppearance.WearVision.DialogContent</item>
+    </style>
+
+    <!-- Material theme for alert dialog windows, which is used by the
+         {@link android.app.AlertDialog} class.  This is basically a dialog
+         but sets the background to empty so it can do two-tone backgrounds.
+         For applications targeting Honeycomb or newer, this is the default
+         AlertDialog theme. -->
+    <style name="Theme.WearVision.Dialog.Alert" parent="Theme.WearVision.Dialog.BaseAlert" />
+
+</resources>

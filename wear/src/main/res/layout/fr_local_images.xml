@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="sharedModel"
+            type="cc.chenhe.weargallery.ui.main.SharedViewModel" />
+    </data>
+
+    <cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            style="?attr/wv_windowAppBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/localImageHeader"
+                style="?attr/wv_windowAppBarContentStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/drawer_local_gallery"
+                    android:textAppearance="@style/TextAppearance.Title" />
+
+                <ImageView
+                    android:id="@+id/listGridType"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/title"
+                    android:tint="?android:attr/textColorPrimary"
+                    app:imageDrawable="@{@drawable/ic_view_list}"
+                    tools:ignore="ContentDescription"
+                    tools:srcCompat="@drawable/ic_view_list" />
+            </RelativeLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/imagesRecyclerView"
+            style="@style/Widget.WearVision.ListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+            tools:listitem="@layout/rv_item_local_folder" />
+
+        <ViewStub
+            android:id="@id/emptyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/view_empty"
+            app:resource="@{sharedModel.localImages}" />
+    </cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>
+</layout>

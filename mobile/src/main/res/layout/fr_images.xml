@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/imagesCoordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/collapse_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/imagesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:fullyShown="false"
+        app:layout_behavior=".ui.common.CollapseContentScrollBehavior"
+        tools:listitem="@layout/rv_item_images_img" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

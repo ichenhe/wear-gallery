@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="cc.chenhe.weargallery.uilts.UtilsKt" />
+
+        <!-- This variable can be only [RemoteImage?] or [Image?] -->
+        <variable
+            name="currentItem"
+            type="Object" />
+
+        <variable
+            name="onClickListener"
+            type="android.view.View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_image_menu_bg"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_behavior=".ui.imagedetail.ImageDetailOperationBehavior">
+
+        <ImageView
+            android:id="@+id/imageOperationTurnLeft"
+            style="@style/Widget.ImageView.ImageDetailMenuButton"
+            android:contentDescription="@string/image_operation_rotate_left"
+            android:enabled="@{currentItem!=null}"
+            android:onClick="@{onClickListener}"
+            app:layout_constraintBottom_toTopOf="@+id/imageOperationHd"
+            app:layout_constraintEnd_toStartOf="@+id/imageOperationTurnRight"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_operation_rotate_left" />
+
+        <ImageView
+            android:id="@+id/imageOperationTurnRight"
+            style="@style/Widget.ImageView.ImageDetailMenuButton"
+            android:contentDescription="@string/image_operation_rotate_right"
+            android:enabled="@{currentItem!=null}"
+            android:onClick="@{onClickListener}"
+            app:layout_constraintBottom_toTopOf="@+id/imageOperationDelete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageOperationTurnLeft"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_operation_rotate_right" />
+
+        <ImageView
+            android:id="@+id/imageOperationHd"
+            style="@style/Widget.ImageView.ImageDetailMenuButton"
+            android:contentDescription="@string/image_operation_hd"
+            android:enabled="@{currentItem!=null &amp;&amp; !UtilsKt.hasLocalFile(currentItem)}"
+            android:onClick="@{onClickListener}"
+            android:tint="@color/image_operation_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageOperationDelete"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageOperationTurnLeft"
+            app:srcCompat="@drawable/ic_operation_hd" />
+
+        <ImageView
+            android:id="@+id/imageOperationDelete"
+            style="@style/Widget.ImageView.ImageDetailMenuButton"
+            android:contentDescription="@string/image_operation_delete"
+            android:enabled="@{currentItem!=null &amp;&amp; UtilsKt.hasLocalFile(currentItem)}"
+            android:onClick="@{onClickListener}"
+            android:tint="@color/image_operation_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageOperationHd"
+            app:layout_constraintTop_toBottomOf="@+id/imageOperationTurnRight"
+            app:srcCompat="@drawable/ic_operation_del" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
