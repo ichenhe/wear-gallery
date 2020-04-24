@@ -69,6 +69,7 @@ class AboutAty : AbsAboutActivity(), OnRecommendationClickedListener {
         items.add(Category(getString(R.string.about_licence)))
         items.add(License("Wear-Msger", "Chenhe", License.MIT, "https://github.com/liangchenhe55/Wear-Msger"))
         items.add(License("about-page", "drakeet", License.APACHE_2, "https://github.com/PureWriter/about-page"))
+        items.add(License("Luban", "Curzibn", License.APACHE_2, "https://github.com/Curzibn/Luban"))
         items.add(License("glide", "bumptech", "Custom License", "https://github.com/bumptech/glide"))
         items.add(License("Subsampling Scale Image View", "davemorrissey", License.APACHE_2, "https://github.com/davemorrissey/subsampling-scale-image-view"))
         items.add(License("material-intro", "heinrichreimer", License.MIT, "https://github.com/heinrichreimer/material-intro"))

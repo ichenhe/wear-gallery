@@ -52,6 +52,7 @@ class LicensesFr : SwipeDismissFr() {
             add(License("Wear-Msger", "Chenhe", MIT, "https://github.com/liangchenhe55/Wear-Msger"))
             add(License("WatchFaceHelper", "Chenhe", APACHE_2, "https://github.com/liangchenhe55/WatchFaceHelper"))
             add(License("TicDesign", "Mobvoi", APACHE_2, "https://github.com/mobvoi/ticdesign"))
+            add(License("DiskLruCache", "JakeWharton", APACHE_2, "https://github.com/JakeWharton/DiskLruCache"))
             add(License("NanoHTTPD", "NanoHTTPD", "BSD 3-Clause", "https://github.com/NanoHttpd/nanohttpd"))
             add(License("Sketch", "panpf", APACHE_2, "https://github.com/panpf/sketch"))
             add(License("material-intro", "heinrichreimer", MIT, "https://github.com/heinrichreimer/material-intro"))
