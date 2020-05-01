@@ -112,7 +112,18 @@ class DiskLruCacheTest {
     }
 
     @Test
-    fun edit_lru() {
+    fun edit_lru_constant() {
+        lru(null)
+    }
+
+    @Test
+    fun edit_lru_reload() {
+        lru {
+            cache = DiskLruCache.open(cacheFile, APP_VERSION, MAX_SIZE)
+        }
+    }
+
+    private fun lru(beforeOverride: (() -> Unit)?) {
         // 5*100 = 500B
         val size = 100L
         for (i in 0..4) {
@@ -127,6 +138,7 @@ class DiskLruCacheTest {
         cache.getFile("2")
         cache.getFile("4")
         cache.getFile("1")
+        beforeOverride?.invoke()
         writeCacheBytes("big", 800)
         Thread.sleep(50)
         // queue: [0,3,2],4,1,big

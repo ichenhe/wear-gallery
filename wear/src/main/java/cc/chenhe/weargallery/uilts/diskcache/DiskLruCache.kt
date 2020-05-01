@@ -44,10 +44,6 @@ private const val DIRTY = "DIRTY"
 private const val REMOVE = "REMOVE"
 private const val READ = "READ"
 
-/**
- * We won't write [READ] log if this flag is `false` since this type of log is useless.
- */
-private const val DEBUG = false
 
 /**
  * Based on [DiskLruCache](https://github.com/JakeWharton/DiskLruCache), adapted to our use case.
@@ -400,10 +396,8 @@ class DiskLruCache private constructor(
             return null
         }
 
-        if (DEBUG) {
-            redundantOpCount++
-            journalFile.appendingSink { it.writeRead(entry) }
-        }
+        redundantOpCount++
+        journalFile.appendingSink { it.writeRead(entry) }
         if (journalRebuildRequired()) {
             executorService.submit(cleanupCallable)
         }
