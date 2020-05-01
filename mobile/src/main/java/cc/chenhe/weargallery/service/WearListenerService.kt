@@ -29,6 +29,7 @@ import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import cc.chenhe.lib.wearmsger.BothWayHub
+import cc.chenhe.lib.wearmsger.WM
 import cc.chenhe.lib.wearmsger.bean.MessageEvent
 import cc.chenhe.lib.wearmsger.compatibility.data.Asset
 import cc.chenhe.lib.wearmsger.service.WMListenerService
@@ -51,6 +52,7 @@ import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import java.io.FileNotFoundException
 
@@ -131,9 +133,11 @@ class WearListenerService : WMListenerService() {
         }
     }
 
-    private fun toastIfEnabled(@StringRes resId: Int) {
+    private suspend fun toastIfEnabled(@StringRes resId: Int) {
         if (isTipWithWatch(this)) {
-            Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@WearListenerService, resId, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -161,8 +165,8 @@ class WearListenerService : WMListenerService() {
     }
 
     private fun processRequestImageFolders(request: MessageEvent) {
-        toastIfEnabled(R.string.watch_operation_search_gallery_ing)
         GlobalScope.launch {
+            toastIfEnabled(R.string.watch_operation_search_gallery_ing)
             val folders = queryImageFolders(this@WearListenerService)
             val type = Types.newParameterizedType(List::class.java, RemoteImageFolder::class.java)
             val adapter: JsonAdapter<List<RemoteImageFolder>> = moshi.adapter(type)
@@ -197,8 +201,8 @@ class WearListenerService : WMListenerService() {
     }
 
     private fun processRequestImages(request: MessageEvent) {
-        toastIfEnabled(R.string.watch_operation_get_pics_list_ing)
         GlobalScope.launch(Dispatchers.IO) {
+            toastIfEnabled(R.string.watch_operation_get_pics_list_ing)
             val data = moshi.adapter(ImagesReq::class.java).fromJsonQ(request.getStringData()) ?: return@launch
             val images = ImageUtil.queryBucketImages(this@WearListenerService, data.bucketId)
             val type = Types.newParameterizedType(List::class.java, Image::class.java)
@@ -208,15 +212,15 @@ class WearListenerService : WMListenerService() {
     }
 
     private fun processRequestImageHd(request: MessageEvent) {
-        toastIfEnabled(R.string.watch_operation_send_hd_picture_ing)
         GlobalScope.launch(Dispatchers.IO) {
+            toastIfEnabled(R.string.watch_operation_send_hd_picture_ing)
             val data = moshi.adapter(ImageHdReq::class.java).fromJsonQ(request.getStringData()) ?: return@launch
             val resp = BothWayHub.obtainResponseDataRequest(request)
             try {
                 // Test if file is exist and make sure it will be closed with `use`.
                 this@WearListenerService.contentResolver.openAssetFileDescriptor(data.uri, "r").use {}
                 resp.getDataMap().apply {
-                    putAsset(ITEM_IMAGE, Asset.createFromUri(data.uri))
+                    putAsset(ITEM_IMAGE, createImageAsset(data.uri))
                     putInt(ITEM_RESULT, RESULT_OK)
                 }
             } catch (e: FileNotFoundException) {
@@ -229,6 +233,15 @@ class WearListenerService : WMListenerService() {
                 e.printStackTrace()
             }
             BothWayHub.response(this@WearListenerService, resp)
+        }
+    }
+
+    private suspend fun createImageAsset(uri: Uri): Asset = withContext(Dispatchers.IO) {
+        if (WM.mode == WM.MODE_MMS) {
+            val fd = this@WearListenerService.contentResolver.openFileDescriptor(uri, "r")!!
+            Asset.createFromFd(fd)
+        } else {
+            Asset.createFromUri(uri)
         }
     }
 

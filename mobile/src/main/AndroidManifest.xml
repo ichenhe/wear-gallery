@@ -96,7 +96,7 @@
 
         <service
             android:name="cc.chenhe.lib.wearmsger.service.MmsListenerAgentService"
-            android:exported="false">
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.mobvoi.android.wearable.BIND_LISTENER" />
                 <action android:name="com.mobvoi.android.wearable.MESSAGE_RECEIVED" />

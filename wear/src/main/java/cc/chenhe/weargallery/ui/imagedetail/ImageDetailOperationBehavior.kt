@@ -199,7 +199,9 @@ class ImageDetailOperationBehavior(context: Context?, attrs: AttributeSet?)
      * @param [direction] Positive number means scroll to right.
      */
     private fun canScroll(child: View, direction: Int): Boolean {
-        return if (direction > 0) {
+        // When scroll to the right in the ticwear system, MotionEvent.x always stays the same.
+        // I don't have time to figure out why, so let's consider dx=0 as a swipe to the right.
+        return if (direction >= 0) {
             child.left < parentWidth
         } else {
             child.left > 0

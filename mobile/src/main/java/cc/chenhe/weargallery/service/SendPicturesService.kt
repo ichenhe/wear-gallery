@@ -20,6 +20,7 @@ package cc.chenhe.weargallery.service
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.os.Parcelable
@@ -27,6 +28,7 @@ import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import cc.chenhe.lib.wearmsger.BothWayHub
+import cc.chenhe.lib.wearmsger.WM
 import cc.chenhe.lib.wearmsger.bean.BothWayCallback
 import cc.chenhe.lib.wearmsger.compatibility.data.Asset
 import cc.chenhe.lib.wearmsger.compatibility.data.PutDataMapRequest
@@ -187,7 +189,7 @@ class SendPicturesService : Service() {
                 this@SendPicturesService.contentResolver.openAssetFileDescriptor(job.image.uri, "r").use {}
                 val req = PutDataMapRequest.create(PATH_SEND_IMAGE)
                 req.getDataMap().apply {
-                    putAsset(ITEM_IMAGE, Asset.createFromUri(job.image.uri))
+                    putAsset(ITEM_IMAGE, createImageAsset(job.image.uri))
                     job.target?.let { putString(ITEM_SAVE_PATH, it) }
                     putInt(ITEM_INDEX, sendCount + 1)
                     putInt(ITEM_TOTAL, totalCount)
@@ -295,5 +297,15 @@ class SendPicturesService : Service() {
                 .setAutoCancel(true)
                 .build()
         NotificationManagerCompat.from(this).notify(NOTIFY_ID_SEND_RESULT, n)
+    }
+
+
+    private suspend fun createImageAsset(uri: Uri): Asset = withContext(Dispatchers.IO) {
+        if (WM.mode == WM.MODE_MMS) {
+            val fd = this@SendPicturesService.contentResolver.openFileDescriptor(uri, "r")!!
+            Asset.createFromFd(fd)
+        } else {
+            Asset.createFromUri(uri)
+        }
     }
 }
