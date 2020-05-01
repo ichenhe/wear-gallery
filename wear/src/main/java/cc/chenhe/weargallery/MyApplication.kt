@@ -20,6 +20,9 @@ package cc.chenhe.weargallery
 import android.app.Application
 import android.widget.Toast
 import cc.chenhe.lib.wearmsger.WM
+import cc.chenhe.weargallery.common.util.FIREBASE_KEY_DEVICE
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -27,6 +30,9 @@ import org.koin.core.context.startKoin
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+
+        FirebaseCrashlytics.getInstance().setCustomKey(FIREBASE_KEY_DEVICE, "watch")
+        FirebaseAnalytics.getInstance(this).setUserProperty(FIREBASE_KEY_DEVICE, "watch")
 
         startKoin {
             androidLogger()

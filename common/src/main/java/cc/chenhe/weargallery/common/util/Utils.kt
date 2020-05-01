@@ -29,6 +29,8 @@ const val GITHUB = "https://github.com/liangchenhe55/wear-gallery/"
 const val GITHUB_RELEASE = GITHUB + "releases"
 const val TELEGRAM = "https://t.me/weargallery_news"
 
+const val FIREBASE_KEY_DEVICE = "device_type"
+
 fun checkHuaWei(): Boolean {
     return android.os.Build.MANUFACTURER.toLowerCase(Locale.getDefault()).contains("huawei")
 }
