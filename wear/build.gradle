@@ -7,6 +7,16 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("config.properties")
+if (localPropertiesFile.isFile()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+} else {
+    logger.log(LogLevel.ERROR, "Can't find file <config.properties>. Please see <config-tmpl.properties>.")
+    localProperties['ks.file'] = "n/a"
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion '28.0.3'
@@ -14,13 +24,21 @@ android {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 215010201 //minSdk(21)+v(410)+buildV(03)+MultipleAPK(01)
-        versionName "v5.1.1210"
+        versionCode 220060000 // header(220)+xx.xx.xx
+        versionName "v6.0.0-preview"
 
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
             }
+        }
+    }
+    signingConfigs {
+        release {
+            storeFile file(localProperties['ks.file'])
+            storePassword localProperties['ks.pwd']
+            keyAlias localProperties['ks.alias']
+            keyPassword localProperties['ks.aliaspwd']
         }
     }
     buildTypes {
@@ -30,6 +48,7 @@ android {
             }
         }
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

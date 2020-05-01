@@ -8,6 +8,15 @@ apply plugin: 'com.ticwear.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("config.properties")
+if (localPropertiesFile.isFile()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+} else {
+    logger.log(LogLevel.ERROR, "Can't find file <config.properties>. Please see <config-tmpl.properties>.")
+    localProperties['ks.file'] = "n/a"
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion '28.0.3'
@@ -15,10 +24,18 @@ android {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 195010200
-        versionName "v5.1.1210"
+        versionCode 220060000
+        versionName "v6.0.0-preview"
 
         vectorDrawables.useSupportLibrary = true
+    }
+    signingConfigs {
+        release {
+            storeFile file(localProperties['ks.file'])
+            storePassword localProperties['ks.pwd']
+            keyAlias localProperties['ks.alias']
+            keyPassword localProperties['ks.aliaspwd']
+        }
     }
     buildTypes {
         debug {
@@ -27,6 +44,7 @@ android {
             }
         }
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
