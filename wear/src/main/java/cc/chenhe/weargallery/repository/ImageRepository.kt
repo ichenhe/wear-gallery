@@ -29,7 +29,6 @@ import cc.chenhe.weargallery.uilts.IMAGE_RECEIVE_FOLDER_NAME
 import cc.chenhe.weargallery.uilts.imageReceiveRelativePath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.BufferedOutputStream
 import java.io.File
 import java.io.InputStream
 
@@ -98,16 +97,13 @@ open class ImageRepository {
         } else {
             File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), folderName)
         }
-        if (!folder.isDirectory || !folder.exists()) {
+        if (!folder.isDirectory) {
             folder.mkdirs()
         }
 
-        // write file: delete it first if already exist
+        // write file: override old data
         val file = File(folder, displayName)
-        if (file.isFile && file.exists()) {
-            file.delete()
-        }
-        BufferedOutputStream(file.outputStream()).use { out ->
+        file.outputStream().buffered().use { out ->
             ins.copyTo(out)
             out.flush()
         }

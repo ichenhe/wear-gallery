@@ -68,7 +68,7 @@ class UpgradeService : Service() {
 
         @Suppress("UNUSED_PARAMETER")
         fun shouldPerformUpgrade(oldVersion: Long, newVersion: Long): Boolean {
-            return oldVersion in 1..VERSION_5_1_1210
+            return oldVersion in 0..VERSION_5_1_1210
         }
     }
 
@@ -125,7 +125,7 @@ class UpgradeService : Service() {
     private suspend fun startUpgrade(oldVersion: Long, currentVersion: Long) = withContext(Dispatchers.Main) {
         logd(TAG, "Start upgrade process. $oldVersion → $currentVersion")
 
-        if (oldVersion in 1..VERSION_5_1_1210) {
+        if (oldVersion in 0..VERSION_5_1_1210) {
             migrate_5_1_1210()
         }
 
@@ -154,12 +154,14 @@ class UpgradeService : Service() {
                 hdDir.listFiles()?.forEach { file ->
                     if (file.isFile) {
                         logd(TAG, "Save ${file.path}")
+                        val time = ExifInterface(file).dateTime
                         FileInputStream(file).use { ins ->
-                            val time = ExifInterface(file).dateTime
                             repo.saveImage(this@UpgradeService, file.name, time, ins)
                         }
+                        file.delete()
                     }
                 }
+                hdDir.deleteRecursively()
                 logd(TAG, "Done!")
             }
         }
