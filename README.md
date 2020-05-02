@@ -13,6 +13,7 @@
 
 - [Google Play](https://play.google.com/store/apps/details?id=cc.chenhe.weargallery)
 - [Release](https://github.com/liangchenhe55/wear-gallery/releases)
+- [蓝奏云](https://chenhe.lanzous.com/b0cw4qhah) 密码：`5psy`
 
 现在 Wear OS 与 Ticwear 均不再支持应用同步，你必须前往**手表端**的应用商店安装，并确保手表与手机的腕间图库版本一致。
 
