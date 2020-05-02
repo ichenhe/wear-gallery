@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <cc.chenhe.weargallery.ui.explore.TitlePreference
+        app:layout="@layout/preference_title"
+        app:title="@string/preference_transfer" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_transfer_lan"
+        app:key="preference_transfer_lan"
+        app:title="@string/preference_transfer_lan" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_transfer_net"
+        app:isPreferenceVisible="false"
+        app:key="preference_transfer_net"
+        app:title="@string/preference_transfer_net" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_transfer_disclaimer"
+        app:key="preference_transfer_disclaimer"
+        app:title="@string/preference_transfer_disclaimer" />
+</PreferenceScreen>

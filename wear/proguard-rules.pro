@@ -24,29 +24,14 @@
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
 
-#-------------------实体类
--keep public class cc.chenhe.weargallery.bean.* { *; }
--keep public class cc.chenhe.weargallery.common.bean.* { *; }
--dontwarn mobvoiapi.**
-
-#-------------------Glide
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-
-#-------------------eventbus
 -keepattributes *Annotation*
--keepclassmembers class * {
-    @org.greenrobot.eventbus.Subscribe <methods>;
-}
--keep enum org.greenrobot.eventbus.ThreadMode { *; }
+-keep public class * extends java.lang.Exception
+# For faster builds with ProGuard
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
 
-#Bugly
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
+-keepnames class androidx.navigation.fragment.NavHostFragment
 
-#WearTools
+# WearMsger
 -keep public class com.mobvoi.android.** { *; }
+-dontwarn mobvoiapi.**

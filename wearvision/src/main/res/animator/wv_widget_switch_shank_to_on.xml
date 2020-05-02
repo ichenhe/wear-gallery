@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Chenhe
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator
+        android:duration="@integer/wv_anim_button_state"
+        android:interpolator="@android:anim/decelerate_interpolator"
+        android:propertyName="pathData"
+        android:valueFrom="@string/wv_svg_btn_switch_off"
+        android:valueTo="@string/wv_svg_btn_switch_on"
+        android:valueType="pathType" />
+
+    <objectAnimator
+        android:duration="@integer/wv_anim_button_state_half"
+        android:propertyName="fillColor"
+        android:valueFrom="@color/wv_widget_foreground_dark"
+        android:valueTo="?android:attr/colorControlActivated" />
+</set>

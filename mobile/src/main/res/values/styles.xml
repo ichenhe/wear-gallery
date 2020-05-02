@@ -1,58 +1,57 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="PreferenceFragmentStyle" parent="@style/PreferenceFragment.Material">
+        <item name="android:layout">@layout/fr_preference</item>
     </style>
 
-    <style name="text_view_btn_simple">
+    <style name="ImageDetailToolbarTheme" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="subtitleTextColor">@color/white</item>
+    </style>
+
+    <style name="CircleCheckBox" parent="DefaultCircleCheckBoxStyle">
+        <item name="normalColor">@android:color/transparent</item>
+        <item name="checkedColor">@color/black</item>
+        <item name="outlineColor">#A5A5A5</item>
+        <item name="outlineMargin">false</item>
+    </style>
+
+    <style name="ImageCheckBox" parent="CircleCheckBox">
+        <item name="normalColor">#55000000</item>
+        <item name="checkedColor">#FFFFFF</item>
+        <item name="outlineColor">#FFFFFF</item>
+        <item name="outlineMargin">true</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:layout_width">@dimen/image_checkbox_size</item>
+        <item name="android:layout_height">@dimen/image_checkbox_size</item>
+        <item name="android:layout_marginTop">@dimen/image_checkbox_margin</item>
+        <item name="android:layout_marginStart">@dimen/image_checkbox_margin</item>
+        <item name="android:checked">false</item>
+    </style>
+
+    <style name="ImageDetailIcon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="tint">?attr/iconColor</item>
+    </style>
+
+    <style name="ImageDetailAttr">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="text_view_primary">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:paddingStart">10dp</item>
-        <item name="android:paddingEnd">10dp</item>
-        <item name="android:clickable">true</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="text_view_btn_base">
+    <style name="text_view_secondary">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingTop">6dp</item>
-        <item name="android:paddingBottom">6dp</item>
-        <item name="android:paddingStart">10dp</item>
-        <item name="android:paddingEnd">10dp</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="text_view_btn" parent="text_view_btn_base">
-        <item name="android:background">@drawable/shape_button_bg</item>
-        <item name="android:textColor">#ffffff</item>
-    </style>
-
-    <!--分割线-->
-    <style name="line">
-        <item name="android:background">@color/line</item>
-        <item name="android:layout_height">1px</item>
-        <item name="android:layout_width">match_parent</item>
-    </style>
-
-    <!--容器-->
-    <style name="layout_content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
-        <item name="android:paddingLeft">18dp</item>
-        <item name="android:paddingRight">18dp</item>
-        <item name="android:background">@drawable/layout_content_selecter</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
     <style name="text_view">
@@ -62,20 +61,26 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
-    <style name="text_view_left" parent="text_view">
+    <style name="Widget" />
+
+    <style name="Widget.ListItem">
+        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/text_view_key</item>
-        <item name="android:layout_centerVertical">true</item>
-
+        <item name="android:paddingStart">?android:attr/listPreferredItemPaddingStart</item>
+        <item name="android:paddingEnd">?android:attr/listPreferredItemPaddingEnd</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:clipToPadding">false</item>
     </style>
 
-    <style name="text_view_right" parent="text_view">
-        <item name="android:textColor">@color/text_view_value</item>
+    <style name="Widget.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_nav_item</item>
+        <item name="itemTextColor">@color/bottom_nav_item</item>
+        <item name="android:background">?android:attr/colorBackground</item>
     </style>
 
-    <style name="view_right">
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="Widget.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:layout_marginEnd">@dimen/fab_margin</item>
+        <item name="android:layout_marginBottom">@dimen/fab_margin</item>
     </style>
+
 </resources>

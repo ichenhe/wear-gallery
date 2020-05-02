@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <cc.chenhe.weargallery.ui.explore.TitlePreference
+        app:layout="@layout/preference_title"
+        app:title="@string/wf_preference_title" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_wf_image"
+        app:key="preference_watchface_image"
+        app:title="@string/wf_preference_image" />
+
+    <cc.chenhe.weargallery.wearvision.preference.ListPreference
+        app:defaultValue="@string/wf_preference_type_entry_value_analog"
+        app:entries="@array/wf_preference_type_entries"
+        app:entryValues="@array/wf_preference_type_entry_values"
+        app:icon="@drawable/ic_pref_wf_type"
+        app:key="watchface_type"
+        app:title="@string/wf_preference_type"
+        app:useSimpleSummaryProvider="true" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_wf_text_position"
+        app:isPreferenceVisible="false"
+        app:key="preference_watchface_text_position"
+        app:title="@string/wf_preference_position" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_wf_text"
+        app:isPreferenceVisible="false"
+        app:key="preference_watchface_text"
+        app:title="@string/wf_preference_format" />
+
+    <Preference
+        app:icon="@drawable/ic_pref_wf_text_color"
+        app:isPreferenceVisible="false"
+        app:key="preference_watchface_text_color"
+        app:title="@string/wf_preference_color" />
+
+    <Preference
+        app:key="preference_cot"
+        app:layout="@layout/preference_cot" />
+</PreferenceScreen>

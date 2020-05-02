@@ -2,9 +2,9 @@
 .gradle
 .DS_Store
 /build
+config.properties
 
 # IntelliJ
-*.iml
 .idea
 
 # External native build folder generated in Android Studio 2.2 and later

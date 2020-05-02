@@ -1,43 +1,66 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.ticwear.application'
-apply plugin: 'bugly'
+//firebase
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
-Properties localProp = new Properties()
-InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
-localProp.load( inputStream )
-
-bugly {
-    appId = localProp.getProperty('bugly.id')
-    appKey = localProp.getProperty('key')
-    appChannel = ''
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("config.properties")
+if (localPropertiesFile.isFile()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+} else {
+    logger.log(LogLevel.ERROR, "Can't find file <config.properties>. Please see <config-tmpl.properties>.")
+    localProperties['ks.file'] = "n/a"
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "cc.chenhe.weargallery"
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 195010200
-        versionName "v5.1.1210"
-        //特征码，用于检测手表手机版本匹配。
-        buildConfigField("int", "FEATURE_VERSION", "50009")
-        buildConfigField("String", "BUGLY_ID", localProp.getProperty('bugly.id'))
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 220600000 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
+        versionName "v6.0.0-preview"
 
         vectorDrawables.useSupportLibrary = true
     }
-    buildTypes {
+    signingConfigs {
         release {
+            storeFile file(localProperties['ks.file'])
+            storePassword localProperties['ks.pwd']
+            keyAlias localProperties['ks.alias']
+            keyPassword localProperties['ks.aliaspwd']
+        }
+    }
+    buildTypes {
+        debug {
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
+        }
+        release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
-        abortOnError false
+    viewBinding {
+        enabled = true
     }
     dataBinding {
         enabled = true
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+        jvmTarget = 1.8
     }
 }
 
@@ -46,32 +69,49 @@ dependencies {
         all*.exclude group: 'com.android.support', module: 'support-v13'
     }
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    //noinspection GradleDependency
-    implementation 'com.google.android.gms:play-services-wearable:10.2.0'
     wearApp project(':wear')
     implementation project(':common')
-    implementation 'cc.chenhe:wear-tools:1.0.2'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support:cardview-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:support-annotations:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    implementation "androidx.viewpager2:viewpager2:$viewpager2Version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
+    implementation "androidx.preference:preference-ktx:$preferenceVersion"
+    implementation "androidx.core:core-ktx:$ktxVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroidVersion"
 
-    implementation 'com.afollestad.material-dialogs:core:0.9.1.0'
-    //noinspection GradleDependency
-    implementation 'com.heinrichreimersoftware:material-intro:1.6'
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.tencent.bugly:crashreport:2.6.6.1'
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+    implementation "com.heinrichreimersoftware:material-intro:$materialIntroVersion"
+    implementation "cc.chenhe:wear-msger:$wearMsgerVersion"
 
-    //AndroidLinks
-    implementation 'me.drakeet.support:about:2.1.1'
-    implementation 'me.drakeet.multitype:multitype:3.4.4'
-    implementation 'me.drakeet.support:about-extension:2.1.1'
+    // AndroidLinks
+    implementation 'com.drakeet.about:about:2.4.1'
+    implementation 'com.drakeet.multitype:multitype:4.0.0'
+    implementation 'com.drakeet.about:about-extension:2.4.1'
 
-    //图片
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    implementation project(':subsampling-scale-image-view')
+    // pictures
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation "com.davemorrissey.labs:subsampling-scale-image-view:$subsamplingImageViewVersion"
 
+    // firebase
+    implementation 'com.google.firebase:firebase-analytics:17.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test:core:$testVersion" // Robolectric environment
+    testImplementation "org.mockito:mockito-core:$mockitoVersion" // Mockito framework
+    testImplementation "org.amshove.kluent:kluent-android:$kluentVersion"
 }

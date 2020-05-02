@@ -1,12 +1,17 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion '28.0.3'
 
+    resourcePrefix "lib_"
+
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
+        minSdkVersion 21
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
     }
@@ -16,11 +21,35 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+        jvmTarget = 1.8
+    }
 }
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleDependency
     api 'com.alibaba:fastjson:1.1.70.android'
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation "androidx.annotation:annotation:$annotationVersion"
+    implementation "androidx.core:core-ktx:$ktxVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroidVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+    implementation "cc.chenhe:wear-msger:$wearMsgerVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test:core:$testVersion" // Robolectric environment
+    testImplementation "org.mockito:mockito-core:$mockitoVersion" // Mockito framework
+    testImplementation "org.amshove.kluent:kluent-android:$kluentVersion"
 }

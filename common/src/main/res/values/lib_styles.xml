@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="DefaultCircleCheckBoxStyle" tools:ignore="ResourceName">
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="normalColor">#00000000</item>
+        <item name="checkedColor">?android:attr/colorAccent</item>
+        <item name="outlineColor">#A5A5A5</item>
+        <item name="outlineStrokeWidth">@dimen/lib_circlecheckbox_default_outline_width</item>
+        <item name="outlineMargin">false</item>
+        <item name="android:checked">false</item>
+    </style>
+
+    <style name="DefaultMaskImageViewStyle" tools:ignore="ResourceName">
+        <item name="checkedColor">#55000000</item>
+        <item name="android:checked">false</item>
+    </style>
+</resources>

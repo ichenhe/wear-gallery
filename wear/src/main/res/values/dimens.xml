@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="title_padding_top">14dp</dimen>
-    <dimen name="title_padding_bottom">14dp</dimen>
-    <dimen name="content_horizontal_padding">30dp</dimen>
 
-    <dimen name="dialog_message_text_size">16sp</dimen>
-    <!--Dialog 在圆形设备上显示两个按钮时的文本尺寸-->
-    <dimen name="dialog_message_margin_top">12dp</dimen><!--42-->
-    <dimen name="dialog_message_margin_horizontal1">42dp</dimen><!--42-->
-    <dimen name="dialog_message_margin_bottom1">40dp</dimen><!--40-->
-    <dimen name="dialog_message_margin_horizontal2">28dp</dimen>
-    <dimen name="dialog_message_margin_bottom2">50dp</dimen>
+    <dimen name="image_detail_operation_button_size">50dp</dimen>
+    <dimen name="image_detail_zoom_button_size">40dp</dimen>
+
+    <dimen name="image_button_padding">4dp</dimen>
+
+    <dimen name="wf_time_text_color_dark_stroke_width">0.75dp</dimen>
+
+    <dimen name="dialog_image_margin">20dp</dimen>
 </resources>

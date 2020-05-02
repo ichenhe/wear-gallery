@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="lib_circlecheckbox_default_size">26dp</dimen>
+    <dimen name="lib_circlecheckbox_default_outline_width">1dp</dimen>
+</resources>

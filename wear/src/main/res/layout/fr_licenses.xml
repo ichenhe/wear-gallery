@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/mobileImagesAppBarLayout"
+        style="?attr/wv_windowAppBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/title"
+            style="?attr/wv_windowAppBarContentStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/about_licence"
+            android:textAppearance="@style/TextAppearance.Title"
+            app:layout_scrollFlags="scroll" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@android:id/list"
+        style="@style/Widget.WearVision.ListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/rv_item_license" />
+
+</cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>

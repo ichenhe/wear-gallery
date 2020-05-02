@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Chenhe
+  ~
+  ~ This file has been modified.
+  ~
+  ~ Copyright (c) 2016 Mobvoi Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <color name="wv_white">#FFFFFF</color>
+    <color name="wv_black">#000000</color>
+
+    <color name="wv_basic_light_green_darken">#99c635</color>
+    <color name="wv_basic_light_green">#b0d955</color>
+    <color name="wv_basic_light_green_lighten">#d9fd8c</color>
+    <color name="wv_basic_green_darken">#5fb280</color>
+    <color name="wv_basic_green">#75d99e</color>
+    <color name="wv_basic_green_lighten">#b3f6d1</color>
+    <color name="wv_basic_cyan_darken">#02a6a4</color>
+    <color name="wv_basic_cyan">#50d4d2</color>
+    <color name="wv_basic_cyan_lighten">#99f3fa</color>
+    <color name="wv_basic_dark_cyan_darken">#5083a6</color>
+    <color name="wv_basic_dark_cyan">#6fb5e7</color>
+    <color name="wv_basic_dark_cyan_lighten">#9cf2f9</color>
+    <color name="wv_basic_indigo_darken">#3c5db3</color>
+    <color name="wv_basic_indigo">#5e83e1</color>
+    <color name="wv_basic_indigo_lighten">#8aabf6</color>
+    <color name="wv_basic_deep_purple_darken">#7d66ab</color>
+    <color name="wv_basic_deep_purple">#9577d2</color>
+    <color name="wv_basic_deep_purple_lighten">#c6a7fe</color>
+    <color name="wv_basic_deep_blue_darken">#1b2138</color>
+    <color name="wv_basic_deep_blue">#082a52</color>
+    <color name="wv_basic_deep_blue_lighten">#17436f</color>
+    <color name="wv_basic_gold_grey_darken">#313039</color>
+    <color name="wv_basic_gold_grey">#54555a</color>
+    <color name="wv_basic_gold_grey_lighten">#788597</color>
+    <color name="wv_basic_pink_darken">#ff3b60</color>
+    <color name="wv_basic_pink">#ff6d87</color>
+    <color name="wv_basic_pink_lighten">#ff9fb1</color>
+    <color name="wv_basic_red_darken">#a9140d</color>
+    <color name="wv_basic_red">#e13026</color>
+    <color name="wv_basic_red_lighten">#ec5048</color>
+    <color name="wv_basic_deep_orange_darken">#ca310b</color>
+    <color name="wv_basic_deep_orange">#f35d34</color>
+    <color name="wv_basic_deep_orange_lighten">#ff8769</color>
+    <color name="wv_basic_orange_darken">#db7421</color>
+    <color name="wv_basic_orange">#ff9743</color>
+    <color name="wv_basic_orange_lighten">#fdad69</color>
+    <color name="wv_basic_amber_darken">#ffc303</color>
+    <color name="wv_basic_amber">#fdd148</color>
+    <color name="wv_basic_amber_lighten">#fedf7c</color>
+    <color name="wv_basic_yellow_darken">#d5cc03</color>
+    <color name="wv_basic_yellow">#f5f64f</color>
+    <color name="wv_basic_yellow_lighten">#f7f076</color>
+    <color name="wv_basic_brown_darken">#663a00</color>
+    <color name="wv_basic_brown">#8c632e</color>
+    <color name="wv_basic_brown_lighten">#a39364</color>
+    <color name="wv_basic_warm_grey_darken">#1d1d1f</color>
+    <color name="wv_basic_warm_grey">#473c37</color>
+    <color name="wv_basic_warm_grey_lighten">#796a65</color>
+
+    <item name="wv_disabled_alpha" format="float" type="dimen">0.30</item>
+
+</resources>

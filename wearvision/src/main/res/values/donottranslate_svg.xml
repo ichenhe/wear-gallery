@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Chenhe
+  ~
+  ~ This file has been modified.
+  ~
+  ~ Copyright (c) 2016 Mobvoi Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <!-- viewport size = 104.0 -->
+
+    <string name="wv_svg_btn_two_state_bg" translatable="false">M52,52m-52,0a52,52 0,1 1,104 0a52,52 0,1 1,-104 0</string>
+
+    <string name="wv_svg_btn_switch_on" translatable="false">M78,52m-19,0a19,19 0 1 1 38,0a19,19 0,1 1,-38 0</string>
+    <string name="wv_svg_btn_switch_off" translatable="false">M26,52m-19,0a19,19 0 1 1 38,0a19,19 0,1 1,-38 0</string>
+
+    <string name="wv_svg_btn_check_on" translatable="false">M36.23,49.27L50,63L71.98,41.02</string>
+
+    <string name="wv_svg_btn_radio_on" translatable="false">M52,52m-19,0a19,19 0,1 1,38 0a19,19 0,1 1,-38 0</string>
+
+</resources>
+

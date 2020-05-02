@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/imageDetailRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/imageDetailPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior=".ui.imagedetail.ImageDetailContentBehavior"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#9575CD" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageDetailPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_behavior=".ui.imagedetail.ImageDetailPanelBehavior">
+
+        <TextView
+            android:id="@+id/imageDetailPanelTitle"
+            style="@style/text_view_secondary"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/image_detail_title"
+            android:textColor="@color/white"
+            android:textSize="19sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            style="@style/ImageDetailIcon"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="34dp"
+            android:contentDescription="@string/icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageDetailPanelTitle"
+            app:srcCompat="@drawable/ic_image_detail_date" />
+
+        <TextView
+            android:id="@+id/imageDetailDate"
+            style="@style/ImageDetailAttr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/imageView6"
+            tools:text="2020年2月22日 15:24" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            style="@style/ImageDetailIcon"
+            android:layout_marginTop="36dp"
+            android:contentDescription="@string/icon"
+            app:layout_constraintEnd_toEndOf="@+id/imageView6"
+            app:layout_constraintStart_toStartOf="@+id/imageView6"
+            app:layout_constraintTop_toBottomOf="@+id/barrier"
+            app:srcCompat="@drawable/ic_image_detail_info" />
+
+        <TextView
+            android:id="@+id/imageDetailFileName"
+            style="@style/ImageDetailAttr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/imageView7"
+            tools:text="20200101.jpg" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="imageView6,imageDetailDate"
+            tools:layout_editor_absoluteY="679dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="88dp" />
+
+        <TextView
+            android:id="@+id/imageDetailFilePath"
+            style="@style/ImageDetailAttr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/imageDetailFileName"
+            tools:text="/sdcard/DCIM/camera" />
+
+        <TextView
+            android:id="@+id/imageDetailInfo"
+            style="@style/ImageDetailAttr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/imageDetailFilePath"
+            tools:text="3.54MB 4032x3024" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+        <!--We must wrap Toolbar with FrameLayout, other wise fitsSystemWindows will result in abnormal height-->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/imageDetailToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/imageDetailBarBg"
+            android:theme="@style/ImageDetailToolbarTheme"
+            app:popupTheme="@style/ImageDetailToolbarTheme" />
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="cc.chenhe.weargallery.common.bean.Resource" />
+
+        <import type="java.util.List" />
+
+        <!-- A workaround that data binding does not support generics -->
+        <variable
+            name="images"
+            type="Resource" />
+
+        <variable
+            name="retryCallback"
+            type="cc.chenhe.weargallery.ui.common.RetryCallback" />
+
+        <variable
+            name="onClickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="onLongPressListener"
+            type="cc.chenhe.weargallery.view.LongPressImageView.OnLongPressListener" />
+
+        <variable
+            name="model"
+            type="cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel" />
+    </data>
+
+    <cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="@{model.keepScreenOn ?? false}">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@id/imageDetailPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            app:layout_behavior=".ui.imagedetail.ImageDetailContentBehavior"
+            tools:background="#019588" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@id/imageDetailTitleLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/shape_text_view_count_bg"
+                android:orientation="horizontal"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@id/keenScreenOnIcon"
+                    visibleGone="@{model.keepScreenOn ?? false}"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="2dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ico_light"
+                    tools:ignore="ContentDescription"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@id/imageDetailIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.title}"
+                    tools:text="Loading" />
+            </LinearLayout>
+
+            <cc.chenhe.weargallery.view.LongPressImageView
+                android:id="@id/imageDetailZoomIn"
+                style="@style/Widget.ImageView.Button.ImageDetailZoomButton"
+                android:layout_marginEnd="@dimen/wv_page_horizontal_padding_small"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/image_detail_zoom_in"
+                android:onClick="@{onClickListener}"
+                android:visibility="gone"
+                app:layout_anchor="@+id/constraintLayout"
+                app:layout_anchorGravity="center"
+                app:layout_constraintBottom_toTopOf="@id/imageDetailZoomOut"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:onLongPressListener="@{onLongPressListener}"
+                app:srcCompat="@drawable/ic_zoom_in"
+                tools:visibility="visible" />
+
+            <cc.chenhe.weargallery.view.LongPressImageView
+                android:id="@id/imageDetailZoomOut"
+                style="@style/Widget.ImageView.Button.ImageDetailZoomButton"
+                android:background="@drawable/shape_zoom_button_bg"
+                android:contentDescription="@string/image_detail_zoom_out"
+                android:onClick="@{onClickListener}"
+                android:tint="@color/white"
+                android:visibility="gone"
+                app:layout_anchor="@+id/constraintLayout"
+                app:layout_anchorGravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/imageDetailZoomIn"
+                app:layout_constraintStart_toStartOf="@id/imageDetailZoomIn"
+                app:layout_constraintTop_toBottomOf="@id/imageDetailZoomIn"
+                app:onLongPressListener="@{onLongPressListener}"
+                app:srcCompat="@drawable/ic_zoom_out"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@id/imageMimeType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/shape_text_view_count_bg"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="GIF"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@id/operationMenu"
+            layout="@layout/menu_image_detail_operation"
+            tools:currentItem="@{model.currentItemData}"
+            tools:onClickListener="@{onClickListener}" />
+
+        <ViewStub
+            android:id="@id/loadingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/view_loading"
+            app:resource="@{images}" />
+
+        <ViewStub
+            android:id="@id/retryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/view_retry"
+            app:callback="@{retryCallback}"
+            app:resource="@{images}" />
+
+        <ViewStub
+            android:id="@id/emptyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/view_empty"
+            app:resource="@{images}" />
+
+    </cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>
+</layout>

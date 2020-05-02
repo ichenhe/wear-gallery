@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--layouts-->
+
+    <item name="retryLayout" type="id" />
+    <item name="retryButton" type="id" />
+    <item name="retryMessage" type="id" />
+    <item name="retryHelp" type="id" />
+    <item name="emptyLayout" type="id" />
+    <item name="emptyMessage" type="id" />
+    <item name="loadingLayout" type="id" />
+
+    <item name="imageDetailPager" type="id" />
+    <item name="imageDetailTitleLayout" type="id" />
+    <item name="imageDetailIndicator" type="id" />
+    <item name="keenScreenOnIcon" type="id" />
+    <item name="imageDetailZoomIn" type="id" />
+    <item name="imageDetailZoomOut" type="id" />
+    <item name="imageMimeType" type="id" />
+    <item name="operationMenu" type="id" />
+    <item name="imageOperationTurnLeft" type="id" />
+    <item name="imageOperationTurnRight" type="id" />
+    <item name="imageOperationHd" type="id" />
+    <item name="imageOperationDelete" type="id" />
+
+    <!--tag-->
+    <item name="tag_image_position" type="id" />
+    <item name="tag_image_detail_pending" type="id" />
+
     <item name="photo_view_tag_is_original" type="id" />
     <item name="tag_big_imaged_isshowhd" type="id" />
 

@@ -5,11 +5,9 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <!-- Required for complications to receive complication data and open the provider chooser. -->
     <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
@@ -17,12 +15,15 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ico_app"
+        android:fullBackupContent="@xml/my_backup_rules"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppBaseTheme.AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".ui.main.MainAty"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,15 +31,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AtyIntroduce"
+            android:name=".ui.IntroduceAty"
             android:theme="@style/Theme.Intro" />
-        <activity android:name=".AtyGridPics" />
-        <activity android:name=".AtyPreviewPics" />
-        <activity android:name=".AtySetting" />
-        <activity android:name=".AtyHideFolders" />
-        <activity android:name=".AtyAndroidLinks" />
         <activity
-            android:name=".AtyShareImage"
+            android:name=".ui.AboutAty"
+            android:launchMode="singleTask"
+            android:theme="@style/AppBaseTheme.About" />
+        <activity
+            android:name=".ui.sendimages.SendImagesAty"
             android:label="@string/share_image_label">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -56,95 +56,71 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SendPicsService" />
-        <service android:name="com.mobvoi.android.wearable.WearableListenerServiceGoogleImpl">
+        <service
+            android:name=".service.SendPicturesService"
+            android:exported="false" />
+
+        <!--Watch Listener Service-->
+
+        <service
+            android:name=".service.WearListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cc.chenhe.lib.wearmsger.EVENT_LISTENER" />
+            </intent-filter>
+        </service>
+
+        <service android:name="cc.chenhe.lib.wearmsger.service.GmsListenerAgentService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
 
                 <data
                     android:host="*"
-                    android:path="/PATH_GET_WATCH_CANCHE_SIZE"
+                    android:path="/request/image-folders"
                     android:scheme="wear" />
                 <data
                     android:host="*"
-                    android:path="/PATH_RESET_TIP"
+                    android:path="/request/image-preview"
                     android:scheme="wear" />
                 <data
                     android:host="*"
-                    android:path="/PATH_DEL_CACHE"
+                    android:path="/request/images"
                     android:scheme="wear" />
                 <data
                     android:host="*"
-                    android:path="/DEL_OFFLINE_IMAGE"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_WATCH_INIT"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_GET_GALLERY"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_GET_MICRO_PICTURE"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_HIDE_GALLERY"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_GET_FILE_NAME_LIST"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_GET_SINGLE_PICTURE"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_GET_ORIGINAL_PICTURE"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_DEL_PHONE_PICTURE"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_SEND_PICS"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_CONFIRM_RECEIVE_PICS"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_SEND_PICS_FINISH"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_SEND_PICS_CANCEL"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/PATH_NEED_UPDATE"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/test"
+                    android:path="/request/image-hd"
                     android:scheme="wear" />
             </intent-filter>
         </service>
-        <service android:name=".WatchListenerService">
+
+        <service
+            android:name="cc.chenhe.lib.wearmsger.service.MmsListenerAgentService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.mobvoi.android.wearable.BIND_LISTENER" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="com.mobvoi.android.wearable.MESSAGE_RECEIVED" />
                 <action android:name="com.mobvoi.android.wearable.DATA_CHANGED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="/request/image-folders"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/request/image-preview"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/request/images"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/request/image-hd"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

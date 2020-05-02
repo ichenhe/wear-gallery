@@ -24,40 +24,14 @@
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
 
-#实体类
--keep public class cc.chenhe.weargallery.bean.* { *; }
--keep public class cc.chenhe.weargallery.common.bean.* { *; }
--dontwarn mobvoiapi.**
-
--dontwarn me.drakeet.**
-
-#Glide
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-
-#OkHttp
--dontwarn javax.annotation.**
--keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
--dontwarn org.codehaus.mojo.animal_sniffer.*
--dontwarn okhttp3.internal.platform.ConscryptPlatform
-
-#OkIo
--dontwarn okio.**
-
-#okhttputils
--dontwarn com.zhy.http.**
--keep class com.zhy.http.**{*;}
-
-#eventbus
 -keepattributes *Annotation*
--keepclassmembers class * {
-    @org.greenrobot.eventbus.Subscribe <methods>;
-}
--keep enum org.greenrobot.eventbus.ThreadMode { *; }
+-keep public class * extends java.lang.Exception
+# For faster builds with ProGuard
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
 
-#WearTools
+-keepnames class androidx.navigation.fragment.NavHostFragment
+
+# WearMsger
 -keep public class com.mobvoi.android.** { *; }
+-dontwarn mobvoiapi.**

@@ -1,1 +1,2 @@
-include ':mobile', ':wear', ':common', ':subsampling-scale-image-view'
+include ':mobile', ':wear', ':common'
+include ':wearvision'
