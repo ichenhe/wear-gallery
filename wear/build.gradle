@@ -24,7 +24,7 @@ android {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 220060000 // header(220)+xx.xx.xx
+        versionCode 220600001 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName "v6.0.0-preview"
 
         kapt {
