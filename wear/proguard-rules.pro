@@ -24,6 +24,12 @@
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
 
+-keepattributes *Annotation*
+-keep public class * extends java.lang.Exception
+# For faster builds with ProGuard
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+
 -keepnames class androidx.navigation.fragment.NavHostFragment
 
 # WearMsger
