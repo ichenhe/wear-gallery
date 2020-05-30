@@ -27,7 +27,7 @@ import cc.chenhe.weargallery.bean.RemoteImageFolder
 
 @Database(
         entities = [RemoteImageFolder::class, RemoteImage::class],
-        version = 1
+        version = 2
 )
 @TypeConverters(TypeConverter::class)
 abstract class MainDb : RoomDatabase() {
@@ -47,6 +47,8 @@ abstract class MainDb : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context) =
-                Room.databaseBuilder(context.applicationContext, MainDb::class.java, "main-db").build()
+                Room.databaseBuilder(context.applicationContext, MainDb::class.java, "main-db")
+                        .fallbackToDestructiveMigrationFrom(1)
+                        .build()
     }
 }

@@ -34,7 +34,7 @@ interface IImage {
     val size: Long
     val width: Int
     val height: Int
-    val mime: String
+    val mime: String?
     val bucketName: String
 
     /** Used to identify album folders since `data` is deprecated. */
@@ -58,9 +58,9 @@ data class Image(
         override val size: Long,
         override val width: Int,
         override val height: Int,
-        override val mime: String,
+        override val mime: String?,
         override val bucketName: String,
         override val bucketId: Int,
         /** This field can only be used for display purposes because it is deprecated. */
-        @Transient val file: String = ""
+        @Transient val file: String? = null
 ) : IImage, Parcelable

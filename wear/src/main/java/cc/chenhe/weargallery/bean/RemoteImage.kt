@@ -44,7 +44,7 @@ data class RemoteImage(
         override val size: Long,
         override val width: Int,
         override val height: Int,
-        override val mime: String,
+        override val mime: String?,
         @ColumnInfo(name = "bucket_name") override val bucketName: String,
         @ColumnInfo(name = "bucket_id") override val bucketId: Int
 ) : IImage {

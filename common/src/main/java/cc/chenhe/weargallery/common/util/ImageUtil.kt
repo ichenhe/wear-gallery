@@ -68,7 +68,7 @@ object ImageUtil {
         val result = ArrayList<ImageFolderGroup>(collect.size)
         collect.forEach { (k, v) ->
             val first = v.first()
-            result += ImageFolderGroup(k, first.bucketName, first.file.filePath, v)
+            result += ImageFolderGroup(k, first.bucketName, first.file?.filePath, v)
         }
         result
     }
@@ -137,6 +137,7 @@ object ImageUtil {
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idIndex)
                 val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                val file: String? = cursor.getString(dataIndex)
                 images += Image(
                         uri = uri,
                         name = cursor.getString(nameIndex),
@@ -145,9 +146,9 @@ object ImageUtil {
                         width = cursor.getInt(widthIndex),
                         height = cursor.getInt(heightIndex),
                         mime = cursor.getString(mimeIndex),
-                        bucketName = cursor.getString(bucketNameIndex),
+                        bucketName = cursor.getString(bucketNameIndex) ?: file?.fileName ?: "",
                         bucketId = cursor.getInt(bucketIndex),
-                        file = cursor.getString(dataIndex))
+                        file = file)
             }
         }
         images

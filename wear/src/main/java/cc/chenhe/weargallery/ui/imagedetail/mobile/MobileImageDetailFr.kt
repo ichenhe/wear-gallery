@@ -68,7 +68,7 @@ class MobileImageDetailFr : ImageDetailBaseFr() {
                 binding.imageMimeType.visibility = View.GONE
                 return@observe
             }
-            val mime = currentItemData.mime.split("/").getOrNull(1)?.toUpperCase(Locale.getDefault())
+            val mime = currentItemData.mime?.split("/")?.getOrNull(1)?.toUpperCase(Locale.getDefault())
             if (mime == null || mime != "GIF") {
                 // only display gif mime type
                 binding.imageMimeType.visibility = View.GONE
