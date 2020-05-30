@@ -163,7 +163,7 @@ class ImageDetailFr : BaseFr() {
     private fun updateDetailPanel(image: Image) {
         binding.imageDetailDate.text = dateFormat.format(Date(image.takenTime))
         binding.imageDetailFileName.text = image.name
-        binding.imageDetailFilePath.text = image.file.filePath ?: image.bucketName
+        binding.imageDetailFilePath.text = image.file?.filePath ?: image.bucketName
         binding.imageDetailInfo.text = "${image.getSize()}    ${image.width}×${image.height}"
     }
 
