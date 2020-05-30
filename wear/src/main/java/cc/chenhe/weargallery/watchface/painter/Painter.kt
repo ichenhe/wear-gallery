@@ -37,8 +37,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.util.*
-import kotlin.math.max
-import kotlin.math.min
 
 private const val TAG = "Painter"
 
@@ -160,28 +158,50 @@ abstract class Painter(
             inSampleSize = calculateInSample(options, width, height)
         }
         if (options.outMimeType == "image/gif") {
+            logw(TAG, "Gif detected, not support!")
             Toast.makeText(context, R.string.wf_not_support_gif, Toast.LENGTH_SHORT).show()
         }
 
         var img = BitmapFactory.decodeFile(file.absolutePath, options)
-        val rotate = getExifRotateAngle(file.absolutePath).toFloat()
+        val rotate = getExifRotateAngle(file.absolutePath)
+        if (rotate != 0) {
+            // Let's rotate it first to avoid affect the width and height judgment.
+            val matrix = Matrix().apply { setRotate(rotate.toFloat(), img.width / 2f, img.height / 2f) }
+            img = Bitmap.createBitmap(img, 0, 0, img.width, img.height, matrix, false)
+        }
+        logd(TAG, "Loaded image ${img.width}x${img.height}; exifRotation=$rotate")
 
         // crop & rotate
-        val matrix = Matrix().apply { setRotate(rotate, img.width / 2f, img.height / 2f) }
-        img = if (img.width > width || img.height > height) {
-            Bitmap.createBitmap(img,
-                    max(((img.width - width) / 2f).toInt(), 0),
-                    max(((img.height - height) / 2f).toInt(), 0),
-                    min(img.width, width),
-                    min(img.height, height),
+        if (img.width != width || img.height != height) {
+            val deviceRatio = width / height.toFloat()
+            val imgRatio = img.width / img.height.toFloat()
+
+            val scale: Float
+            val regionWidth: Int
+            val regionHeight: Int
+            if (imgRatio >= deviceRatio) {
+                scale = height / img.height.toFloat()
+                regionWidth = (img.height * deviceRatio).toInt()
+                regionHeight = img.height
+            } else {
+                scale = width / img.width.toFloat()
+                regionWidth = img.width
+                regionHeight = (img.width / deviceRatio).toInt()
+            }
+            logd(TAG, "scale=$scale; subregion=${regionWidth}x${regionHeight}")
+
+            val matrix = Matrix().apply { postScale(scale, scale) }
+            img = Bitmap.createBitmap(img,
+                    ((img.width - regionWidth) / 2f).toInt(),
+                    ((img.height - regionHeight) / 2f).toInt(),
+                    regionWidth,
+                    regionHeight,
                     matrix,
                     true
             )
-        } else {
-            Bitmap.createBitmap(img, 0, 0, img.width, img.height, matrix, true)
         }
         bg = img
-        logd(TAG, "Load background picture finish.")
+        logd(TAG, "Load background picture finish. ${img.width}x${img.height}")
         onBackgroundImageLoaded()
     }
 
@@ -196,6 +216,7 @@ abstract class Painter(
                 inSample *= 2
             }
         }
+        logd(TAG, "raw=${rawWidth}x${rawHeight}; target=${targetWidth}x${targetHeight}; inSample=$inSample")
         return inSample
     }
 
