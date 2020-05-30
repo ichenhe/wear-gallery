@@ -159,7 +159,9 @@ abstract class Painter(
         }
         if (options.outMimeType == "image/gif") {
             logw(TAG, "Gif detected, not support!")
-            Toast.makeText(context, R.string.wf_not_support_gif, Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, R.string.wf_not_support_gif, Toast.LENGTH_SHORT).show()
+            }
         }
 
         var img = BitmapFactory.decodeFile(file.absolutePath, options)
