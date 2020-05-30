@@ -20,14 +20,14 @@ package cc.chenhe.weargallery.ui.local
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import cc.chenhe.weargallery.uilts.fetchFolderMode
+import cc.chenhe.weargallery.uilts.folderMode
 
 class LocalImagesViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _folderMode = MutableLiveData(false)
-    val folderMode: LiveData<Boolean> = _folderMode
+    val folderMode: LiveData<Boolean> = fetchFolderMode(application)
 
     fun toggleListMode() {
-        _folderMode.value = !(_folderMode.value ?: false)
+        folderMode(getApplication(), !(folderMode.value ?: false))
     }
 }
