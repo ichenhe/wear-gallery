@@ -28,11 +28,20 @@ import cc.chenhe.weargallery.common.util.SpFloatLiveData
 import cc.chenhe.weargallery.common.util.SpIntLiveData
 import cc.chenhe.weargallery.common.util.SpStringLiveData
 
+private const val PREFERENCE_SHOW_HW = "show_hw" // boolean
 const val PREFERENCE_KEEP_SCREEN_ON = "keep_screen_on" // boolean
 private const val PREFERENCE_SHOW_PHONE_IMAGES = "show_phone_images" // boolean
 private const val LAST_START_VERSION = "last_start_version_l" // long
 
 private fun getSp(context: Context) = PreferenceManager.getDefaultSharedPreferences(context)
+
+fun showHuawei(context: Context): Boolean = getSp(context).getBoolean(PREFERENCE_SHOW_HW, true)
+
+fun showHuawei(context: Context, show: Boolean) {
+    getSp(context).edit {
+        putBoolean(PREFERENCE_SHOW_HW, show)
+    }
+}
 
 fun fetchKeepScreenOn(context: Context) = SpBooleanLiveData(getSp(context), PREFERENCE_KEEP_SCREEN_ON, false)
 

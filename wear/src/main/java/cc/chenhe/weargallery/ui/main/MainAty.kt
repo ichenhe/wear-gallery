@@ -28,6 +28,7 @@ import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
 import cc.chenhe.weargallery.uilts.addQrCode
+import cc.chenhe.weargallery.uilts.showHuawei
 import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,16 +44,18 @@ class MainAty : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (checkHuaWei()) {
+        if (checkHuaWei() && showHuawei(this)) {
             AlertDialog(this).apply {
                 setTitle(R.string.app_hw_title)
                 setMessage(R.string.app_hw_message)
+                skipText = getString(R.string.dont_show_again)
+                showSkipLayout = true
                 addQrCode(HUA_WEI)
                 setPositiveButtonIcon(R.drawable.ic_dialog_confirm, DialogInterface.OnClickListener { _, _ ->
-                    init()
+                    showHuawei(this@MainAty, !isSkipChecked)
                 })
-                setOnCancelListener {
-                    finish()
+                setOnDismissListener {
+                    init()
                 }
             }.show()
         } else {
