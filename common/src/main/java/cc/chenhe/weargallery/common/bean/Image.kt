@@ -20,7 +20,7 @@ package cc.chenhe.weargallery.common.bean
 import android.net.Uri
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 private const val KB = 1024f
 private const val MB = KB * 1024f
@@ -40,7 +40,7 @@ interface IImage {
     /** Used to identify album folders since `data` is deprecated. */
     val bucketId: Int
 
-    fun getSize(): String {
+    fun getSizeStr(): String {
         return when {
             size < KB -> "$size Bytes"
             size < MB -> String.format("%.2f KB", size / KB)

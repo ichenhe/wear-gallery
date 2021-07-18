@@ -18,9 +18,7 @@
 package cc.chenhe.weargallery.uilts.diskcache
 
 import cc.chenhe.weargallery.uilts.loge
-import okio.BufferedSink
-import okio.BufferedSource
-import okio.Okio
+import okio.*
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.Callable
@@ -28,6 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
+import kotlin.io.use
 
 private const val TAG = "DiskLruCache"
 
@@ -49,9 +48,9 @@ private const val READ = "READ"
  * Based on [DiskLruCache](https://github.com/JakeWharton/DiskLruCache), adapted to our use case.
  */
 class DiskLruCache private constructor(
-        private val directory: File,
-        private val appVersion: Long,
-        private val maxSize: Long
+    private val directory: File,
+    private val appVersion: Long,
+    private val maxSize: Long
 ) {
 
     private val journalFile = File(directory, JOURNAL_FILE)
@@ -62,7 +61,8 @@ class DiskLruCache private constructor(
     private var redundantOpCount = 0
     private var size: Long = 0
 
-    private val executorService = ThreadPoolExecutor(0, 1, 60L, TimeUnit.SECONDS, LinkedBlockingQueue())
+    private val executorService =
+        ThreadPoolExecutor(0, 1, 60L, TimeUnit.SECONDS, LinkedBlockingQueue())
     private val cleanupCallable = Callable {
         synchronized(this) {
             trimToSize()
@@ -218,9 +218,9 @@ class DiskLruCache private constructor(
         if (secondSpace != -1 && firstSpace == CLEAN.length && line.startsWith(CLEAN)) {
             // CLEAN
             entry.reset(
-                    readable = true,
-                    currentEditor = null,
-                    length = line.substring(secondSpace + 1).toLong()
+                readable = true,
+                currentEditor = null,
+                length = line.substring(secondSpace + 1).toLong()
             )
         } else if (secondSpace == -1 && firstSpace == DIRTY.length && line.startsWith(DIRTY)) {
             // DIRTY
@@ -549,12 +549,16 @@ private fun File.deleteRecursivelySure() {
  * @param autoCreate Create a new file first if it doesn't exist.
  * @throws IOException
  */
-private inline fun File.appendingSink(autoCreate: Boolean = true, block: (bufferedSink: BufferedSink) -> Unit) {
+private inline fun File.appendingSink(
+    autoCreate: Boolean = true,
+    block: (bufferedSink: BufferedSink) -> Unit
+) {
     if (autoCreate && !this.exists()) {
         this.createNewFile()
     }
-    Okio.appendingSink(this).use {
-        Okio.buffer(it).use { bufferedSink ->
+
+    this.appendingSink().use {
+        it.buffer().use { bufferedSink ->
             block(bufferedSink)
         }
     }
@@ -566,8 +570,8 @@ private inline fun File.appendingSink(autoCreate: Boolean = true, block: (buffer
  * @throws IOException
  */
 private fun File.source(block: (bufferedSource: BufferedSource) -> Unit) {
-    Okio.source(this).use {
-        Okio.buffer(it).use { bufferedSource ->
+    this.source().use {
+        it.buffer().use { bufferedSource ->
             block(bufferedSource)
         }
     }

@@ -21,7 +21,9 @@ import android.content.Context
 import android.net.Uri
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.common.util.getVersionCode
-import okio.Okio
+import okio.buffer
+import okio.sink
+import okio.source
 import java.io.File
 import java.io.InputStream
 import java.math.BigInteger
@@ -69,9 +71,9 @@ sealed class DiskCacheManager(context: Context, name: String, maxSize: Long = MA
         // do NOT use md5() here!
         val editor = edit(key) ?: return false
         try {
-            Okio.source(ins).use { src ->
-                Okio.sink(editor.getTargetFile()).use {
-                    Okio.buffer(it).use { buffer ->
+            ins.source().use { src ->
+                editor.getTargetFile().sink().use {
+                    it.buffer().use { buffer ->
                         buffer.writeAll(src)
                     }
                 }
@@ -95,8 +97,8 @@ sealed class DiskCacheManager(context: Context, name: String, maxSize: Long = MA
 /**
  * Manage the picture preview cache. All Uri parameters refer to the remote device by default.
  */
-class MobilePreviewCacheManager private constructor(context: Context)
-    : DiskCacheManager(context, CACHE_MOBILE_PREVIEW) {
+class MobilePreviewCacheManager private constructor(context: Context) :
+    DiskCacheManager(context, CACHE_MOBILE_PREVIEW) {
     companion object {
         private var instance: MobilePreviewCacheManager? = null
 

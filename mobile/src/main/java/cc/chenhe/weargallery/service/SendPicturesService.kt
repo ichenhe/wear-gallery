@@ -39,11 +39,11 @@ import cc.chenhe.weargallery.common.comm.bean.SendResp
 import cc.chenhe.weargallery.ui.main.MainAty
 import cc.chenhe.weargallery.utils.*
 import com.squareup.moshi.Moshi
-import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.parcelize.Parcelize
 import org.koin.android.ext.android.get
 import java.io.FileNotFoundException
 import java.util.concurrent.LinkedBlockingQueue
@@ -178,6 +178,7 @@ class SendPicturesService : Service() {
     /**
      * Can be only called from [send].
      */
+    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun realSend(job: Job): Int {
         withContext(Dispatchers.Main) {
             // update notification
@@ -300,6 +301,7 @@ class SendPicturesService : Service() {
     }
 
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun createImageAsset(uri: Uri): Asset = withContext(Dispatchers.IO) {
         if (WM.mode == WM.MODE_MMS) {
             val fd = this@SendPicturesService.contentResolver.openFileDescriptor(uri, "r")!!

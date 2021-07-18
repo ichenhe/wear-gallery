@@ -20,7 +20,6 @@ package cc.chenhe.weargallery.ui.imagedetail.local
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.Keep
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import cc.chenhe.weargallery.common.bean.Success
@@ -60,13 +59,13 @@ class LocalImageDetailFr : ImageDetailBaseFr() {
 
         binding.imageDetailPager.adapter = adapter
 
-        if (args.sourceType == Source.IMAGES) {
+        if (args.sourceType as Source == Source.IMAGES) {
             model.currentItem.value = sharedModel.currentPosition
             model.addImageDataSource(sharedModel.localImages)
             model.currentItem.observe(viewLifecycleOwner) { currentItem ->
                 sharedModel.currentPosition = currentItem
             }
-        } else if (args.sourceType == Source.FOLDER) {
+        } else if (args.sourceType as Source == Source.FOLDER) {
             val args = LocalImageDetailFrArgs.fromBundle(requireArguments())
             model.addFolderDataSource(sharedModel.localFolderImages, args.bucketId)
         }
@@ -76,7 +75,7 @@ class LocalImageDetailFr : ImageDetailBaseFr() {
                 findNavController().navigateUp()
             } else {
                 adapter.submitList(images.data) {
-                    if (args.sourceType == Source.IMAGES && shouldInitCurrentPosition) {
+                    if (args.sourceType as Source == Source.IMAGES && shouldInitCurrentPosition) {
                         // Jump to the clicked position
                         binding.imageDetailPager.setCurrentItem(sharedModel.currentPosition, false)
                         shouldInitCurrentPosition = false

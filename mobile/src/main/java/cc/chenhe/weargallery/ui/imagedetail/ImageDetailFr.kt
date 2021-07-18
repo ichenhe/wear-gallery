@@ -25,7 +25,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.Keep
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cc.chenhe.weargallery.R
@@ -76,9 +75,16 @@ class ImageDetailFr : BaseFr() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FrImageDetailBinding.inflate(inflater, container, false)
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
         setupSystemUI()
         // toolbar
         setupToolbar(binding.imageDetailToolBar)
@@ -139,18 +145,21 @@ class ImageDetailFr : BaseFr() {
         binding.imageDetailPager.registerOnPageChangeCallback(onPageChangeCallback)
 
         // load data
-        if (args.source == Source.IMAGES) {
+        if (args.source as Source == Source.IMAGES) {
             sharedModel.images.observe(viewLifecycleOwner) {
                 adapter.submitList(it) {
                     binding.imageDetailPager.setCurrentItem(sharedModel.currentPosition, false)
                 }
             }
-        } else {
+        } else if (args.source as Source == Source.FOLDER) {
             sharedModel.folderImages.observe(viewLifecycleOwner) { folders ->
                 folders.forEach {
                     if (it.bucketName == args.sourceAttr) {
                         adapter.submitList(it.children) {
-                            binding.imageDetailPager.setCurrentItem(sharedModel.currentPosition, false)
+                            binding.imageDetailPager.setCurrentItem(
+                                sharedModel.currentPosition,
+                                false
+                            )
                         }
                         return@observe
                     }
@@ -164,7 +173,7 @@ class ImageDetailFr : BaseFr() {
         binding.imageDetailDate.text = dateFormat.format(Date(image.takenTime))
         binding.imageDetailFileName.text = image.name
         binding.imageDetailFilePath.text = image.file?.filePath ?: image.bucketName
-        binding.imageDetailInfo.text = "${image.getSize()}    ${image.width}×${image.height}"
+        binding.imageDetailInfo.text = "${image.getSizeStr()}    ${image.width}×${image.height}"
     }
 
     private fun performBack() {

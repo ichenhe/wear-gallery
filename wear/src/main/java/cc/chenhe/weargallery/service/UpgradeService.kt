@@ -84,17 +84,20 @@ class UpgradeService : Service() {
             running = true
 
             val no = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_UPGRADE)
-                    .setSmallIcon(R.drawable.ic_notify_upgrade)
-                    .setContentTitle(getString(R.string.notify_upgrade_title))
-                    .setContentText(getString(R.string.notify_upgrade_text))
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setOngoing(true)
-                    .setOnlyAlertOnce(true)
-                    .build()
+                .setSmallIcon(R.drawable.ic_notify_upgrade)
+                .setContentTitle(getString(R.string.notify_upgrade_title))
+                .setContentText(getString(R.string.notify_upgrade_text))
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .build()
             startForeground(NOTIFY_ID_UPGRADE, no)
 
             GlobalScope.launch {
-                startUpgrade(intent.getLongExtra(EXTRA_OLD_VERSION, 0), getVersionCode(this@UpgradeService))
+                startUpgrade(
+                    intent.getLongExtra(EXTRA_OLD_VERSION, 0),
+                    getVersionCode(this@UpgradeService)
+                )
             }
         } else {
             logd(TAG, "Upgrade process already running, skip this command.")
@@ -107,30 +110,34 @@ class UpgradeService : Service() {
     private fun complete() {
         logd(TAG, "Upgrade complete.")
         lastStartVersion(this, getVersionCode(this))
-        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(ACTION_APPLICATION_UPGRADE_COMPLETE))
+        LocalBroadcastManager.getInstance(this)
+            .sendBroadcast(Intent(ACTION_APPLICATION_UPGRADE_COMPLETE))
         stopForeground(true)
         stopSelf()
     }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(NOTIFY_CHANNEL_ID_UPGRADE,
-                    getString(R.string.notify_channel_upgrade_name), NotificationManager.IMPORTANCE_LOW).apply {
+            val channel = NotificationChannel(
+                NOTIFY_CHANNEL_ID_UPGRADE,
+                getString(R.string.notify_channel_upgrade_name), NotificationManager.IMPORTANCE_LOW
+            ).apply {
                 description = getString(R.string.notify_channel_upgrade_description)
             }
             getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
     }
 
-    private suspend fun startUpgrade(oldVersion: Long, currentVersion: Long) = withContext(Dispatchers.Main) {
-        logd(TAG, "Start upgrade process. $oldVersion → $currentVersion")
+    private suspend fun startUpgrade(oldVersion: Long, currentVersion: Long) =
+        withContext(Dispatchers.Main) {
+            logd(TAG, "Start upgrade process. $oldVersion → $currentVersion")
 
-        if (oldVersion in 0..VERSION_5_1_1210) {
-            migrate_5_1_1210()
+            if (oldVersion in 0..VERSION_5_1_1210) {
+                migrate_5_1_1210()
+            }
+
+            complete()
         }
-
-        complete()
-    }
 
     @SuppressLint("RestrictedApi")
     private suspend fun migrate_5_1_1210() = withContext(Dispatchers.IO) {
@@ -154,7 +161,7 @@ class UpgradeService : Service() {
                 hdDir.listFiles()?.forEach { file ->
                     if (file.isFile) {
                         logd(TAG, "Save ${file.path}")
-                        val time = ExifInterface(file).dateTime
+                        val time = ExifInterface(file).dateTime ?: 0L
                         FileInputStream(file).use { ins ->
                             repo.saveImage(this@UpgradeService, file.name, time, ins)
                         }

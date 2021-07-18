@@ -1,11 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
-//firebase
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
 
 
 def localProperties = new Properties()
@@ -19,7 +16,6 @@ if (localPropertiesFile.isFile()) {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 21
@@ -42,22 +38,15 @@ android {
         }
     }
     buildTypes {
-        debug {
-            firebaseCrashlytics {
-                mappingFileUploadEnabled false
-            }
-        }
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    viewBinding {
-        enabled = true
-    }
-    dataBinding {
-        enabled = true
+    buildFeatures{
+        viewBinding true
+        dataBinding true
     }
     compileOptions {
         sourceCompatibility = 1.8
@@ -74,7 +63,6 @@ dependencies {
     implementation files('libs/core-3.3.3.jar')
     implementation project(':common')
     implementation project(':wearvision')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.core:core-ktx:$ktxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.fragment:fragment:$fragmentVersion"
@@ -84,7 +72,6 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navVersion"
     implementation "androidx.viewpager2:viewpager2:$viewpager2Version"
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
@@ -94,14 +81,11 @@ dependencies {
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
-    implementation "org.koin:koin-core:$koinVersion"
-    implementation "org.koin:koin-android:$koinVersion"
-    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
+    implementation "io.insert-koin:koin-android:$koinVersion"
 
-    implementation "cc.chenhe:wear-msger:$wearMsgerVersion"
-    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
-    implementation 'com.google.android.support:wearable:2.6.0'
-    compileOnly 'com.google.android.wearable:wearable:2.6.0'
+    implementation 'com.google.android.gms:play-services-wearable:17.1.0'
+    implementation 'com.google.android.support:wearable:2.8.1'
+    compileOnly 'com.google.android.wearable:wearable:2.8.1'
     implementation 'cc.chenhe:watch-face-helper:2.0.3'
     implementation "com.heinrichreimersoftware:material-intro:$materialIntroVersion"
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
@@ -110,11 +94,7 @@ dependencies {
     implementation "me.panpf:sketch:$sketchVersion"
     implementation "me.panpf:sketch-gif:$sketchVersion"
 
-    // firebase
-    implementation 'com.google.firebase:firebase-analytics:17.4.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
-
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.amshove.kluent:kluent-android:$kluentVersion"
-    testImplementation "org.koin:koin-test:$koinVersion"
+    testImplementation "io.insert-koin:koin-test:$koinVersion"
 }

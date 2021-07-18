@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -42,7 +42,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation 'com.google.android.support:wearable:2.6.0'
