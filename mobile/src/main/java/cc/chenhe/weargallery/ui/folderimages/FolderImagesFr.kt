@@ -21,7 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.observe
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,25 +30,27 @@ import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.SimpleItemDecoration
 import cc.chenhe.weargallery.common.util.fileName
 import cc.chenhe.weargallery.databinding.FrFolderImagesBinding
-import cc.chenhe.weargallery.ui.common.BaseFr
-import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
-import cc.chenhe.weargallery.ui.common.requireCompatAty
-import cc.chenhe.weargallery.ui.common.setupToolbar
-import cc.chenhe.weargallery.ui.main.SharedViewModel
+import cc.chenhe.weargallery.ui.legacy.SharedViewModel
+import cc.chenhe.weargallery.utils.requireCompatAty
+import cc.chenhe.weargallery.utils.setupToolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class FolderImagesFr : BaseFr() {
+class FolderImagesFr : Fragment() {
 
     private lateinit var binding: FrFolderImagesBinding
 
     private val sharedModel by sharedViewModel<SharedViewModel>()
     private val args: FolderImagesFrArgs by navArgs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FrFolderImagesBinding.inflate(inflater, container, false)
         // toolbar
         setupToolbar(binding.header.toolbar)
-        (binding.header.root as CollapseHeaderLayout).setTitle(args.folderPath.fileName)
+        binding.header.root.setTitle(args.folderPath.fileName)
         requireCompatAty().supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.header.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -59,14 +61,22 @@ class FolderImagesFr : BaseFr() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // RecyclerView
-        binding.imagesRecyclerView.addItemDecoration(SimpleItemDecoration(requireContext(), R.dimen.images_grid_padding))
+        binding.imagesRecyclerView.addItemDecoration(
+            SimpleItemDecoration(
+                requireContext(),
+                R.dimen.images_grid_padding
+            )
+        )
         binding.imagesRecyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
         val adapter = FolderImagesAdapter(this)
         binding.imagesRecyclerView.adapter = adapter
         adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
             override fun onItemClick(view: View, position: Int) {
                 sharedModel.currentPosition = position
-                val action = FolderImagesFrDirections.actionFolderImagesFrToImageDetailFr(shareAnimationName = "", sourceAttr = args.folderPath)
+                val action = FolderImagesFrDirections.actionFolderImagesFrToImageDetailFr(
+                    shareAnimationName = "",
+                    sourceAttr = args.folderPath
+                )
                 findNavController().navigate(action)
             }
         }
@@ -74,8 +84,10 @@ class FolderImagesFr : BaseFr() {
         // Data
         sharedModel.folderImages.observe(viewLifecycleOwner) { folders ->
             folders.find { it.bucketName == args.folderPath }?.let {
-                binding.header.subtitleTextView.text = resources.getQuantityString(R.plurals.images_subtitle,
-                        it.children.size, it.children.size)
+                binding.header.subtitleTextView.text = resources.getQuantityString(
+                    R.plurals.images_subtitle,
+                    it.children.size, it.children.size
+                )
                 adapter.submitList(it.children)
             }
         }

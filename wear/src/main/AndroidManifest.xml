@@ -71,29 +71,14 @@
             android:name=".service.MobileListenerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="cc.chenhe.lib.wearmsger.EVENT_LISTENER" />
+                <action android:name="me.chenhe.lib.wearmsger.EVENT_LISTENER" />
             </intent-filter>
         </service>
 
-        <service android:name="cc.chenhe.lib.wearmsger.service.GmsListenerAgentService">
+        <service android:name="me.chenhe.lib.wearmsger.service.GmsListenerAgentService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-
-                <data
-                    android:host="*"
-                    android:pathPrefix="/send-image"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name="cc.chenhe.lib.wearmsger.service.MmsListenerAgentService"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.mobvoi.android.wearable.BIND_LISTENER" />
-                <action android:name="com.mobvoi.android.wearable.MESSAGE_RECEIVED" />
-                <action android:name="com.mobvoi.android.wearable.DATA_CHANGED" />
 
                 <data
                     android:host="*"

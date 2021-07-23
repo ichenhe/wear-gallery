@@ -19,13 +19,13 @@ package cc.chenhe.weargallery.repository
 
 import android.net.Uri
 import androidx.annotation.IntDef
-import cc.chenhe.lib.wearmsger.bean.DataCallback
-import cc.chenhe.lib.wearmsger.compatibility.data.DataMap
 import cc.chenhe.weargallery.common.comm.ITEM_RESULT
 import cc.chenhe.weargallery.common.comm.RESULT_ERROR
 import cc.chenhe.weargallery.uilts.loge
+import com.google.android.gms.wearable.DataMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import me.chenhe.lib.wearmsger.bean.DataCallback
 import java.io.InputStream
 
 private const val TAG = "RemoteAssetResource"

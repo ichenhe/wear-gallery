@@ -14,59 +14,58 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package cc.chenhe.weargallery.ui
 
+import android.Manifest
+import android.os.Build
+import android.os.Bundle
+import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.utils.checkStoragePermissions
+import com.heinrichreimersoftware.materialintro.app.IntroActivity
+import com.heinrichreimersoftware.materialintro.slide.SimpleSlide
 
-package cc.chenhe.weargallery.ui;
-
-import android.Manifest;
-import android.os.Build;
-import android.os.Bundle;
-
-import com.heinrichreimersoftware.materialintro.app.IntroActivity;
-import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
-
-import cc.chenhe.weargallery.R;
-import cc.chenhe.weargallery.utils.UtilsKt;
-
-public class IntroduceAty extends IntroActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setButtonBackVisible(false);
-
-        if (Build.VERSION.SDK_INT >= 23 && !UtilsKt.checkStoragePermissions(this)) {
-            String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            addSlide(new SimpleSlide.Builder()
+class IntroduceAty : IntroActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isButtonBackVisible = false
+        if (Build.VERSION.SDK_INT >= 23 && !checkStoragePermissions(this)) {
+            val permissions = arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            addSlide(
+                SimpleSlide.Builder()
                     .title(R.string.intro_permission_title)
                     .description(R.string.intro_permission_content)
                     .background(R.color.slide_first)
                     .backgroundDark(R.color.slide_first_dark)
                     .permissions(permissions)
-                    .build());
+                    .build()
+            )
         }
-
-        addSlide(new SimpleSlide.Builder()
+        addSlide(
+            SimpleSlide.Builder()
                 .title(R.string.intro_install_title)
                 .description(R.string.intro_install_content)
                 .background(R.color.slide_second)
                 .backgroundDark(R.color.slide_second_dark)
-                .build());
-
-        addSlide(new SimpleSlide.Builder()
+                .build()
+        )
+        addSlide(
+            SimpleSlide.Builder()
                 .title(R.string.intro_auto_run_title)
                 .description(R.string.intro_auto_run_content)
                 .background(R.color.slide_third)
                 .backgroundDark(R.color.slide_third_dark)
-                .build());
-
-        addSlide(new SimpleSlide.Builder()
+                .build()
+        )
+        addSlide(
+            SimpleSlide.Builder()
                 .title(R.string.intro_os_title)
                 .description(R.string.intro_os_content)
                 .background(R.color.slide_fourth)
                 .backgroundDark(R.color.slide_fourth_dark)
-                .build());
+                .build()
+        )
     }
-
 }

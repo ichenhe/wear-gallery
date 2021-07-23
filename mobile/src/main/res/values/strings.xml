@@ -9,11 +9,12 @@
     <string name="date_format_full">MMMM d, yyyy HH:mm</string>
     <string name="today">Today</string>
     <string name="icon">Icon</string>
+    <string name="main_preference">Preferences</string>
+    <string name="main_legacy"><u>Legacy</u></string>
 
     <string name="nav_menu_images">Images</string>
     <string name="nav_menu_folders">Folders</string>
 
-    <string name="app_none_transfer_available">!neither mms nor gms is available!</string>
     <string name="app_hw_title">Error</string>
     <string name="app_hw_message">Wear Gallery refuses to run on HuaWei devices!</string>
     <string name="app_hw_view">Learn more</string>
@@ -47,7 +48,6 @@
 
     <string name="pref_version" translatable="false">%1$s  (%2$d)</string>
 
-    <string name="menu_setting">Settings</string>
     <string name="menu_send">Send to watch</string>
 
     <string name="send_dialog_title">Send to watch</string>
@@ -55,21 +55,7 @@
     <string name="send_dialog_advanced">Advanced</string>
 
     <string name="pref_category_general">General</string>
-    <string name="pref_category_advanced">Advanced</string>
     <string name="pref_category_information">Information</string>
-
-    <string name="pref_compress">Preview compress algorithm</string>
-    <string name="pref_compress_summary">How to compress when the watch requests a preview.</string>
-    <string-array name="pref_compress_entries">
-        <item>Luban (default)</item>
-        <item>Legacy (faster)</item>
-    </string-array>
-    <string name="pref_compress_entry_value_luban" translatable="false">Luban</string>
-    <string name="pref_compress_entry_value_legacy" translatable="false">Legacy</string>
-    <string-array name="pref_compress_entry_values">
-        <item>@string/pref_compress_entry_value_luban</item>
-        <item>@string/pref_compress_entry_value_legacy</item>
-    </string-array>
 
     <string name="setting_check_update">Check for updates</string>
     <string name="pref_donate">Donate</string>
@@ -77,23 +63,7 @@
     <string name="pref_donate_alipay_error">Failed to start AliPay :(</string>
     <string name="pref_about">About</string>
     <string name="pref_phone_show_tips_about_watch">Tip when watch is been operated</string>
-    <string name="pref_wear_mode_restart">We have to stop the Wear Gallery completely and restart it to load new config.</string>
     <string name="pref_title">Settings</string>
-    <string name="pref_wear_mode">Watch communication mode</string>
-    <string name="pref_wear_mode_entry_auto">Auto</string>
-    <string-array name="pref_wear_mode_entries">
-        <item>@string/pref_wear_mode_entry_auto</item>
-        <item>Wear OS</item>
-        <item>Ticwear</item>
-    </string-array>
-    <string name="pref_wear_mode_value_auto" translatable="false">auto</string>
-    <string name="pref_wear_mode_value_gms" translatable="false">gms</string>
-    <string name="pref_wear_mode_value_mms" translatable="false">mms</string>
-    <string-array name="pref_wear_mode_entry_values">
-        <item>@string/pref_wear_mode_value_auto</item>
-        <item>@string/pref_wear_mode_value_gms</item>
-        <item>@string/pref_wear_mode_value_mms</item>
-    </string-array>
 
     <string name="watch_operation_search_gallery_ing">Scanning albums</string>
     <string name="watch_operation_get_pics_list_ing">Loading pics list</string>
@@ -137,11 +107,15 @@
     <string name="notify_channel_sending_description">Show progress of sending pictures.</string>
     <string name="notify_channel_send_result_name">Send Result</string>
     <string name="notify_channel_send_result_description">Show result of sending pictures.</string>
+    <string name="notify_channel_important_processing">Important Processing</string>
+    <string name="notify_channel_important_processing_description">Show the high priority work being performed.</string>
 
     <string name="notify_permission_title">Require Permissions</string>
     <string name="notify_permission_text">Click on the phone to grant permissions.</string>
     <string name="notify_huawei_title">Unable to respond to watch</string>
     <string name="notify_huawei_text">Wear Gallery refuses to run on HuaWei devices! Click to learn more.</string>
+    <string name="notify_upgrading">Migrating Data</string>
+    <string name="notify_upgrading_content">Do not end the process to avoid data loss.</string>
 
     <string name="links_chooser_browser">Choose browser</string>
 </resources>

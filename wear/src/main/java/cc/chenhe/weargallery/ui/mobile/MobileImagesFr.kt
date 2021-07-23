@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
@@ -45,7 +44,11 @@ class MobileImagesFr : Fragment(), RetryCallback {
     private lateinit var binding: FrMobileImagesBinding
     private val sharedViewModel: SharedViewModel by sharedViewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FrMobileImagesBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
             sharedModel = sharedViewModel
@@ -63,7 +66,8 @@ class MobileImagesFr : Fragment(), RetryCallback {
         adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
             override fun onItemClick(view: View, position: Int) {
                 val action = PagerFrDirections.actionPagerFrToMobileImageDetailFr(
-                        adapter.getItemData(position).bucketId)
+                    adapter.getItemData(position).bucketId
+                )
                 findNavController().navigate(action)
             }
         }

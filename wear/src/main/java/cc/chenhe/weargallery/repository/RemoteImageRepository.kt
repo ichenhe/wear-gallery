@@ -24,10 +24,6 @@ import android.content.IntentSender
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.lifecycle.LiveData
-import cc.chenhe.lib.wearmsger.BothWayHub
-import cc.chenhe.lib.wearmsger.DataHub
-import cc.chenhe.lib.wearmsger.bean.DataCallback
-import cc.chenhe.lib.wearmsger.compatibility.data.DataMap
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.bean.RemoteImageFolder
 import cc.chenhe.weargallery.common.bean.ApiResponse
@@ -43,12 +39,16 @@ import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.db.RemoteImageFolderDao
 import cc.chenhe.weargallery.uilts.*
 import cc.chenhe.weargallery.uilts.diskcache.MobilePreviewCacheManager
+import com.google.android.gms.wearable.DataMap
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import me.chenhe.lib.wearmsger.BothWayHub
+import me.chenhe.lib.wearmsger.DataHub
+import me.chenhe.lib.wearmsger.bean.DataCallback
 import java.io.InputStream
 
 private const val TAG = "ImageFolderRepo"
@@ -109,7 +109,13 @@ class RemoteImageRepository(
             override suspend fun fetchFromRemote(): DataCallback {
                 val req = moshi.adapter(ImagePreviewReq::class.java).toJson(ImagePreviewReq(uri))
                 return previewReqRunner.joinPreviousOrRun(uri.toString()) {
-                    BothWayHub.requestForData(context, null, PATH_REQ_IMAGE_PREVIEW, req, REQUEST_IMAGE_PREVIEW_TIMEOUT)
+                    BothWayHub.requestForData(
+                        context,
+                        null,
+                        PATH_REQ_IMAGE_PREVIEW,
+                        req,
+                        REQUEST_IMAGE_PREVIEW_TIMEOUT
+                    )
                 }
             }
 

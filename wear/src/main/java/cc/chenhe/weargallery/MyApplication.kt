@@ -18,8 +18,6 @@
 package cc.chenhe.weargallery
 
 import android.app.Application
-import android.widget.Toast
-import cc.chenhe.lib.wearmsger.WM
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -32,17 +30,6 @@ class MyApplication : Application() {
             androidLogger()
             androidContext(this@MyApplication)
             modules(appModule)
-        }
-
-        initWearMsger()
-    }
-
-    private fun initWearMsger() {
-        try {
-            WM.init(this, WM.Mode.AUTO)
-            WM.bothWayTimeout = 5000L
-        } catch (e: Exception) {
-            Toast.makeText(this, "neither mms nor gms is available.", Toast.LENGTH_SHORT).show()
         }
     }
 

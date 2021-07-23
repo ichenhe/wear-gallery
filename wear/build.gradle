@@ -63,9 +63,10 @@ dependencies {
     implementation files('libs/core-3.3.3.jar')
     implementation project(':common')
     implementation project(':wearvision')
+
     implementation "androidx.core:core-ktx:$ktxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.fragment:fragment:$fragmentVersion"
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
     implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
@@ -93,6 +94,7 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
     implementation "me.panpf:sketch:$sketchVersion"
     implementation "me.panpf:sketch-gif:$sketchVersion"
+    implementation("me.chenhe:wearmsger:$wearMsgerVersion")
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.amshove.kluent:kluent-android:$kluentVersion"

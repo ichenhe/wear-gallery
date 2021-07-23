@@ -19,11 +19,4 @@
         app:iconTint="?attr/colorOnSurface"
         app:showAsAction="ifRoom"
         tools:visible="true" />
-
-    <item
-        android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_bar_settings"
-        android:title="@string/menu_setting"
-        app:iconTint="?attr/colorOnSurface"
-        app:showAsAction="never" />
 </menu>

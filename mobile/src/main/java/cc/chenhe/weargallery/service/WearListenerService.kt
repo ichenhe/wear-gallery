@@ -21,6 +21,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.SystemClock
@@ -28,11 +29,6 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import cc.chenhe.lib.wearmsger.BothWayHub
-import cc.chenhe.lib.wearmsger.WM
-import cc.chenhe.lib.wearmsger.bean.MessageEvent
-import cc.chenhe.lib.wearmsger.compatibility.data.Asset
-import cc.chenhe.lib.wearmsger.service.WMListenerService
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImageFolder
 import cc.chenhe.weargallery.common.bean.Image
@@ -46,14 +42,20 @@ import cc.chenhe.weargallery.common.util.checkHuaWei
 import cc.chenhe.weargallery.common.util.fromJsonQ
 import cc.chenhe.weargallery.ui.main.MainAty
 import cc.chenhe.weargallery.utils.*
+import com.google.android.gms.wearable.Asset
+import com.google.android.gms.wearable.MessageEvent
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import id.zelory.compressor.constraint.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.chenhe.lib.wearmsger.BothWayHub
+import me.chenhe.lib.wearmsger.service.WMListenerService
 import org.koin.android.ext.android.inject
+import java.io.File
 import java.io.FileNotFoundException
 
 private const val TAG = "WearListenerService"
@@ -83,14 +85,14 @@ class WearListenerService : WMListenerService() {
         val intent = Intent(this, MainAty::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
         val notify = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_PERMISSION)
-                .setSmallIcon(R.drawable.ic_notify_permission)
-                .setContentTitle(getString(R.string.notify_permission_title))
-                .setContentText(getString(R.string.notify_permission_text))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setTicker(getString(R.string.notify_permission_title))
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build()
+            .setSmallIcon(R.drawable.ic_notify_permission)
+            .setContentTitle(getString(R.string.notify_permission_title))
+            .setContentText(getString(R.string.notify_permission_text))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setTicker(getString(R.string.notify_permission_title))
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
         NotificationManagerCompat.from(this).notify(NOTIFY_ID_PERMISSION, notify)
         return false
     }
@@ -109,14 +111,13 @@ class WearListenerService : WMListenerService() {
             }
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
             val notify = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_PERMISSION)
-                    .setSmallIcon(R.drawable.ic_notify_permission)
-                    .setContentTitle(getString(R.string.notify_huawei_title))
-                    .setContentText(getString(R.string.notify_huawei_text))
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setTicker(getString(R.string.notify_permission_title))
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-                    .build()
+                .setSmallIcon(R.drawable.ic_notify_permission)
+                .setContentTitle(getString(R.string.notify_huawei_title))
+                .setContentText(getString(R.string.notify_huawei_text))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
             NotificationManagerCompat.from(this).notify(NOTIFY_ID_PERMISSION, notify)
             return true
         }
@@ -125,8 +126,11 @@ class WearListenerService : WMListenerService() {
 
     private fun createPermissionNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(NOTIFY_CHANNEL_ID_PERMISSION,
-                    getString(R.string.notify_channel_permission_name), NotificationManager.IMPORTANCE_HIGH).apply {
+            val channel = NotificationChannel(
+                NOTIFY_CHANNEL_ID_PERMISSION,
+                getString(R.string.notify_channel_permission_name),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
                 description = getString(R.string.notify_channel_permission_description)
             }
             getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
@@ -176,34 +180,43 @@ class WearListenerService : WMListenerService() {
 
     private fun processRequestImagePreview(request: MessageEvent) {
         GlobalScope.launch(Dispatchers.IO) {
-            val data = moshi.adapter(ImagePreviewReq::class.java).fromJsonQ(request.getStringData()) ?: return@launch
+            val data = moshi.adapter(ImagePreviewReq::class.java).fromJsonQ(String(request.data))
+                ?: return@launch
             val resp = BothWayHub.obtainResponseDataRequest(request)
             val startTime = SystemClock.uptimeMillis()
 
-            when (getPreviewCompress(this@WearListenerService)) {
-                PreviewCompress.Luban ->
-                    Luban.compressQuietly(this@WearListenerService.contentResolver, data.uri)
-                PreviewCompress.Legacy ->
-                    Luban.compressLegacyQuietly(this@WearListenerService.contentResolver, data.uri, 1080, 1920)
-            }?.use { compressed ->
-                val b = compressed.toByteArray()
-                logd(TAG, "Compress complete, uri=${data.uri}, size=${b.size / 1024}KB, time=${SystemClock.uptimeMillis() - startTime}")
-                resp.getDataMap().apply {
+            var compressed: File? = null
+            try {
+                @Suppress("DEPRECATION") // require api 30
+                compressed = compressImage(this@WearListenerService, data.uri) {
+                    resolution(500, 500)
+                    format(Bitmap.CompressFormat.WEBP)
+                    quality(60)
+                }
+                val b = compressed.readBytes()
+                logd(
+                    TAG,
+                    "Compress complete, uri=${data.uri}, size=${b.size / 1024}KB, time=${SystemClock.uptimeMillis() - startTime}"
+                )
+                resp.dataMap.apply {
                     putInt(ITEM_RESULT, RESULT_OK)
                     putAsset(ITEM_IMAGE, Asset.createFromBytes(b))
                 }
-            } ?: kotlin.run {
-                logw(TAG, "Compress image error. uri=${data.uri}")
-                resp.getDataMap().putInt(ITEM_RESULT, RESULT_ERROR)
+            } catch (e: Exception) {
+                logw(TAG, "Compress image error. uri=${data.uri}", e)
+                resp.dataMap.putInt(ITEM_RESULT, RESULT_ERROR)
+            } finally {
+                compressed?.delete()
+                BothWayHub.response(this@WearListenerService, resp)
             }
-            BothWayHub.response(this@WearListenerService, resp)
         }
     }
 
     private fun processRequestImages(request: MessageEvent) {
         GlobalScope.launch(Dispatchers.IO) {
             toastIfEnabled(R.string.watch_operation_get_pics_list_ing)
-            val data = moshi.adapter(ImagesReq::class.java).fromJsonQ(request.getStringData()) ?: return@launch
+            val data = moshi.adapter(ImagesReq::class.java).fromJsonQ(String(request.data))
+                ?: return@launch
             val images = ImageUtil.queryBucketImages(this@WearListenerService, data.bucketId)
             val type = Types.newParameterizedType(List::class.java, Image::class.java)
             val adapter: JsonAdapter<List<Image>> = moshi.adapter(type)
@@ -214,22 +227,24 @@ class WearListenerService : WMListenerService() {
     private fun processRequestImageHd(request: MessageEvent) {
         GlobalScope.launch(Dispatchers.IO) {
             toastIfEnabled(R.string.watch_operation_send_hd_picture_ing)
-            val data = moshi.adapter(ImageHdReq::class.java).fromJsonQ(request.getStringData()) ?: return@launch
+            val data = moshi.adapter(ImageHdReq::class.java).fromJsonQ(String(request.data))
+                ?: return@launch
             val resp = BothWayHub.obtainResponseDataRequest(request)
             try {
                 // Test if file is exist and make sure it will be closed with `use`.
-                this@WearListenerService.contentResolver.openAssetFileDescriptor(data.uri, "r").use {}
-                resp.getDataMap().apply {
+                this@WearListenerService.contentResolver.openAssetFileDescriptor(data.uri, "r")
+                    .use {}
+                resp.dataMap.apply {
                     putAsset(ITEM_IMAGE, createImageAsset(data.uri))
                     putInt(ITEM_RESULT, RESULT_OK)
                 }
             } catch (e: FileNotFoundException) {
                 toastIfEnabled(R.string.watch_operation_send_hd_picture_fail)
                 logd(TAG, "Image file not exist, uri=${data.uri}")
-                resp.getDataMap().putInt(ITEM_RESULT, RESULT_ERROR)
+                resp.dataMap.putInt(ITEM_RESULT, RESULT_ERROR)
             } catch (e: Exception) {
                 toastIfEnabled(R.string.watch_operation_send_hd_picture_fail)
-                resp.getDataMap().putInt(ITEM_RESULT, RESULT_ERROR)
+                resp.dataMap.putInt(ITEM_RESULT, RESULT_ERROR)
                 e.printStackTrace()
             }
             BothWayHub.response(this@WearListenerService, resp)
@@ -237,12 +252,7 @@ class WearListenerService : WMListenerService() {
     }
 
     private suspend fun createImageAsset(uri: Uri): Asset = withContext(Dispatchers.IO) {
-        if (WM.mode == WM.MODE_MMS) {
-            val fd = this@WearListenerService.contentResolver.openFileDescriptor(uri, "r")!!
-            Asset.createFromFd(fd)
-        } else {
-            Asset.createFromUri(uri)
-        }
+        Asset.createFromUri(uri)
     }
 
 }

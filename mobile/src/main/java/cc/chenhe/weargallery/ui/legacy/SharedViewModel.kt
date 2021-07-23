@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.chenhe.weargallery.ui.main
+package cc.chenhe.weargallery.ui.legacy
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

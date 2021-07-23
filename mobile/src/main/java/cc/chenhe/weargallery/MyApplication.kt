@@ -18,16 +18,10 @@
 package cc.chenhe.weargallery
 
 import android.app.Application
-import android.widget.Toast
-import cc.chenhe.lib.wearmsger.WM
-import cc.chenhe.weargallery.utils.WearMode
-import cc.chenhe.weargallery.utils.getWearMode
-import cc.chenhe.weargallery.utils.logd
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
-private const val TAG = "MyApplication"
 
 class MyApplication : Application() {
     override fun onCreate() {
@@ -37,22 +31,6 @@ class MyApplication : Application() {
             androidLogger()
             androidContext(this@MyApplication)
             modules(appModule)
-        }
-
-        initWearMsger()
-    }
-
-    private fun initWearMsger() {
-        try {
-            val mode = when (getWearMode(this)) {
-                WearMode.Auto -> WM.Mode.AUTO
-                WearMode.Gms -> WM.Mode.GMS
-                WearMode.Mms -> WM.Mode.MMS
-            }
-            logd(TAG, "Init wear msger, mode=$mode")
-            WM.init(this, mode)
-        } catch (e: Exception) {
-            Toast.makeText(this, R.string.app_none_transfer_available, Toast.LENGTH_LONG).show()
         }
     }
 

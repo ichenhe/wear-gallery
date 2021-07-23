@@ -17,12 +17,12 @@
 
 package cc.chenhe.weargallery.common.comm
 
-import cc.chenhe.lib.wearmsger.bean.BothWayCallback
-import cc.chenhe.lib.wearmsger.bean.MessageCallback
 import cc.chenhe.weargallery.common.bean.ApiEmptyResponse
 import cc.chenhe.weargallery.common.bean.ApiErrorResponse
 import cc.chenhe.weargallery.common.bean.ApiResponse
 import cc.chenhe.weargallery.common.bean.ApiSuccessResponse
+import me.chenhe.lib.wearmsger.bean.BothWayCallback
+import me.chenhe.lib.wearmsger.bean.MessageCallback
 
 /**
  * @param process A function that translate the raw data to the type we need.

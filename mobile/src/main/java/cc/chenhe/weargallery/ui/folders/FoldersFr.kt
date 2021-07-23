@@ -24,21 +24,19 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.observe
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.SimpleItemDecoration
 import cc.chenhe.weargallery.databinding.FrFoldersBinding
-import cc.chenhe.weargallery.ui.common.BaseFr
-import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
-import cc.chenhe.weargallery.ui.main.PagerFrDirections
-import cc.chenhe.weargallery.ui.main.SharedViewModel
+import cc.chenhe.weargallery.ui.legacy.PagerFrDirections
+import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class FoldersFr : BaseFr(), Toolbar.OnMenuItemClickListener {
+class FoldersFr : Fragment(), Toolbar.OnMenuItemClickListener {
 
     private val sharedModel by sharedViewModel<SharedViewModel>()
     private val model by viewModel<FoldersViewModel>()
@@ -46,7 +44,11 @@ class FoldersFr : BaseFr(), Toolbar.OnMenuItemClickListener {
     private lateinit var binding: FrFoldersBinding
     private lateinit var adapter: FoldersAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FrFoldersBinding.inflate(inflater, container, false)
         binding.header.toolbar.apply {
             inflateMenu(R.menu.folders)
@@ -57,35 +59,44 @@ class FoldersFr : BaseFr(), Toolbar.OnMenuItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (binding.header.root as CollapseHeaderLayout).setTitle(R.string.nav_menu_folders)
+        binding.header.root.setTitle(R.string.nav_menu_folders)
 
         // RecyclerView
         adapter = FoldersAdapter(this)
-        binding.foldersRecyclerView.addItemDecoration(SimpleItemDecoration(requireContext(),
-                R.dimen.folders_grid_padding))
-        binding.foldersRecyclerView.layoutManager = GridLayoutManager(requireContext(),
-                getColumns(model.listStyle.value!!))
+        binding.foldersRecyclerView.addItemDecoration(
+            SimpleItemDecoration(
+                requireContext(),
+                R.dimen.folders_grid_padding
+            )
+        )
+        binding.foldersRecyclerView.layoutManager = GridLayoutManager(
+            requireContext(),
+            getColumns(model.listStyle.value!!)
+        )
         binding.foldersRecyclerView.adapter = adapter
 
         adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
             override fun onItemClick(view: View, position: Int) {
-                val action = PagerFrDirections.actionPagerFrToFolderImagesFr(adapter.currentList[position].bucketName)
+                val action =
+                    PagerFrDirections.actionPagerFrToFolderImagesFr(adapter.currentList[position].bucketName)
                 findNavController().navigate(action)
             }
         }
 
         // data
         model.listStyle.observe(viewLifecycleOwner) {
-            (binding.foldersRecyclerView.layoutManager as GridLayoutManager).spanCount = getColumns(it)
+            (binding.foldersRecyclerView.layoutManager as GridLayoutManager).spanCount =
+                getColumns(it)
             adapter.notifyItemRangeChanged(0, adapter.itemCount)
 
             binding.header.toolbar.menu?.findItem(R.id.menu_folders_style)?.setIcon(
-                    if (it) R.drawable.ic_view_list else R.drawable.ic_view_grid)
+                if (it) R.drawable.ic_view_list else R.drawable.ic_view_grid
+            )
         }
 
         sharedModel.folderImages.observe(viewLifecycleOwner) {
             binding.header.subtitleTextView.text = requireContext().resources
-                    .getQuantityString(R.plurals.folders_subtitle, it.size, it.size)
+                .getQuantityString(R.plurals.folders_subtitle, it.size, it.size)
             adapter.submitList(it)
         }
     }
@@ -102,9 +113,6 @@ class FoldersFr : BaseFr(), Toolbar.OnMenuItemClickListener {
         when (item.itemId) {
             R.id.menu_folders_style -> {
                 model.toggleListStyle()
-            }
-            R.id.menu_settings -> {
-                findNavController().navigate(R.id.preferenceFr)
             }
             else -> return false
         }

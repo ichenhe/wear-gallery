@@ -18,14 +18,18 @@
 package cc.chenhe.weargallery.utils
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImageFolder
 import cc.chenhe.weargallery.common.util.ImageUtil
 import kotlinx.coroutines.Dispatchers
@@ -37,11 +41,18 @@ const val NOTIFY_CHANNEL_ID_PERMISSION = "wg.permission"
 const val NOTIFY_CHANNEL_ID_SENDING = "wg.send_images"
 const val NOTIFY_CHANNEL_ID_SEND_RESULT = "wg.send_images_result"
 
+/** Use to display important foreground service */
+const val NOTIFY_CHANNEL_ID_IMPORTANT_PROCESSING = "wg.important_processing"
+
 const val NOTIFY_ID_PERMISSION = 1
 const val NOTIFY_ID_SENDING = 2
 const val NOTIFY_ID_SEND_RESULT = 3
+const val NOTIFY_ID_UPGRADING = 4
 
 const val UPDATE_URL = "http://wg.chenhe.cc"
+
+/** LocalBroadcast with extra 'success' which is a boolean value.*/
+const val ACTION_APP_UPGRADE_COMPLETE = "ACTION_APP_UPGRADE_COMPLETE"
 
 fun Toolbar.getTitleTextView(): TextView? {
     var tv: TextView? = null
@@ -61,26 +72,52 @@ fun @receiver:ColorInt Int.setAlpha(@IntRange(from = 0, to = 255) alpha: Int): I
 }
 
 fun checkStoragePermissions(context: Context): Boolean {
-    return ContextCompat.checkSelfPermission(context,
-            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+    return ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
 }
 
-suspend fun queryImageFolders(context: Context): List<RemoteImageFolder> = withContext(Dispatchers.Default) {
-    val folders = mutableListOf<RemoteImageFolder>()
-    ImageUtil.groupImagesByFolder(ImageUtil.queryImages(context)).forEach {
-        if (it.children.isNotEmpty()) {
-            folders += RemoteImageFolder(
+suspend fun queryImageFolders(context: Context): List<RemoteImageFolder> =
+    withContext(Dispatchers.Default) {
+        val folders = mutableListOf<RemoteImageFolder>()
+        ImageUtil.groupImagesByFolder(ImageUtil.queryImages(context)).forEach {
+            if (it.children.isNotEmpty()) {
+                folders += RemoteImageFolder(
                     bucketId = it.bucketId,
                     bucketName = it.bucketName,
                     imageCount = it.children.size,
                     previewUri = it.children.first().uri,
                     latestTime = it.children.first().takenTime
-            )
+                )
+            }
         }
+        folders
     }
-    folders
+
+fun generateRandomString(length: Int): String {
+    val nonceScope = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    val scopeSize = nonceScope.length
+    val nonceItem: (Int) -> Char = { nonceScope[(scopeSize * Math.random()).toInt()] }
+    return Array(length, nonceItem).joinToString("")
+}
+
+fun registerImportantPrecessingNotificationChannel(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channel = NotificationChannel(
+            NOTIFY_CHANNEL_ID_IMPORTANT_PROCESSING,
+            context.getString(R.string.notify_channel_important_processing),
+            NotificationManager.IMPORTANCE_LOW
+        )
+        channel.description =
+            context.getString(R.string.notify_channel_important_processing_description)
+        context.getSystemService(NotificationManager::class.java)!!
+            .createNotificationChannel(channel)
+    }
 }
 
 // -------------------------------------------------------------------------------------
@@ -97,10 +134,10 @@ internal fun logi(tag: String, msg: String) {
     Log.i(TAG, "[$tag] $msg")
 }
 
-internal fun loge(tag: String, msg: String) {
-    Log.e(TAG, "[$tag] $msg")
+internal fun loge(tag: String, msg: String, e: Exception? = null) {
+    Log.e(TAG, "[$tag] $msg", e)
 }
 
-internal fun logw(tag: String, msg: String) {
-    Log.w(TAG, "[$tag] $msg")
+internal fun logw(tag: String, msg: String, e: Exception? = null) {
+    Log.w(TAG, "[$tag] $msg", e)
 }

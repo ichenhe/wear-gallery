@@ -21,12 +21,10 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Process
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
-import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import cc.chenhe.weargallery.R
@@ -34,19 +32,14 @@ import cc.chenhe.weargallery.common.util.getVersionCode
 import cc.chenhe.weargallery.common.util.getVersionName
 import cc.chenhe.weargallery.ui.AboutAty
 import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
-import cc.chenhe.weargallery.ui.common.requireCompatAty
-import cc.chenhe.weargallery.ui.common.setupToolbar
-import cc.chenhe.weargallery.utils.PREFERENCE_WEAR_MODE
 import cc.chenhe.weargallery.utils.UPDATE_URL
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import cc.chenhe.weargallery.utils.requireCompatAty
+import cc.chenhe.weargallery.utils.setupToolbar
 
 private const val ALIPAY =
-        "alipayqr://platformapi/startapp?saId=10000007&qrcode=https://qr.alipay.com/tsx12672qtk37hufsxfkub7"
+    "alipayqr://platformapi/startapp?saId=10000007&qrcode=https://qr.alipay.com/tsx12672qtk37hufsxfkub7"
 
 class PreferenceFr : PreferenceFragmentCompat() {
-
-    private lateinit var wearModePreference: ListPreference
-    private var wearModeFlag = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,31 +55,10 @@ class PreferenceFr : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         // version
-        findPreference<Preference>("check_update")?.summary = getString(R.string.pref_version,
-                getVersionName(requireContext()), getVersionCode(requireContext()))
-
-        wearModePreference = findPreference(PREFERENCE_WEAR_MODE)!!
-        wearModePreference.setOnPreferenceChangeListener { preference, _ ->
-            val old = (preference as ListPreference).value
-            if (!wearModeFlag) {
-                wearModeFlag = true
-                MaterialAlertDialogBuilder(requireContext())
-                        .setCancelable(false)
-                        .setTitle(R.string.tip)
-                        .setMessage(R.string.pref_wear_mode_restart)
-                        .setPositiveButton(R.string.confirm) { _, _ ->
-                            Process.killProcess(Process.myPid())
-                        }
-                        .setNegativeButton(R.string.cancel) { _, _ ->
-                            wearModePreference.value = old
-                            wearModeFlag = false
-                        }
-                        .show()
-            } else {
-                wearModeFlag = false
-            }
-            true
-        }
+        findPreference<Preference>("check_update")?.summary = getString(
+            R.string.pref_version,
+            getVersionName(requireContext()), getVersionCode(requireContext())
+        )
     }
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
@@ -118,8 +90,12 @@ class PreferenceFr : PreferenceFragmentCompat() {
 
     private fun openWithBrowser(@Suppress("SameParameterValue") url: String) {
         try {
-            requireContext().startActivity(Intent.createChooser(Intent(Intent.ACTION_VIEW, Uri.parse(url)),
-                    requireContext().getString(R.string.links_chooser_browser)))
+            requireContext().startActivity(
+                Intent.createChooser(
+                    Intent(Intent.ACTION_VIEW, Uri.parse(url)),
+                    requireContext().getString(R.string.links_chooser_browser)
+                )
+            )
         } catch (ignored: ActivityNotFoundException) {
             Toast.makeText(context, R.string.update_no_web_view, Toast.LENGTH_SHORT).show()
         }
@@ -131,7 +107,8 @@ class PreferenceFr : PreferenceFragmentCompat() {
             val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(intent)
         } catch (e: java.lang.Exception) {
-            Toast.makeText(requireContext(), R.string.pref_donate_alipay_error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), R.string.pref_donate_alipay_error, Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }

@@ -31,6 +31,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.legacy.LegacyAty"
+            android:launchMode="singleTop"
+            android:theme="@style/AppBaseTheme.Legacy" />
+        <activity
             android:name=".ui.IntroduceAty"
             android:theme="@style/Theme.Intro" />
         <activity
@@ -60,17 +64,25 @@
             android:name=".service.SendPicturesService"
             android:exported="false" />
 
+        <service android:name=".service.AppUpgradeService" />
+
+        <receiver android:name=".AppUpgradeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
         <!--Watch Listener Service-->
 
         <service
             android:name=".service.WearListenerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="cc.chenhe.lib.wearmsger.EVENT_LISTENER" />
+                <action android:name="me.chenhe.lib.wearmsger.EVENT_LISTENER" />
             </intent-filter>
         </service>
 
-        <service android:name="cc.chenhe.lib.wearmsger.service.GmsListenerAgentService">
+        <service android:name="me.chenhe.lib.wearmsger.service.GmsListenerAgentService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
@@ -93,34 +105,6 @@
                     android:scheme="wear" />
             </intent-filter>
         </service>
-
-        <service
-            android:name="cc.chenhe.lib.wearmsger.service.MmsListenerAgentService"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.mobvoi.android.wearable.BIND_LISTENER" />
-                <action android:name="com.mobvoi.android.wearable.MESSAGE_RECEIVED" />
-                <action android:name="com.mobvoi.android.wearable.DATA_CHANGED" />
-
-                <data
-                    android:host="*"
-                    android:pathPrefix="/request/image-folders"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/request/image-preview"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/request/images"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/request/image-hd"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-
     </application>
 
 </manifest>

@@ -24,7 +24,7 @@ import android.view.*
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.observe
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -33,12 +33,10 @@ import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.SimpleItemDecoration
 import cc.chenhe.weargallery.databinding.FrImagesBinding
 import cc.chenhe.weargallery.service.SendPicturesService
-import cc.chenhe.weargallery.ui.common.BaseFr
-import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
 import cc.chenhe.weargallery.ui.common.DragSelectProcessor
 import cc.chenhe.weargallery.ui.common.DragSelectTouchListener
-import cc.chenhe.weargallery.ui.main.PagerFrDirections
-import cc.chenhe.weargallery.ui.main.SharedViewModel
+import cc.chenhe.weargallery.ui.legacy.PagerFrDirections
+import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesAty
 import cc.chenhe.weargallery.utils.calculateImageColumnCount
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -46,7 +44,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
 
-class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
+class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
 
     private val sharedModel: SharedViewModel by sharedViewModel()
     private val model: ImagesViewModel by viewModel()
@@ -62,7 +60,11 @@ class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FrImagesBinding.inflate(inflater, container, false)
         binding.header.toolbar.apply {
             inflateMenu(R.menu.images)
@@ -73,7 +75,10 @@ class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
         setupRecyclerView()
 
         model.columnWidth.observe(viewLifecycleOwner) { itemWidth ->
@@ -87,18 +92,19 @@ class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
             binding.header.toolbar.menu.findItem(R.id.menu_images_check_all)?.isVisible = it
             binding.header.toolbar.menu.findItem(R.id.menu_send)?.isVisible = it
             if (it) {
-                (binding.header.root as CollapseHeaderLayout).setTitle(R.string.images_selected_none)
+                binding.header.root.setTitle(R.string.images_selected_none)
                 adapter.enterSelectMode()
             } else {
-                (binding.header.root as CollapseHeaderLayout).setTitle(R.string.nav_menu_images)
+                binding.header.root.setTitle(R.string.nav_menu_images)
                 adapter.exitSelectMode()
             }
         }
 
         sharedModel.groupImages.observe(viewLifecycleOwner) {
             adapter.submitData(it)
-            val num = it.sumBy { item -> item.children.size }
-            binding.header.subtitleTextView.text = resources.getQuantityString(R.plurals.images_subtitle, num, num)
+            val num = it.sumOf { item -> item.children.size }
+            binding.header.subtitleTextView.text =
+                resources.getQuantityString(R.plurals.images_subtitle, num, num)
         }
     }
 
@@ -124,7 +130,7 @@ class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
     private fun setupRecyclerView() {
         // Zoom
         val scaleGestureDetector = ScaleGestureDetector(requireContext(), object :
-                ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            ScaleGestureDetector.SimpleOnScaleGestureListener() {
             override fun onScaleEnd(detector: ScaleGestureDetector) {
                 when {
                     abs(detector.scaleFactor) < 0.1 -> return
@@ -138,21 +144,41 @@ class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
             false
         }
 
-        binding.imagesRecyclerView.addItemDecoration(SimpleItemDecoration(requireContext(), R.dimen.images_grid_padding))
-        adapter = ImagesAdapter(this, model.getSelectionStatus(), sharedModel.getGroupBasedCurrentPosition())
+        binding.imagesRecyclerView.addItemDecoration(
+            SimpleItemDecoration(
+                requireContext(),
+                R.dimen.images_grid_padding
+            )
+        )
+        adapter = ImagesAdapter(
+            this,
+            model.getSelectionStatus(),
+            sharedModel.getGroupBasedCurrentPosition()
+        )
         binding.imagesRecyclerView.adapter = adapter
         binding.imagesRecyclerView.post {
-            setSpanCount(calculateImageColumnCount(binding.imagesRecyclerView.width, model.columnWidth.value!!))
+            setSpanCount(
+                calculateImageColumnCount(
+                    binding.imagesRecyclerView.width,
+                    model.columnWidth.value!!
+                )
+            )
         }
 
         // drag selection
         val dragSelectProcessor = DragSelectProcessor(DragSelectProcessor.Mode.Simple, object :
-                DragSelectProcessor.SimpleSelectionHandler() {
-            override fun updateSelection(start: Int, end: Int, isSelected: Boolean, calledFromOnStart: Boolean) {
+            DragSelectProcessor.SimpleSelectionHandler() {
+            override fun updateSelection(
+                start: Int,
+                end: Int,
+                isSelected: Boolean,
+                calledFromOnStart: Boolean
+            ) {
                 adapter.selectRange(start, end, isSelected)
             }
         })
-        val dragSelectTouchListener = DragSelectTouchListener().withSelectListener(dragSelectProcessor)
+        val dragSelectTouchListener =
+            DragSelectTouchListener().withSelectListener(dragSelectProcessor)
 
         adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
 
@@ -162,9 +188,10 @@ class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
                     sharedModel.currentPosition = adapter.getImageListIndex(position)
                     // Nav to detail fragment
                     val imageView = view.findViewById<ImageView>(R.id.itemImageView)
-                    val action = PagerFrDirections.actionPagerFrToImageDetailFr(shareAnimationName = imageView.transitionName)
+                    val action =
+                        PagerFrDirections.actionPagerFrToImageDetailFr(shareAnimationName = imageView.transitionName)
                     val extras = FragmentNavigatorExtras(
-                            imageView to imageView.transitionName
+                        imageView to imageView.transitionName
                     )
                     findNavController().navigate(action, extras)
                 }
@@ -179,9 +206,14 @@ class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
         adapter.onSelectChangedCallback = { count ->
             if (count == 0) {
                 binding.header
-                (binding.header.root as CollapseHeaderLayout).setTitle(getString(R.string.images_selected_none))
+                binding.header.root.setTitle(getString(R.string.images_selected_none))
             } else {
-                (binding.header.root as CollapseHeaderLayout).setTitle(getString(R.string.images_selected_num, count))
+                binding.header.root.setTitle(
+                    getString(
+                        R.string.images_selected_num,
+                        count
+                    )
+                )
             }
             model.saveSelectionStatus(adapter.getSelected())
         }
@@ -193,28 +225,28 @@ class ImagesFr : BaseFr(), Toolbar.OnMenuItemClickListener {
             R.id.menu_images_check_all -> {
                 adapter.setSelectAll(adapter.getSelected().size != adapter.getChildCount())
             }
-            R.id.menu_settings -> {
-                findNavController().navigate(R.id.preferenceFr)
-            }
             R.id.menu_send -> {
                 val selected = adapter.getSelected()
                 MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(R.string.send_dialog_title)
-                        .setMessage(getString(R.string.send_dialog_content, selected.size))
-                        .setPositiveButton(R.string.confirm) { _, _ ->
-                            SendPicturesService.add(requireContext(), selected, null)
-                            model.inSelectionMode.value = false
+                    .setTitle(R.string.send_dialog_title)
+                    .setMessage(getString(R.string.send_dialog_content, selected.size))
+                    .setPositiveButton(R.string.confirm) { _, _ ->
+                        SendPicturesService.add(requireContext(), selected, null)
+                        model.inSelectionMode.value = false
+                    }
+                    .setNeutralButton(R.string.send_dialog_advanced) { _, _ ->
+                        val intent = Intent(requireContext(), SendImagesAty::class.java).apply {
+                            action = Intent.ACTION_SEND_MULTIPLE
+                            putParcelableArrayListExtra(
+                                Intent.EXTRA_STREAM,
+                                ArrayList(selected.map { it.uri })
+                            )
                         }
-                        .setNeutralButton(R.string.send_dialog_advanced) { _, _ ->
-                            val intent = Intent(requireContext(), SendImagesAty::class.java).apply {
-                                action = Intent.ACTION_SEND_MULTIPLE
-                                putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(selected.map { it.uri }))
-                            }
-                            startActivity(intent)
-                            model.inSelectionMode.value = false
-                        }
-                        .setNegativeButton(R.string.cancel, null)
-                        .show()
+                        startActivity(intent)
+                        model.inSelectionMode.value = false
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
             }
             else -> return false
         }

@@ -3,66 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home"
-    app:startDestination="@id/pagerFr"
-    tools:ignore="UnusedNavigation">
+    app:startDestination="@id/mainFr">
 
     <fragment
-        android:id="@+id/imageDetailFr"
-        android:name="cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr"
-        android:label="ImageDetailFr"
-        tools:layout="@layout/fr_image_detail">
-        <argument
-            android:name="shareAnimationName"
-            app:argType="string" />
-        <argument
-            android:name="source"
-            app:argType="cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr$Source" />
-        <argument
-            android:name="sourceAttr"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/pagerFr"
-        android:name="cc.chenhe.weargallery.ui.main.PagerFr"
-        android:label="PagerFr"
-        tools:layout="@layout/fr_pager">
+        android:id="@+id/mainFr"
+        android:name="cc.chenhe.weargallery.ui.main.MainFr"
+        android:label="MainFr"
+        tools:layout="@layout/fr_main">
         <action
-            android:id="@+id/action_pagerFr_to_imageDetailFr"
-            app:destination="@id/imageDetailFr"
-            app:enterAnim="@anim/image_detail_enter"
-            app:popExitAnim="@anim/image_detail_exit">
-            <argument
-                android:name="source"
-                android:defaultValue="IMAGES"
-                app:argType="cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr$Source" />
-        </action>
-        <action
-            android:id="@+id/action_pagerFr_to_folderImagesFr"
-            app:destination="@id/folderImagesFr" />
-        <action
-            android:id="@+id/action_pagerFr_to_preferenceFr"
+            android:id="@+id/action_mainFr_to_preferenceFr"
             app:destination="@id/preferenceFr" />
-    </fragment>
-    <fragment
-        android:id="@+id/folderImagesFr"
-        android:name="cc.chenhe.weargallery.ui.folderimages.FolderImagesFr"
-        android:label="FolderImagesFr"
-        tools:layout="@layout/fr_folder_images">
-        <argument
-            android:name="folderPath"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_folderImagesFr_to_imageDetailFr"
-            app:destination="@id/imageDetailFr"
-            app:enterAnim="@anim/image_detail_enter"
-            app:popExitAnim="@anim/image_detail_exit">
-            <argument
-                android:name="source"
-                android:defaultValue="FOLDER"
-                app:argType="cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr$Source" />
-        </action>
     </fragment>
     <fragment
         android:id="@+id/preferenceFr"

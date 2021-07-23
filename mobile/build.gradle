@@ -14,11 +14,11 @@ if (localPropertiesFile.isFile()) {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 23
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 220600010 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName "v6.0.1-preview"
 
@@ -59,6 +59,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     wearApp project(':wear')
     implementation project(':common')
+
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -68,6 +69,8 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:$viewpager2Version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
+    implementation("androidx.work:work-runtime-ktx:2.5.0")
     implementation "io.insert-koin:koin-android:$koinVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
@@ -78,12 +81,17 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation 'com.google.android.gms:play-services-wearable:17.1.0'
+    implementation "id.zelory:compressor:3.0.1"
     implementation "com.heinrichreimersoftware:material-intro:$materialIntroVersion"
+    implementation("me.chenhe:wearmsger:$wearMsgerVersion")
+
 
     // AndroidLinks
     implementation 'com.drakeet.about:about:2.4.1'
     implementation 'com.drakeet.multitype:multitype:4.0.0'
     implementation 'com.drakeet.about:about-extension:2.4.1'
+    //noinspection GradleDependency
+    implementation 'com.alibaba:fastjson:1.1.70.android' // required by android links
 
     // pictures
     implementation 'com.github.bumptech.glide:glide:4.12.0'

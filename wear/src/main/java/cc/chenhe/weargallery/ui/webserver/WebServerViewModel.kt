@@ -30,7 +30,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import cc.chenhe.lib.wearmsger.WM
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.WebServer
 import cc.chenhe.weargallery.repository.ImageRepository
@@ -41,12 +40,13 @@ import cc.chenhe.weargallery.uilts.setIfNot
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import me.chenhe.lib.wearmsger.WM
 
 const val TAG = "WebServerVM"
 
 class WebServerViewModel(
-        application: Application,
-        private val repository: ImageRepository
+    application: Application,
+    private val repository: ImageRepository
 ) : AndroidViewModel(application) {
 
     companion object {
@@ -109,8 +109,9 @@ class WebServerViewModel(
     fun checkNetwork() {
         waitNetworkJob?.cancel()
         _networkState.setIfNot(NETWORK_STATE_TRYING)
-        connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (shouldUsdConnectivityManager(connectivityManager)) {
+        connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (shouldUsdConnectivityManager()) {
             requestWifi(requireNotNull(connectivityManager))
         } else {
             checkWifi(connectivityManager)
@@ -128,8 +129,8 @@ class WebServerViewModel(
             }
         }
         val request = NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .build()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .build()
         connectivityManager.requestNetwork(request, requireNotNull(networkCallback))
         waitNetworkJob = viewModelScope.launch {
             delay(NETWORK_CONNECTIVITY_TIMEOUT_MS)
@@ -159,9 +160,9 @@ class WebServerViewModel(
     /**
      * Whether should we use [ConnectivityManager] API.
      */
-    private fun shouldUsdConnectivityManager(manager: ConnectivityManager?): Boolean {
+    private fun shouldUsdConnectivityManager(): Boolean {
         // We only use it in wear os.
-        return manager != null && WM.mode == WM.MODE_GMS
+        return !WM.isTicwear()
     }
 
     @Suppress("DEPRECATION")
@@ -190,7 +191,8 @@ class WebServerViewModel(
                 logi(TAG, "Web server start: $ip")
             } catch (e: Exception) {
                 loge(TAG, "Web server start failed.")
-                serverErrorMsg = context.getString(R.string.server_failed, e.message) // must set message first
+                serverErrorMsg =
+                    context.getString(R.string.server_failed, e.message) // must set message first
                 _serverState.setIfNot(SERVER_STATE_FAIL)
                 e.printStackTrace()
             }

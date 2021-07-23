@@ -31,8 +31,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class SharedViewModel(
-        application: Application,
-        private val imageResp: RemoteImageRepository
+    application: Application,
+    private val imageRepo: RemoteImageRepository
 ) : AndroidViewModel(application) {
 
     private val _localImages = ImageScopeLiveData().map { Success(it) }
@@ -58,7 +58,8 @@ class SharedViewModel(
     var currentPosition = -1
 
     private val _fetchRemoteImageFolders = MutableLiveData(true)
-    val remoteImageFolders = _fetchRemoteImageFolders.switchMap { imageResp.loadImageFolder(application) }
+    val remoteImageFolders =
+        _fetchRemoteImageFolders.switchMap { imageRepo.loadImageFolder(application) }
 
     private var pendingDeleteImage: Uri? = null
     private val _permissionNeededForDelete = MutableLiveData<IntentSender?>()
@@ -74,7 +75,7 @@ class SharedViewModel(
 
     fun deleteLocalImage(localUri: Uri) {
         viewModelScope.launch {
-            val intentSender = imageResp.deleteLocalImage(getApplication(), localUri)
+            val intentSender = imageRepo.deleteLocalImage(getApplication(), localUri)
             if (intentSender != null) {
                 pendingDeleteImage = localUri
             }

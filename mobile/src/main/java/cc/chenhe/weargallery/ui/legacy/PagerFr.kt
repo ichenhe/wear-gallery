@@ -15,40 +15,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.chenhe.weargallery.ui.main
+package cc.chenhe.weargallery.ui.legacy
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.util.getVersionCode
 import cc.chenhe.weargallery.databinding.FrPagerBinding
-import cc.chenhe.weargallery.ui.IntroduceAty
-import cc.chenhe.weargallery.ui.common.BaseFr
 import cc.chenhe.weargallery.ui.folders.FoldersFr
 import cc.chenhe.weargallery.ui.images.ImagesFr
-import cc.chenhe.weargallery.utils.NOTIFY_ID_PERMISSION
-import cc.chenhe.weargallery.utils.checkStoragePermissions
-import cc.chenhe.weargallery.utils.getLastStartVersion
-import cc.chenhe.weargallery.utils.setLastStartVersion
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 
 private const val INDEX_IMAGES = 0
 private const val INDEX_FOLDERS = 1
 
-private const val REQUEST_INTRODUCE = 1
 
-class PagerFr : BaseFr(), BottomNavigationView.OnNavigationItemSelectedListener {
+class PagerFr : Fragment(), NavigationBarView.OnItemSelectedListener {
 
     private lateinit var binding: FrPagerBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FrPagerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -56,28 +50,9 @@ class PagerFr : BaseFr(), BottomNavigationView.OnNavigationItemSelectedListener 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.pager.isUserInputEnabled = false
-        binding.mainBottomNav.setOnNavigationItemSelectedListener(this)
+        binding.mainBottomNav.setOnItemSelectedListener(this)
 
-        if (!checkStoragePermissions(requireContext()) ||
-                getLastStartVersion(requireContext()) < getVersionCode(requireContext())) {
-            startActivityForResult(Intent(context, IntroduceAty::class.java), REQUEST_INTRODUCE)
-        } else {
-            loadFragments()
-        }
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_INTRODUCE) {
-            if (checkStoragePermissions(requireContext())) {
-                setLastStartVersion(requireContext(), getVersionCode(requireContext()))
-                loadFragments()
-                context?.let { ctx -> NotificationManagerCompat.from(ctx).cancel(NOTIFY_ID_PERMISSION) }
-            } else {
-                activity?.finish()
-            }
-        }
+        loadFragments()
     }
 
     private fun loadFragments() {

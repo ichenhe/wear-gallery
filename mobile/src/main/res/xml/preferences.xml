@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/pref_category_general">
 
@@ -9,27 +8,6 @@
             android:icon="@drawable/ic_pref_watch"
             android:key="tip_with_watch"
             android:title="@string/pref_phone_show_tips_about_watch" />
-
-        <ListPreference
-            android:defaultValue="@string/pref_wear_mode_value_auto"
-            android:icon="@drawable/ic_pref_tw"
-            android:key="wear_mode"
-            android:title="@string/pref_wear_mode"
-            app:entries="@array/pref_wear_mode_entries"
-            app:entryValues="@array/pref_wear_mode_entry_values"
-            app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/pref_category_advanced">
-
-        <ListPreference
-            android:entryValues="@array/pref_compress_entry_values"
-            app:defaultValue="@string/pref_compress_entry_value_luban"
-            app:entries="@array/pref_compress_entries"
-            app:icon="@drawable/ic_pref_compress"
-            app:key="preview_compress"
-            app:summary="@string/pref_compress_summary"
-            app:title="@string/pref_compress" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_information">

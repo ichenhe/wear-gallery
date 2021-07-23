@@ -25,24 +25,26 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.Keep
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.util.filePath
 import cc.chenhe.weargallery.databinding.FrImageDetailBinding
-import cc.chenhe.weargallery.ui.common.BaseFr
-import cc.chenhe.weargallery.ui.common.requireCompatAty
-import cc.chenhe.weargallery.ui.common.setupToolbar
-import cc.chenhe.weargallery.ui.main.MainAty
-import cc.chenhe.weargallery.ui.main.SharedViewModel
+import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.utils.getTitleTextView
+import cc.chenhe.weargallery.utils.requireCompatAty
+import cc.chenhe.weargallery.utils.resetStatusBarTextColor
+import cc.chenhe.weargallery.utils.setupToolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ImageDetailFr : BaseFr() {
+class ImageDetailFr : Fragment() {
 
     @Keep
     enum class Source {
@@ -56,6 +58,8 @@ class ImageDetailFr : BaseFr() {
 
     private lateinit var imageGestureDetector: GestureDetector
     private lateinit var adapter: ImageDetailAdapter
+
+    private var originalNavigationBarColor = 0
 
     private val dateFormat by lazy {
         SimpleDateFormat(getString(R.string.date_format_full), Locale.getDefault())
@@ -85,7 +89,7 @@ class ImageDetailFr : BaseFr() {
             viewLifecycleOwner,
             onBackPressedCallback
         )
-        setupSystemUI()
+        setupSystemUI(binding.root)
         // toolbar
         setupToolbar(binding.imageDetailToolBar)
         requireCompatAty().supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -96,43 +100,45 @@ class ImageDetailFr : BaseFr() {
         }
 
         panelBehavior = ((binding.imageDetailPanel.layoutParams as CoordinatorLayout.LayoutParams)
-                .behavior as ImageDetailPanelBehavior)
+            .behavior as ImageDetailPanelBehavior)
         panelBehavior.onStateChangeListener = { state ->
             if (state == ImageDetailPanelBehavior.STATE_EXPANDED) {
                 binding.imageDetailToolBar.getTitleTextView()?.visibility = View.VISIBLE
-                showSystemUi()
-                setStatusBarColor(Color.BLACK)
+                setSystemBarVisibility(requireView(), true)
+                requireActivity().window.statusBarColor = Color.BLACK
             } else {
                 binding.imageDetailToolBar.getTitleTextView()?.visibility = View.INVISIBLE
-                setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.imageDetailBarBg))
+                requireActivity().window.statusBarColor =
+                    ContextCompat.getColor(requireContext(), R.color.imageDetailBarBg)
             }
         }
         return binding.root
     }
 
-    private fun setupSystemUI() {
-        showSystemUi()
-        setStatusBarColor(ContextCompat.getColor(requireContext(), R.color.imageDetailBarBg))
-        val aty = requireActivity() as MainAty
-        imageGestureDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                if (aty.isSystemUIVisible()) {
-                    hideSystemUI()
-                } else {
-                    showSystemUi()
-                }
-                return true
-            }
-        })
+    private fun setupSystemUI(rootView: View) {
+        originalNavigationBarColor = requireActivity().window.navigationBarColor
+        requireActivity().window.navigationBarColor = Color.TRANSPARENT
+        requireActivity().window.statusBarColor =
+            ContextCompat.getColor(requireContext(), R.color.imageDetailBarBg)
+        WindowInsetsControllerCompat(requireActivity().window, rootView)
+            .isAppearanceLightStatusBars = false
+        setSystemBarVisibility(rootView, true)
+        var isNavigationBarVisible = true
 
-        setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                // visible
-                binding.imageDetailToolBar.visibility = View.VISIBLE
-            } else {
-                // invisible
-                binding.imageDetailToolBar.visibility = View.INVISIBLE
-            }
+        imageGestureDetector =
+            GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
+                override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                    setSystemBarVisibility(rootView, !isNavigationBarVisible)
+                    return true
+                }
+            })
+
+        rootView.setOnApplyWindowInsetsListener { _, insets ->
+            isNavigationBarVisible = WindowInsetsCompat.toWindowInsetsCompat(insets, binding.root)
+                .isVisible(WindowInsetsCompat.Type.navigationBars())
+            binding.imageDetailToolBar.visibility =
+                if (isNavigationBarVisible) View.VISIBLE else View.INVISIBLE
+            insets
         }
     }
 
@@ -184,25 +190,26 @@ class ImageDetailFr : BaseFr() {
         }
     }
 
-    private fun showSystemUi() {
-        requireActivity().window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-    }
-
-    private fun hideSystemUI() {
-        requireActivity().window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                // Hide the nav bar and status bar
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    private fun setSystemBarVisibility(rootView: View, visible: Boolean) {
+        if (visible)
+            WindowInsetsControllerCompat(requireActivity().window, rootView).apply {
+                show(WindowInsetsCompat.Type.systemBars())
+            }
+        else
+            WindowInsetsControllerCompat(requireActivity().window, rootView).apply {
+                hide(WindowInsetsCompat.Type.systemBars())
+                systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
     }
 
     override fun onDestroyView() {
-        (requireActivity() as MainAty).resetSystemUi()
-        resetStatusBarColor()
+        setSystemBarVisibility(requireView(), true)
+        requireActivity().window.apply {
+            navigationBarColor = originalNavigationBarColor
+            statusBarColor = Color.TRANSPARENT
+        }
+        requireActivity().resetStatusBarTextColor(binding.root)
         binding.imageDetailPager.unregisterOnPageChangeCallback(onPageChangeCallback)
         super.onDestroyView()
     }

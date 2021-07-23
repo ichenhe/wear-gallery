@@ -21,7 +21,7 @@ import android.content.Intent
 import cc.chenhe.weargallery.common.jsonadapter.UriAdapter
 import cc.chenhe.weargallery.ui.folders.FoldersViewModel
 import cc.chenhe.weargallery.ui.images.ImagesViewModel
-import cc.chenhe.weargallery.ui.main.SharedViewModel
+import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesViewModel
 import com.squareup.moshi.Moshi
 import org.koin.android.ext.koin.androidApplication

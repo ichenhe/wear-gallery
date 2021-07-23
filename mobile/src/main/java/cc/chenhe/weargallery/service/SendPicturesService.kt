@@ -27,23 +27,22 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import cc.chenhe.lib.wearmsger.BothWayHub
-import cc.chenhe.lib.wearmsger.WM
-import cc.chenhe.lib.wearmsger.bean.BothWayCallback
-import cc.chenhe.lib.wearmsger.compatibility.data.Asset
-import cc.chenhe.lib.wearmsger.compatibility.data.PutDataMapRequest
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.comm.*
 import cc.chenhe.weargallery.common.comm.bean.SendResp
 import cc.chenhe.weargallery.ui.main.MainAty
 import cc.chenhe.weargallery.utils.*
+import com.google.android.gms.wearable.Asset
+import com.google.android.gms.wearable.PutDataMapRequest
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
+import me.chenhe.lib.wearmsger.BothWayHub
+import me.chenhe.lib.wearmsger.bean.BothWayCallback
 import org.koin.android.ext.android.get
 import java.io.FileNotFoundException
 import java.util.concurrent.LinkedBlockingQueue
@@ -65,12 +64,12 @@ class SendPicturesService : Service() {
 
     @Parcelize
     data class Job(
-            val image: Image,
-            /**
-             * Relative path to save on watch (without / prefix), `null` means use default location decided by watch
-             * client.
-             */
-            val target: String?
+        val image: Image,
+        /**
+         * Relative path to save on watch (without / prefix), `null` means use default location decided by watch
+         * client.
+         */
+        val target: String?
     ) : Parcelable
 
     companion object {
@@ -187,9 +186,10 @@ class SendPicturesService : Service() {
         return withContext(Dispatchers.IO) {
             try {
                 // Test if file is exist and make sure it will be closed with `use`.
-                this@SendPicturesService.contentResolver.openAssetFileDescriptor(job.image.uri, "r").use {}
+                this@SendPicturesService.contentResolver.openAssetFileDescriptor(job.image.uri, "r")
+                    .use {}
                 val req = PutDataMapRequest.create(PATH_SEND_IMAGE)
-                req.getDataMap().apply {
+                req.dataMap.apply {
                     putAsset(ITEM_IMAGE, createImageAsset(job.image.uri))
                     job.target?.let { putString(ITEM_SAVE_PATH, it) }
                     putInt(ITEM_INDEX, sendCount + 1)
@@ -197,22 +197,23 @@ class SendPicturesService : Service() {
                     val imageInfo = get<Moshi>().adapter(Image::class.java).toJson(job.image)
                     putString(ITEM_IMAGE_INFO, imageInfo)
                 }
-                BothWayHub.requestForMessage(this@SendPicturesService, req, TIMEOUT).let { callback ->
-                    when (callback.result) {
-                        BothWayCallback.Result.OK -> {
-                            val resp = callback.getStringData()?.let {
-                                get<Moshi>().adapter(SendResp::class.java).fromJson(it)
+                BothWayHub.requestForMessage(this@SendPicturesService, req, TIMEOUT)
+                    .let { callback ->
+                        when (callback.result) {
+                            BothWayCallback.Result.OK -> {
+                                val resp = callback.getStringData()?.let {
+                                    get<Moshi>().adapter(SendResp::class.java).fromJson(it)
+                                }
+                                if (resp == null || resp.result != RESULT_OK) {
+                                    return@withContext SEND_RECEIVE_ERROR
+                                } else {
+                                    return@withContext SEND_OK
+                                }
                             }
-                            if (resp == null || resp.result != RESULT_OK) {
-                                return@withContext SEND_RECEIVE_ERROR
-                            } else {
-                                return@withContext SEND_OK
-                            }
+                            BothWayCallback.Result.REQUEST_FAIL -> return@withContext SEND_REQUEST_FAILED
+                            BothWayCallback.Result.TIMEOUT -> return@withContext SEND_TIMEOUT
                         }
-                        BothWayCallback.Result.REQUEST_FAIL -> return@withContext SEND_REQUEST_FAILED
-                        BothWayCallback.Result.TIMEOUT -> return@withContext SEND_TIMEOUT
                     }
-                }
             } catch (e: FileNotFoundException) {
                 logd(TAG, "Image file not exist, uri=${job.image.uri}")
                 return@withContext SEND_FILE_NOT_EXIST
@@ -240,8 +241,10 @@ class SendPicturesService : Service() {
 
     private fun createSendingNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(NOTIFY_CHANNEL_ID_SENDING,
-                    getString(R.string.notify_channel_sending_name), NotificationManager.IMPORTANCE_LOW)
+            val channel = NotificationChannel(
+                NOTIFY_CHANNEL_ID_SENDING,
+                getString(R.string.notify_channel_sending_name), NotificationManager.IMPORTANCE_LOW
+            )
             channel.description = getString(R.string.notify_channel_sending_description)
             getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
@@ -249,8 +252,11 @@ class SendPicturesService : Service() {
 
     private fun createSendResultNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(NOTIFY_CHANNEL_ID_SEND_RESULT,
-                    getString(R.string.notify_channel_send_result_name), NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(
+                NOTIFY_CHANNEL_ID_SEND_RESULT,
+                getString(R.string.notify_channel_send_result_name),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             channel.description = getString(R.string.notify_channel_send_result_description)
             getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
@@ -258,14 +264,18 @@ class SendPicturesService : Service() {
 
     private fun buildSendingNotification(): Notification {
         return NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_SENDING)
-                .setSmallIcon(R.drawable.ic_send)
-                .setContentTitle(getString(R.string.notify_send_images_title))
-                .setContentText(getString(R.string.notify_send_images_content, sendCount, totalCount,
-                        currentSending?.image?.name))
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .build()
+            .setSmallIcon(R.drawable.ic_send)
+            .setContentTitle(getString(R.string.notify_send_images_title))
+            .setContentText(
+                getString(
+                    R.string.notify_send_images_content, sendCount, totalCount,
+                    currentSending?.image?.name
+                )
+            )
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .build()
     }
 
     private fun notifySendFinish() {
@@ -273,13 +283,13 @@ class SendPicturesService : Service() {
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
         val n = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_SEND_RESULT)
-                .setSmallIcon(R.drawable.ic_notify_done)
-                .setContentTitle(getString(R.string.notify_send_images_success_title))
-                .setContentText(getString(R.string.notify_send_images_success_content, successCount))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build()
+            .setSmallIcon(R.drawable.ic_notify_done)
+            .setContentTitle(getString(R.string.notify_send_images_success_title))
+            .setContentText(getString(R.string.notify_send_images_success_content, successCount))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
         NotificationManagerCompat.from(this).notify(NOTIFY_ID_SEND_RESULT, n)
     }
 
@@ -287,27 +297,21 @@ class SendPicturesService : Service() {
         val intent = Intent(this, MainAty::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
-        val text = getString(R.string.notify_send_images_failed_content, getString(message), successCount)
+        val text =
+            getString(R.string.notify_send_images_failed_content, getString(message), successCount)
 
         val n = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_SEND_RESULT)
-                .setSmallIcon(R.drawable.ic_notify_error)
-                .setContentTitle(getString(R.string.notify_send_images_failed_title))
-                .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build()
+            .setSmallIcon(R.drawable.ic_notify_error)
+            .setContentTitle(getString(R.string.notify_send_images_failed_title))
+            .setContentText(text)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
         NotificationManagerCompat.from(this).notify(NOTIFY_ID_SEND_RESULT, n)
     }
 
-
-    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun createImageAsset(uri: Uri): Asset = withContext(Dispatchers.IO) {
-        if (WM.mode == WM.MODE_MMS) {
-            val fd = this@SendPicturesService.contentResolver.openFileDescriptor(uri, "r")!!
-            Asset.createFromFd(fd)
-        } else {
-            Asset.createFromUri(uri)
-        }
+        Asset.createFromUri(uri)
     }
 }

@@ -4,13 +4,13 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     resourcePrefix "lib_"
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
@@ -31,8 +31,6 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    //noinspection GradleDependency //TODO: del it
-    api 'com.alibaba:fastjson:1.1.70.android'
     implementation "androidx.annotation:annotation:$annotationVersion"
     implementation "androidx.core:core-ktx:$ktxVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -45,10 +43,7 @@ dependencies {
 
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
-    api("cc.chenhe:wear-msger:$wearMsgerVersion") {
-        exclude(group: 'com.ticwear')
-    }
-    api files('libs/mobvoi-api-1.1.1.aar')
+    compileOnly("me.chenhe:wearmsger:$wearMsgerVersion")
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "androidx.test:core:$testVersion" // Robolectric environment

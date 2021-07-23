@@ -20,7 +20,6 @@ package cc.chenhe.weargallery.utils
 import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.SpIntLiveData
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -30,16 +29,7 @@ private const val PREFERENCE_IMAGE_COLUMN_WIDTH = "image_column_width" // int
 private const val IMAGE_COLUMN_COUNT_D = 4
 
 private const val PREFERENCE_TIP_WITH_WATCH = "tip_with_watch" // boolean
-const val PREFERENCE_WEAR_MODE = "wear_mode" //string
-private const val PREFERENCE_PREVIEW_COMPRESS = "preview_compress" // string
 
-enum class PreviewCompress {
-    Luban, Legacy
-}
-
-enum class WearMode {
-    Auto, Gms, Mms
-}
 
 private fun getSp(context: Context) = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -51,34 +41,7 @@ fun setLastStartVersion(context: Context, version: Long) {
 
 fun getLastStartVersion(context: Context): Long = getSp(context).getLong(PREFERENCE_LAST_START_VERSION, 0)
 
-fun getPreviewCompress(context: Context): PreviewCompress {
-    return try {
-        PreviewCompress.valueOf(getSp(context).getString(PREFERENCE_PREVIEW_COMPRESS, PreviewCompress.Luban.name)!!)
-    } catch (e: IllegalArgumentException) {
-        getSp(context).edit {
-            putString(PREFERENCE_PREVIEW_COMPRESS, PreviewCompress.Luban.name)
-        }
-        PreviewCompress.Luban
-    }
-}
-
-fun getWearMode(context: Context): WearMode {
-    val auto = context.getString(R.string.pref_wear_mode_value_auto)
-    val gms = context.getString(R.string.pref_wear_mode_value_gms)
-    val mms = context.getString(R.string.pref_wear_mode_value_mms)
-    return when (val mode = getSp(context).getString(PREFERENCE_WEAR_MODE, auto)) {
-        auto -> WearMode.Auto
-        gms -> WearMode.Gms
-        mms -> WearMode.Mms
-        else -> {
-            logw("getWearMode", "Unknown wear mode <$mode>, return AUTO by default.")
-            WearMode.Auto
-        }
-    }
-}
-
 fun isTipWithWatch(context: Context): Boolean = getSp(context).getBoolean(PREFERENCE_TIP_WITH_WATCH, true)
-
 
 fun getImageColumnWidth(context: Context): Int {
     val m = context.resources.displayMetrics

@@ -24,10 +24,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import cc.chenhe.lib.wearmsger.BothWayHub
-import cc.chenhe.lib.wearmsger.DataHub
-import cc.chenhe.lib.wearmsger.compatibility.data.DataMapItem
-import cc.chenhe.lib.wearmsger.service.WMListenerService
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.comm.*
@@ -39,11 +35,15 @@ import cc.chenhe.weargallery.uilts.NOTIFY_CHANNEL_ID_PERMISSION
 import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.uilts.checkStoragePermissions
 import cc.chenhe.weargallery.uilts.logd
+import com.google.android.gms.wearable.DataMapItem
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.chenhe.lib.wearmsger.BothWayHub
+import me.chenhe.lib.wearmsger.DataHub
+import me.chenhe.lib.wearmsger.service.WMListenerService
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 

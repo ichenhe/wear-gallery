@@ -18,6 +18,7 @@
 package cc.chenhe.weargallery.ui.imagedetail
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Parcel
@@ -30,7 +31,6 @@ import android.view.ViewConfiguration
 import android.widget.OverScroller
 import android.widget.TextView
 import androidx.annotation.IntDef
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
@@ -119,7 +119,7 @@ class ImageDetailPanelBehavior(context: Context, attrs: AttributeSet?)
         toolbarRef = null
     }
 
-    override fun onSaveInstanceState(parent: CoordinatorLayout, child: View): Parcelable? {
+    override fun onSaveInstanceState(parent: CoordinatorLayout, child: View): Parcelable {
         val superState = super.onSaveInstanceState(parent, child)!!
         return SavedState(superState, state)
     }
@@ -267,7 +267,7 @@ class ImageDetailPanelBehavior(context: Context, attrs: AttributeSet?)
         titleRef?.get()?.alpha = progress
 
         val newColor = Color.BLACK.setAlpha(((1 - progress) * (255 - barColor.alpha) + barColor.alpha).toInt())
-        (view.context as AppCompatActivity).window.statusBarColor = newColor
+        (view.context as Activity).window.statusBarColor = newColor
         toolbarRef?.get()?.setBackgroundColor(newColor)
     }
 

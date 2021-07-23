@@ -17,97 +17,76 @@
 
 package cc.chenhe.weargallery.ui.main
 
+import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.util.HUA_WEI
-import cc.chenhe.weargallery.common.util.checkHuaWei
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import cc.chenhe.weargallery.databinding.AtyMainBinding
+import cc.chenhe.weargallery.service.AppUpgradeService
+import cc.chenhe.weargallery.ui.IntroduceAty
+import cc.chenhe.weargallery.utils.NOTIFY_ID_PERMISSION
+import cc.chenhe.weargallery.utils.checkStoragePermissions
+import cc.chenhe.weargallery.utils.resetStatusBarTextColor
 
 
 class MainAty : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        resetStateBarColor()
+    private lateinit var binding: AtyMainBinding
 
-        if (checkHuaWei()) {
-            MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.app_hw_title)
-                    .setMessage(R.string.app_hw_message)
-                    .setPositiveButton(R.string.app_hw_view) { _, _ ->
-                        val intent = Intent().apply {
-                            action = Intent.ACTION_VIEW
-                            data = Uri.parse(HUA_WEI)
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-                        startActivity(intent)
-                        finish()
-                    }
-                    .setNegativeButton(R.string.app_hw_exit) { _, _ ->
-                        finish()
-                    }
-                    .setCancelable(false)
-                    .show()
-        } else {
+    private val introduceLauncher =
+        registerForActivityResult(object : ActivityResultContract<Unit, Unit>() {
+            override fun createIntent(context: Context, input: Unit?): Intent {
+                return Intent(context, IntroduceAty::class.java)
+            }
+
+            override fun parseResult(resultCode: Int, intent: Intent?) {
+            }
+        }) {
+            if (!checkStoragePermissions(this)) {
+                finish()
+                return@registerForActivityResult
+            }
+            NotificationManagerCompat.from(this).cancel(NOTIFY_ID_PERMISSION)
             setContentView(R.layout.aty_main)
         }
-    }
 
-    private var darkBackgroundColor = -1
-    private var backgroundColor = -1
 
-    /**
-     * Set systemUiVisibility to VISIBLE.
-     *
-     * **Notice:** System status bar text color will change to default at the same time. Call [resetStateBarColor] to
-     * reset it.
-     */
-    fun resetSystemUi() {
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = AtyMainBinding.inflate(layoutInflater)
 
-    /**
-     * Reset to default system state bar color along with state bar text color.
-     *
-     * Use dark style if in dark mode or API level less than [Build.VERSION_CODES.M], white otherwise.
-     */
-    fun resetStateBarColor() {
-        val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (mode == Configuration.UI_MODE_NIGHT_YES) {
-            if (darkBackgroundColor == -1) {
-                val typedArray = obtainStyledAttributes(intArrayOf(android.R.attr.colorBackground))
-                darkBackgroundColor = typedArray.getColor(0, Color.BLACK)
-                typedArray.recycle()
-            }
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = darkBackgroundColor
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
-                        and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv())
-            }
+
+//        if (checkHuaWei()) {
+//            MaterialAlertDialogBuilder(this)
+//                .setTitle(R.string.app_hw_title)
+//                .setMessage(R.string.app_hw_message)
+//                .setPositiveButton(R.string.app_hw_view) { _, _ ->
+//                    val intent = Intent().apply {
+//                        action = Intent.ACTION_VIEW
+//                        data = Uri.parse(HUA_WEI)
+//                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                    }
+//                    startActivity(intent)
+//                    finish()
+//                }
+//                .setNegativeButton(R.string.app_hw_exit) { _, _ ->
+//                    finish()
+//                }
+//                .setCancelable(false)
+//                .show()
+//            return
+//        }
+        if (AppUpgradeService.shouldRunUpgrade(this) && !AppUpgradeService.isRunning())
+            ContextCompat.startForegroundService(this, Intent(this, AppUpgradeService::class.java))
+        if (!checkStoragePermissions(this)) {
+            introduceLauncher.launch(Unit)
         } else {
-            if (backgroundColor == -1) {
-                val typedArray = obtainStyledAttributes(intArrayOf(android.R.attr.colorBackground))
-                backgroundColor = typedArray.getColor(0, Color.WHITE)
-                typedArray.recycle()
-            }
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.decorView.systemUiVisibility = (window.decorView.systemUiVisibility
-                    or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
-            window.statusBarColor = backgroundColor
+            setContentView(binding.root)
+            resetStatusBarTextColor(binding.root)
         }
     }
-
-    fun isSystemUIVisible() = (window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0
-
 }
