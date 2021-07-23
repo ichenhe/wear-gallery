@@ -92,12 +92,12 @@
     <string name="wf_text_day">日</string>
     <string name="wf_not_support_gif">暂不支持gif动图</string>
 
-    <string name="upgrade_message">数据升级中\n不要退出腕间图库</string>
+    <string name="upgrade_message">数据升级中\n请勿强行终止进程</string>
 
     <string name="notify_channel_permission_name">无权操作</string>
     <string name="notify_channel_permission_description">当没有权限完成请求时的提示。</string>
-    <string name="notify_channel_upgrade_name">升级</string>
-    <string name="notify_channel_upgrade_description">显示升级数据迁移的进度。</string>
+    <string name="notify_channel_important_processing">重要的处理</string>
+    <string name="notify_channel_important_processing_description">显示正在执行的高优先级工作。</string>
 
     <string name="notify_permission_title">需要权限</string>
     <string name="notify_permission_text">请点击并授予必要的权限。</string>

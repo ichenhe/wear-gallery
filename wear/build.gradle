@@ -75,6 +75,7 @@ dependencies {
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation "androidx.annotation:annotation:$annotationVersion"
     implementation "androidx.palette:palette:$paletteVersion"

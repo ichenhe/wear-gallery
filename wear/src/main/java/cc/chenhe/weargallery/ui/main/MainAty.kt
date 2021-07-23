@@ -18,15 +18,14 @@
 package cc.chenhe.weargallery.ui.main
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.observe
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
+import cc.chenhe.weargallery.ui.UpgradingAty
 import cc.chenhe.weargallery.uilts.addQrCode
 import cc.chenhe.weargallery.uilts.showHuawei
 import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
@@ -51,16 +50,26 @@ class MainAty : AppCompatActivity() {
                 skipText = getString(R.string.dont_show_again)
                 showSkipLayout = true
                 addQrCode(HUA_WEI)
-                setPositiveButtonIcon(R.drawable.ic_dialog_confirm, DialogInterface.OnClickListener { _, _ ->
+                setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { _, _ ->
                     showHuawei(this@MainAty, !isSkipChecked)
-                })
+                }
                 setOnDismissListener {
                     init()
                 }
             }.show()
-        } else {
-            init()
+            return
         }
+
+        val launcher = registerForActivityResult(UpgradingAty.UpgradeContract()) { ok ->
+            if (ok)
+                init()
+            else
+                finish()
+        }
+        if (UpgradingAty.startIfNecessary(this, launcher))
+            return
+
+        init()
     }
 
     private fun init() {
@@ -68,7 +77,15 @@ class MainAty : AppCompatActivity() {
 
         sharedViewModel.permissionNeededForDelete.observe(this) { intentSender ->
             intentSender?.let {
-                startIntentSenderForResult(intentSender, DELETE_PERMISSION_REQUEST, null, 0, 0, 0, null)
+                startIntentSenderForResult(
+                    intentSender,
+                    DELETE_PERMISSION_REQUEST,
+                    null,
+                    0,
+                    0,
+                    0,
+                    null
+                )
             }
         }
     }
@@ -79,4 +96,6 @@ class MainAty : AppCompatActivity() {
             sharedViewModel.deletePendingImage()
         }
     }
+
+
 }

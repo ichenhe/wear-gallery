@@ -107,12 +107,12 @@
     <string name="wf_text_slash" translatable="false">&#160;&#160;/</string>
     <string name="wf_not_support_gif">Gif is not supported</string>
 
-    <string name="upgrade_message">Upgrading…\nDon\'t exit Wear Gallery.</string>
+    <string name="upgrade_message">Upgrading…\nDon\'t forcibly stop the process.</string>
 
     <string name="notify_channel_permission_name">Permissions</string>
     <string name="notify_channel_permission_description">Tips for requesting permissions.</string>
-    <string name="notify_channel_upgrade_name">Upgrade</string>
-    <string name="notify_channel_upgrade_description">Progress for upgrade and data migration.</string>
+    <string name="notify_channel_important_processing">Important Processing</string>
+    <string name="notify_channel_important_processing_description">Show the high priority work being performed.</string>
 
     <string name="notify_permission_title">Require Permissions</string>
     <string name="notify_permission_text">Click to grant permissions.</string>

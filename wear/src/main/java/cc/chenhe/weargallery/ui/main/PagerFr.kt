@@ -18,11 +18,9 @@
 package cc.chenhe.weargallery.ui.main
 
 import android.Manifest
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,18 +29,15 @@ import android.view.ViewGroup
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.observe
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cc.chenhe.weargallery.databinding.FrPagerBinding
 import cc.chenhe.weargallery.ui.IntroduceAty
-import cc.chenhe.weargallery.ui.UpgradingAty
 import cc.chenhe.weargallery.uilts.ACTION_APPLICATION_UPGRADE_COMPLETE
 import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val REQUEST_INTRODUCE = 1
-private const val REQUEST_UPGRADE = 2
 
 class PagerFr : Fragment() {
 
@@ -53,7 +48,11 @@ class PagerFr : Fragment() {
 
     private lateinit var adapter: PagerAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FrPagerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -62,28 +61,20 @@ class PagerFr : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (!checkPermission()) {
-            startActivityForResult(Intent(requireContext(), IntroduceAty::class.java), REQUEST_INTRODUCE)
+            startActivityForResult(
+                Intent(requireContext(), IntroduceAty::class.java),
+                REQUEST_INTRODUCE
+            )
         } else {
-            checkUpgradeAndLoadData()
-        }
-    }
-
-    private fun checkUpgradeAndLoadData() {
-        val r = UpgradingAty.startIfNecessary(this, REQUEST_UPGRADE) {
-            upgradeReceiver = UpgradeReceiver().also { receiver ->
-                LocalBroadcastManager.getInstance(requireContext())
-                        .registerReceiver(receiver, IntentFilter(ACTION_APPLICATION_UPGRADE_COMPLETE))
-            }
-        }
-        if (!r) {
-            // no need to upgrade
             loadFragments()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        upgradeReceiver?.let { LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(it) }
+        upgradeReceiver?.let {
+            LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(it)
+        }
         upgradeReceiver = null
     }
 
@@ -91,13 +82,11 @@ class PagerFr : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_INTRODUCE) {
             if (checkPermission()) {
-                checkUpgradeAndLoadData()
-                context?.let { ctx -> NotificationManagerCompat.from(ctx).cancel(NOTIFY_ID_PERMISSION) }
+                loadFragments()
+                context?.let { ctx ->
+                    NotificationManagerCompat.from(ctx).cancel(NOTIFY_ID_PERMISSION)
+                }
             } else {
-                activity?.finish()
-            }
-        } else if (requestCode == REQUEST_UPGRADE) {
-            if (resultCode != Activity.RESULT_OK) {
                 activity?.finish()
             }
         }
@@ -118,10 +107,14 @@ class PagerFr : Fragment() {
      * @return Whether has permissions.
      */
     private fun checkPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(requireContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
     }
 
     private inner class UpgradeReceiver : BroadcastReceiver() {
@@ -139,7 +132,8 @@ class PagerFr : Fragment() {
         override fun getItemCount(): Int = model.size
 
         override fun createFragment(position: Int): Fragment {
-            return model.createFragment(position) ?: throw IllegalArgumentException("Unexpected main pager index.")
+            return model.createFragment(position)
+                ?: throw IllegalArgumentException("Unexpected main pager index.")
         }
 
         override fun getItemId(position: Int): Long {

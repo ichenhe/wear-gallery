@@ -23,16 +23,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.getVersionCode
 import cc.chenhe.weargallery.service.UpgradeService
 import cc.chenhe.weargallery.ui.UpgradingAty.Companion.startIfNecessary
-import cc.chenhe.weargallery.uilts.*
-
-private const val TAG = "UpgradingAty"
+import cc.chenhe.weargallery.uilts.ACTION_APPLICATION_UPGRADE_COMPLETE
+import cc.chenhe.weargallery.uilts.lastStartVersion
+import cc.chenhe.weargallery.uilts.logd
+import cc.chenhe.weargallery.uilts.logi
 
 /**
  * An Activity to show the progress of upgrading and data migration. In most cases you should use [startIfNecessary]
@@ -44,49 +46,50 @@ private const val TAG = "UpgradingAty"
 class UpgradingAty : AppCompatActivity() {
 
     companion object {
+        private const val TAG = "UpgradingAty"
+
+        /** bool. Whether the [UpgradeService] is running before the activity start. */
+        private const val EXTRA_RUNNING = "running"
 
         /**
-         * Start the activity only if the version has been change and [UpgradeService.shouldPerformUpgrade] returns
-         * `true`.
+         * Start the activity only if [UpgradeService.shouldPerformUpgrade] returns `true` or the
+         * service itself is running.
          *
-         * If there's no need to perform data migration, this function will update the last start version.
+         * This activity will start [UpgradeService] automatically.
          *
-         * @param before A callback that will be invoked before start [UpgradingAty].
-         *
+         * @param launcher The launcher returned by calling [registerForActivityResult] with a [UpgradeContract].
          * @return Whether the activity was started.
          */
-        fun startIfNecessary(fragment: Fragment, requestCode: Int, before: (() -> Unit)?): Boolean {
-            val old = lastStartVersion(fragment.requireContext())
-            val new = getVersionCode(fragment.requireContext())
-            if (old == new) {
-                logd(TAG, "Last start version equals to the current, no need to upgrade.")
-                return false
-            } else if (old > new) {
-                // should never happen
-                loge(TAG, "Current version is lower than old version! current=$new, old=$old")
-                return false
-            }
-            return if (UpgradeService.shouldPerformUpgrade(old, new)) {
-                before?.invoke()
-                fragment.startActivityForResult(
-                        Intent(fragment.requireContext(), UpgradingAty::class.java), requestCode)
+        internal fun startIfNecessary(
+            ctx: Context,
+            launcher: ActivityResultLauncher<Boolean>
+        ): Boolean {
+            val old = lastStartVersion(ctx)
+            val new = getVersionCode(ctx)
+            val upgradeServiceRunning = UpgradeService.isRunning()
+            return if (upgradeServiceRunning || UpgradeService.shouldPerformUpgrade(old, new)) {
+                launcher.launch(upgradeServiceRunning)
                 true
             } else {
-                logi(TAG, "No need to perform data migration, update version code directly.")
-                lastStartVersion(fragment.requireContext(), new)
+                logd(TAG, "No need to perform data migration, update version code directly.")
                 false
             }
         }
     }
 
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(ctx: Context?, intent: Intent?) {
-            if (intent?.action == ACTION_APPLICATION_UPGRADE_COMPLETE) {
-                LocalBroadcastManager.getInstance(this@UpgradingAty).unregisterReceiver(this)
-                onUpgradeComplete()
+    internal class UpgradeContract : ActivityResultContract<Boolean, Boolean>() {
+        override fun createIntent(context: Context, upgradeServiceRunning: Boolean): Intent {
+            return Intent(context, UpgradingAty::class.java).apply {
+                putExtra(EXTRA_RUNNING, upgradeServiceRunning)
             }
         }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Boolean {
+            return resultCode == Activity.RESULT_OK
+        }
     }
+
+    private var receiver: BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,22 +97,45 @@ class UpgradingAty : AppCompatActivity() {
         setContentView(R.layout.aty_upgrading)
 
         // register local receiver
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(ctx: Context?, intent: Intent?) {
+                if (intent?.action == ACTION_APPLICATION_UPGRADE_COMPLETE) {
+                    logi(TAG, "Receive upgrade complete signal, finish activity.")
+                    onUpgradeComplete()
+                }
+            }
+        }
         val filter = IntentFilter(ACTION_APPLICATION_UPGRADE_COMPLETE)
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter)
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver!!, filter)
 
-        // start upgrade service
-        UpgradeService.start(this, lastStartVersion(this))
-    }
-
-    override fun onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
-        super.onDestroy()
+        if (intent.getBooleanExtra(EXTRA_RUNNING, false)) {
+            if (!UpgradeService.isRunning()) {
+                // Since the service is running before activity start, but it has stopped now.
+                // The only reason is the upgrade process has completed before activity fully start.
+                // So we just trigger a complete signal.
+                logi(TAG, "Upgrade service has completed, finish directly.")
+                onUpgradeComplete()
+            }
+            // Otherwise, we should wait for the broadcast signal of service completion.
+            logi(TAG, "Upgrade service is running, just wait.")
+        } else {
+            // Start upgrade service and wait for the broadcast.
+            logi(TAG, "Start upgrade service and wait.")
+            UpgradeService.start(this, lastStartVersion(this))
+        }
     }
 
     private fun onUpgradeComplete() {
-        logd(TAG, "Upgrade complete, finish activity.")
         setResult(Activity.RESULT_OK)
         finish()
+    }
+
+    override fun onDestroy() {
+        receiver?.also {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(it)
+            receiver = null
+        }
+        super.onDestroy()
     }
 
 }

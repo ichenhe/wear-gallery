@@ -65,6 +65,12 @@
             android:name=".service.UpgradeService"
             android:exported="false" />
 
+        <receiver android:name=".AppUpgradeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
         <!--Watch Listener Service-->
 
         <service

@@ -19,6 +19,8 @@ package cc.chenhe.weargallery.uilts
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -41,7 +43,8 @@ const val REQUEST_IMAGE_HD_TIMEOUT = 20000L
 const val NOTIFY_CHANNEL_ID_PERMISSION = "wg.permission"
 const val NOTIFY_ID_PERMISSION = 1
 
-const val NOTIFY_CHANNEL_ID_UPGRADE = "wg.upgrade"
+/** Use to display important foreground service without sound or vibration. */
+const val NOTIFY_CHANNEL_ID_IMPORTANT_PROCESSING = "wg.important_processing"
 const val NOTIFY_ID_UPGRADE = 2
 
 /**
@@ -96,11 +99,14 @@ const val IMAGE_ZOOM_CONSECUTIVE_SCALE = 1.05f
 /** NOT equal here since requestLegacyExternalStorage=true. */
 fun scopeStorageEnabled() = Build.VERSION.SDK_INT > Build.VERSION_CODES.Q
 
-fun shouldShowRetryLayout(resource: Resource<*>?): Boolean = resource is Error && resource.data.isNullOrEmpty()
+fun shouldShowRetryLayout(resource: Resource<*>?): Boolean =
+    resource is Error && resource.data.isNullOrEmpty()
 
-fun shouldShowEmptyLayout(resource: Resource<*>?): Boolean = resource is Success && resource.data.isNullOrEmpty()
+fun shouldShowEmptyLayout(resource: Resource<*>?): Boolean =
+    resource is Success && resource.data.isNullOrEmpty()
 
-fun shouldShowLoadingLayout(resource: Resource<*>?): Boolean = resource is Loading && resource.data.isNullOrEmpty()
+fun shouldShowLoadingLayout(resource: Resource<*>?): Boolean =
+    resource is Loading && resource.data.isNullOrEmpty()
 
 /**
  * Determine if an image has a local cache or file.
@@ -155,17 +161,40 @@ private fun getProperty(key: String, defaultValue: String): String {
 }
 
 fun checkStoragePermissions(context: Context): Boolean {
-    return ContextCompat.checkSelfPermission(context,
-            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+    return ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    ) == PackageManager.PERMISSION_GRANTED
 }
 
 @SuppressLint("InflateParams")
 fun AlertDialog.addQrCode(content: String) {
     val view = LayoutInflater.from(context).inflate(R.layout.dialog_image_view, null, false).apply {
-        findViewById<ImageView>(R.id.qrImage).setImageBitmap(ZxingUtils.generateBitmap(content, 200, 200))
+        findViewById<ImageView>(R.id.qrImage).setImageBitmap(
+            ZxingUtils.generateBitmap(
+                content,
+                200,
+                200
+            )
+        )
     }
     setView(view)
 }
+
+fun registerImportantPrecessingNotificationChannel(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channel = NotificationChannel(
+            NOTIFY_CHANNEL_ID_IMPORTANT_PROCESSING,
+            context.getString(R.string.notify_channel_important_processing),
+            NotificationManager.IMPORTANCE_LOW
+        )
+        channel.description =
+            context.getString(R.string.notify_channel_important_processing_description)
+        requireNotNull(context.getSystemService(NotificationManager::class.java))
+            .createNotificationChannel(channel)
+    }
+}
+
 
 // -------------------------------------------------------------------------------------
 // Logs
