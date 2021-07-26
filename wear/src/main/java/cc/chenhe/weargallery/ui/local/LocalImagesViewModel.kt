@@ -20,12 +20,21 @@ package cc.chenhe.weargallery.ui.local
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
+import cc.chenhe.weargallery.common.bean.Loading
+import cc.chenhe.weargallery.common.bean.Success
+import cc.chenhe.weargallery.common.util.ImageUtil
 import cc.chenhe.weargallery.uilts.fetchFolderMode
 import cc.chenhe.weargallery.uilts.folderMode
 
 class LocalImagesViewModel(application: Application) : AndroidViewModel(application) {
 
     val folderMode: LiveData<Boolean> = fetchFolderMode(application)
+
+    val localFolders = ImageUtil.imageFoldersFlow(application).asLiveData().map { folders ->
+        if (folders == null) Loading(null) else Success(folders)
+    }
 
     fun toggleListMode() {
         folderMode(getApplication(), !(folderMode.value ?: false))

@@ -28,12 +28,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.SimpleItemDecoration
-import cc.chenhe.weargallery.common.util.fileName
 import cc.chenhe.weargallery.databinding.FrFolderImagesBinding
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.utils.requireCompatAty
 import cc.chenhe.weargallery.utils.setupToolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class FolderImagesFr : Fragment() {
 
@@ -41,6 +42,7 @@ class FolderImagesFr : Fragment() {
 
     private val sharedModel by sharedViewModel<SharedViewModel>()
     private val args: FolderImagesFrArgs by navArgs()
+    private val model by viewModel<FolderImagesViewModel> { parametersOf(args.bucketId) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +52,7 @@ class FolderImagesFr : Fragment() {
         binding = FrFolderImagesBinding.inflate(inflater, container, false)
         // toolbar
         setupToolbar(binding.header.toolbar)
-        binding.header.root.setTitle(args.folderPath.fileName)
+        binding.header.root.setTitle(args.bucketName)
         requireCompatAty().supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.header.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
@@ -75,20 +77,20 @@ class FolderImagesFr : Fragment() {
                 sharedModel.currentPosition = position
                 val action = FolderImagesFrDirections.actionFolderImagesFrToImageDetailFr(
                     shareAnimationName = "",
-                    sourceAttr = args.folderPath
+                    bucketId = args.bucketId,
                 )
                 findNavController().navigate(action)
             }
         }
 
         // Data
-        sharedModel.folderImages.observe(viewLifecycleOwner) { folders ->
-            folders.find { it.bucketName == args.folderPath }?.let {
+        model.images.observe(viewLifecycleOwner) { images ->
+            if (images != null) {
                 binding.header.subtitleTextView.text = resources.getQuantityString(
                     R.plurals.images_subtitle,
-                    it.children.size, it.children.size
+                    images.size, images.size
                 )
-                adapter.submitList(it.children)
+                adapter.submitList(images)
             }
         }
     }

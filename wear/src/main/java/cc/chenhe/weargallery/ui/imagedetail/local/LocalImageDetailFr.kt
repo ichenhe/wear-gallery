@@ -67,7 +67,7 @@ class LocalImageDetailFr : ImageDetailBaseFr() {
             }
         } else if (args.sourceType as Source == Source.FOLDER) {
             val args = LocalImageDetailFrArgs.fromBundle(requireArguments())
-            model.addFolderDataSource(sharedModel.localFolderImages, args.bucketId)
+            model.addFolderDataSource(args.bucketId)
         }
 
         model.images.observe(viewLifecycleOwner) { images ->

@@ -84,19 +84,17 @@ fun checkStoragePermissions(context: Context): Boolean {
 
 suspend fun queryImageFolders(context: Context): List<RemoteImageFolder> =
     withContext(Dispatchers.Default) {
-        val folders = mutableListOf<RemoteImageFolder>()
-        ImageUtil.groupImagesByFolder(ImageUtil.queryImages(context)).forEach {
-            if (it.children.isNotEmpty()) {
-                folders += RemoteImageFolder(
-                    bucketId = it.bucketId,
-                    bucketName = it.bucketName,
-                    imageCount = it.children.size,
-                    previewUri = it.children.first().uri,
-                    latestTime = it.children.first().takenTime
-                )
-            }
+        val folders = ImageUtil.queryImageFolders(context)
+        val result = List(folders.size) {
+            RemoteImageFolder(
+                folders[it].id,
+                folders[it].name,
+                folders[it].imgNum,
+                folders[it].preview.uri,
+                folders[it].latestTime,
+            )
         }
-        folders
+        result
     }
 
 fun generateRandomString(length: Int): String {

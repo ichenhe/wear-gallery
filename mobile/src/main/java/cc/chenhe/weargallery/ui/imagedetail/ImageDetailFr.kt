@@ -29,6 +29,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.Image
@@ -40,6 +41,8 @@ import cc.chenhe.weargallery.utils.requireCompatAty
 import cc.chenhe.weargallery.utils.resetStatusBarTextColor
 import cc.chenhe.weargallery.utils.setupToolbar
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,7 +57,9 @@ class ImageDetailFr : Fragment() {
 
     private lateinit var binding: FrImageDetailBinding
     private lateinit var panelBehavior: ImageDetailPanelBehavior
+    private val args: ImageDetailFrArgs by navArgs()
     private val sharedModel: SharedViewModel by sharedViewModel()
+    private val modle: ImageDetailViewModel by viewModel { parametersOf(args.bucketId) }
 
     private lateinit var imageGestureDetector: GestureDetector
     private lateinit var adapter: ImageDetailAdapter
@@ -144,7 +149,6 @@ class ImageDetailFr : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val args = ImageDetailFrArgs.fromBundle(requireArguments())
 
         adapter = ImageDetailAdapter(this, args.shareAnimationName, imageGestureDetector)
         binding.imageDetailPager.adapter = adapter
@@ -158,17 +162,9 @@ class ImageDetailFr : Fragment() {
                 }
             }
         } else if (args.source as Source == Source.FOLDER) {
-            sharedModel.folderImages.observe(viewLifecycleOwner) { folders ->
-                folders.forEach {
-                    if (it.bucketName == args.sourceAttr) {
-                        adapter.submitList(it.children) {
-                            binding.imageDetailPager.setCurrentItem(
-                                sharedModel.currentPosition,
-                                false
-                            )
-                        }
-                        return@observe
-                    }
+            modle.images.observe(viewLifecycleOwner) { images ->
+                adapter.submitList(images) {
+                    binding.imageDetailPager.setCurrentItem(sharedModel.currentPosition, false)
                 }
             }
         }

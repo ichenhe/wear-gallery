@@ -17,12 +17,15 @@
 
 package cc.chenhe.weargallery.ui.folders
 
+import android.app.Application
 import androidx.annotation.MainThread
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import cc.chenhe.weargallery.common.util.ImageUtil
 
-class FoldersViewModel : ViewModel() {
+class FoldersViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _listStyle = MutableLiveData(true)
 
@@ -30,6 +33,8 @@ class FoldersViewModel : ViewModel() {
      * `true` means grid style.
      */
     val listStyle: LiveData<Boolean> = _listStyle
+
+    val folders = ImageUtil.imageFoldersFlow(application).asLiveData()
 
     @MainThread
     fun toggleListStyle() {

@@ -19,7 +19,9 @@ package cc.chenhe.weargallery
 
 import android.content.Intent
 import cc.chenhe.weargallery.common.jsonadapter.UriAdapter
+import cc.chenhe.weargallery.ui.folderimages.FolderImagesViewModel
 import cc.chenhe.weargallery.ui.folders.FoldersViewModel
+import cc.chenhe.weargallery.ui.imagedetail.ImageDetailViewModel
 import cc.chenhe.weargallery.ui.images.ImagesViewModel
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesViewModel
@@ -32,7 +34,9 @@ val appModule = module {
 
     viewModel { SharedViewModel(androidApplication()) }
     viewModel { ImagesViewModel(androidApplication()) }
-    viewModel { FoldersViewModel() }
+    viewModel { FoldersViewModel(androidApplication()) }
+    viewModel { (bucketId: Int) -> FolderImagesViewModel(androidApplication(), bucketId) }
+    viewModel { (bucketId: Int) -> ImageDetailViewModel(androidApplication(), bucketId) }
     viewModel { (intent: Intent) -> SendImagesViewModel(androidApplication(), intent) }
 
     factory { Moshi.Builder().add(UriAdapter()).build() }

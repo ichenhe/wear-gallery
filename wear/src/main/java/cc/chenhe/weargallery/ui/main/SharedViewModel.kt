@@ -22,10 +22,8 @@ import android.content.IntentSender
 import android.net.Uri
 import androidx.lifecycle.*
 import cc.chenhe.weargallery.common.bean.Image
-import cc.chenhe.weargallery.common.bean.ImageFolderGroup
 import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.common.util.ImageLiveData
-import cc.chenhe.weargallery.common.util.ImageUtil
 import cc.chenhe.weargallery.repository.RemoteImageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -37,12 +35,6 @@ class SharedViewModel(
 
     private val _localImages = ImageScopeLiveData().map { Success(it) }
     val localImages: LiveData<Success<List<Image>>> = _localImages
-
-    val localFolderImages: LiveData<Success<List<ImageFolderGroup>>> = localImages.switchMap {
-        liveData {
-            emit(Success(ImageUtil.groupImagesByFolder(it.data!!)))
-        }
-    }
 
     /**
      * Where the user clicks to jump to the details fragment. This is used to display the correct detail data in grid

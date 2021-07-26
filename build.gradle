@@ -38,8 +38,8 @@ task clean(type: Delete) {
 }
 
 ext {
-    coroutinesAndroidVersion = '1.4.3'
-    fragmentVersion = '1.3.5'
+    coroutinesAndroidVersion = '1.5.1'
+    fragmentVersion = '1.3.6'
     ktxVersion = '1.6.0'
     recyclerviewVersion = '1.2.1'
     appcompatVersion = '1.3.0'
@@ -56,7 +56,7 @@ ext {
 
     moshiVersion = '1.12.0'
     subsamplingImageViewVersion = '3.10.0'
-    wearMsgerVersion = '2.0.1'
+    wearMsgerVersion = '2.0.2'
     sketchVersion = '2.7.1'
     materialIntroVersion = '2.0.0'
 

@@ -35,6 +35,7 @@ import cc.chenhe.weargallery.databinding.FrImagesBinding
 import cc.chenhe.weargallery.service.SendPicturesService
 import cc.chenhe.weargallery.ui.common.DragSelectProcessor
 import cc.chenhe.weargallery.ui.common.DragSelectTouchListener
+import cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr
 import cc.chenhe.weargallery.ui.legacy.PagerFrDirections
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesAty
@@ -189,7 +190,11 @@ class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
                     // Nav to detail fragment
                     val imageView = view.findViewById<ImageView>(R.id.itemImageView)
                     val action =
-                        PagerFrDirections.actionPagerFrToImageDetailFr(shareAnimationName = imageView.transitionName)
+                        PagerFrDirections.actionPagerFrToImageDetailFr(
+                            ImageDetailFr.Source.IMAGES,
+                            shareAnimationName = imageView.transitionName,
+                            -1
+                        )
                     val extras = FragmentNavigatorExtras(
                         imageView to imageView.transitionName
                     )

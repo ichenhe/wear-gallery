@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import cc.chenhe.weargallery.common.bean.Image
-import cc.chenhe.weargallery.common.bean.ImageFolderGroup
+import cc.chenhe.weargallery.common.bean.ImageFolder
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
 import cc.chenhe.weargallery.common.util.fileName
@@ -34,10 +34,10 @@ private const val TYPE_IMAGE = 1
 private const val TYPE_FOLDER = 2
 
 /**
- * This adapter only accept a list of [Image] or [ImageFolderGroup]. [Any] is declared here to avoid extra wrapper.
+ * This adapter only accept a list of [Image] or [ImageFolder]. [Any] is declared here to avoid extra wrapper.
  * Item view will adapt the type of given data.
  *
- * @throws IllegalArgumentException The type of given data is neither [Image] nor [ImageFolderGroup].
+ * @throws IllegalArgumentException The type of given data is neither [Image] nor [ImageFolder].
  */
 class LocalImagesAdapter
     : BaseListAdapter<Any, BaseViewHolder>(LocalImagesDiffCallback()) {
@@ -45,7 +45,7 @@ class LocalImagesAdapter
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is Image -> TYPE_IMAGE
-            is ImageFolderGroup -> TYPE_FOLDER
+            is ImageFolder -> TYPE_FOLDER
             else -> throw IllegalArgumentException("Unknown item type.")
         }
     }
@@ -62,7 +62,7 @@ class LocalImagesAdapter
         super.onBindViewHolder(holder, position)
         when (holder) {
             is ImageVH -> holder.bind(getItem(position) as Image)
-            is FolderVH -> holder.bind(getItem(position) as ImageFolderGroup)
+            is FolderVH -> holder.bind(getItem(position) as ImageFolder)
         }
     }
 
@@ -73,10 +73,10 @@ class LocalImagesAdapter
     }
 
     private inner class FolderVH(private val binding: RvItemLocalFolderBinding) : BaseViewHolder(binding.root) {
-        fun bind(folder: ImageFolderGroup) {
-            binding.itemImageCount.text = folder.children.size.toString()
-            binding.folderName.text = folder.bucketName.fileName
-            binding.itemImage.displayContentImage(folder.children.first().uri)
+        fun bind(folder: ImageFolder) {
+            binding.itemImageCount.text = folder.imgNum.toString()
+            binding.folderName.text = folder.name.fileName
+            binding.itemImage.displayContentImage(folder.preview.uri)
         }
     }
 
@@ -89,8 +89,8 @@ private class LocalImagesDiffCallback : DiffUtil.ItemCallback<Any>() {
             is Image -> {
                 if (newItem is Image) oldItem.uri == newItem.uri else false
             }
-            is ImageFolderGroup -> {
-                if (newItem is ImageFolderGroup) oldItem.bucketName == newItem.bucketName else false
+            is ImageFolder -> {
+                if (newItem is ImageFolder) oldItem.id == newItem.id else false
             }
             else -> false
         }
@@ -102,8 +102,8 @@ private class LocalImagesDiffCallback : DiffUtil.ItemCallback<Any>() {
             is Image -> {
                 if (newItem is Image) oldItem == oldItem else false
             }
-            is ImageFolderGroup -> {
-                if (newItem is ImageFolderGroup) oldItem == newItem else false
+            is ImageFolder -> {
+                if (newItem is ImageFolder) oldItem == newItem else false
             }
             else -> false
         }

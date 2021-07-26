@@ -20,10 +20,11 @@ package cc.chenhe.weargallery.ui.pick
 import android.app.Application
 import androidx.lifecycle.*
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.bean.*
-import cc.chenhe.weargallery.common.util.ImageLiveData
+import cc.chenhe.weargallery.common.bean.Image
+import cc.chenhe.weargallery.common.bean.Loading
+import cc.chenhe.weargallery.common.bean.Resource
+import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.common.util.ImageUtil
-import kotlinx.coroutines.CoroutineScope
 
 class PickImageViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -31,76 +32,37 @@ class PickImageViewModel(application: Application) : AndroidViewModel(applicatio
         const val BUCKET_ALL = -1
     }
 
+    /** Current selected bucket id, [BUCKET_ALL] indicate all images. */
     private val _currentBucketId = MutableLiveData(-1)
-    val currentBucketId = _currentBucketId
 
-    private val _localImages = ImageScopeLiveData()
-    val localFolderImages: LiveData<List<ImageFolderGroup>> = _localImages.switchMap {
-        liveData {
-            emit(ImageUtil.groupImagesByFolder(it))
-        }
+    /** @see [_currentBucketId] */
+    val currentBucketId: LiveData<Int> = _currentBucketId
+
+    /** All local image folders. `null` means loading state. */
+    val folders = ImageUtil.imageFoldersFlow(application).asLiveData()
+
+    /**
+     * A collection of images that should be displayed at present. Related to the selected bucket.
+     * `null` means loading state.
+     */
+    private val _images = currentBucketId.switchMap { bucketId ->
+        ImageUtil.imagesFlow(application, bucketId).asLiveData()
     }
 
-    private val _data = MediatorLiveData<Resource<List<Image>>>()
+    /**
+     * A state wrapper of collection of images that should be displayed at present.
+     * Related to the selected bucket.
+     */
+    private val _data: LiveData<Resource<List<Image>>> = _images.map { images ->
+        if (images == null) Loading() else Success(images)
+    }
+
+    /** @see _data */
     val data: LiveData<Resource<List<Image>>> = _data
 
-    val currentBucketTitle: LiveData<String?> = data.map {
-        val images = it.data
-        if (images == null) {
-            null
-        } else {
-            val currentId = _currentBucketId.value
-            val name = if (currentId == -1) {
-                application.getString(R.string.pick_image_all)
-            } else {
-                localFolderImages.value?.find { it.bucketId == currentId }?.bucketName
-            }
-            application.getString(R.string.pick_image_folder_name, name, images.size)
-        }
-    }
-
-    init {
-        _data.value = Loading()
-
-        _data.addSource(localFolderImages) { folders ->
-            if (folders == null) {
-                // Still loading, do nothing.
-                return@addSource
-            }
-            val bucketId = _currentBucketId.value
-            if (bucketId == BUCKET_ALL) {
-                // All
-                _data.value = Success(_localImages.value)
-            } else {
-                val folder = folders.find { it.bucketId == bucketId }
-                if (folder == null) {
-                    // The specified folder does not exist, reset.
-                    _currentBucketId.postValue(BUCKET_ALL)
-                } else {
-                    _data.value = Success(folder.children)
-                }
-            }
-        }
-
-        _data.addSource(_currentBucketId) { bucketId ->
-            val folders = localFolderImages.value
-            if (_localImages.value == null || folders == null) {
-                // Still loading, do nothing.
-                return@addSource
-            }
-            if (bucketId == BUCKET_ALL) {
-                // All
-                _data.value = Success(_localImages.value)
-            } else {
-                val folder = folders.find { it.bucketId == bucketId }
-                if (folder == null) {
-                    // The specified folder does not exist, reset.
-                    _currentBucketId.postValue(BUCKET_ALL)
-                } else {
-                    _data.value = Success(folder.children)
-                }
-            }
-        }
+    val currentBucketTitle: LiveData<String?> = currentBucketId.map { id ->
+        if (id == BUCKET_ALL) application.getString(R.string.pick_image_all)
+        else folders.value?.find { it.id == id }?.name
     }
 
     /**
@@ -108,9 +70,5 @@ class PickImageViewModel(application: Application) : AndroidViewModel(applicatio
      */
     fun setBucketId(bucketId: Int) {
         _currentBucketId.postValue(bucketId)
-    }
-
-    private inner class ImageScopeLiveData : ImageLiveData(getApplication()) {
-        override fun getCoroutineScope(): CoroutineScope = viewModelScope
     }
 }

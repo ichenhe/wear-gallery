@@ -23,23 +23,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.bean.Image
-import cc.chenhe.weargallery.common.bean.ImageFolderGroup
-import cc.chenhe.weargallery.common.bean.Success
+import cc.chenhe.weargallery.common.bean.*
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.databinding.FrLocalImagesBinding
 import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailFr
 import cc.chenhe.weargallery.ui.main.PagerFrDirections
 import cc.chenhe.weargallery.ui.main.SharedViewModel
+import cc.chenhe.weargallery.uilts.loge
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LocalImagesFr : Fragment() {
+
+    companion object {
+        private const val TAG = "LocalImagesFr"
+    }
 
     private val sharedViewModel: SharedViewModel by sharedViewModel()
     private val model: LocalImagesViewModel by viewModel()
@@ -48,9 +50,13 @@ class LocalImagesFr : Fragment() {
     private lateinit var adapter: LocalImagesAdapter
 
     private var imagesObserver: Observer<Success<List<Image>>>? = null
-    private var foldersObserver: Observer<Success<List<ImageFolderGroup>>>? = null
+    private var foldersObserver: Observer<in Resource<out List<ImageFolder>>>? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FrLocalImagesBinding.inflate(inflater, container, false).also {
             it.lifecycleOwner = viewLifecycleOwner
             it.sharedModel = sharedViewModel
@@ -77,15 +83,20 @@ class LocalImagesFr : Fragment() {
                 // Jump to detail fragment
                 val action = if (model.folderMode.value!!) {
                     val item = adapter.getItemData(position)
-                    if (item is ImageFolderGroup) {
-                        PagerFrDirections.actionPagerFrToLocalImageDetailFr(LocalImageDetailFr.Source.FOLDER,
-                                item.bucketId)
+                    if (item is ImageFolder) {
+                        PagerFrDirections.actionPagerFrToLocalImageDetailFr(
+                            LocalImageDetailFr.Source.FOLDER,
+                            item.id
+                        )
                     } else {
+                        loge(TAG, "Now it's in folder mode but item is not a ImageFolder.")
                         return
                     }
                 } else {
-                    PagerFrDirections.actionPagerFrToLocalImageDetailFr(LocalImageDetailFr.Source.IMAGES,
-                            LocalImageDetailFr.BUCKET_ID_NA)
+                    PagerFrDirections.actionPagerFrToLocalImageDetailFr(
+                        LocalImageDetailFr.Source.IMAGES,
+                        LocalImageDetailFr.BUCKET_ID_NA
+                    )
                 }
                 findNavController().navigate(action)
             }
@@ -98,7 +109,8 @@ class LocalImagesFr : Fragment() {
 
         model.folderMode.observe(viewLifecycleOwner) { folderMode ->
             binding.listGridType.setImageResource(if (folderMode) R.drawable.ic_view_list else R.drawable.ic_view_grid)
-            (binding.imagesRecyclerView.layoutManager as GridLayoutManager).spanCount = if (folderMode) 1 else 2
+            (binding.imagesRecyclerView.layoutManager as GridLayoutManager).spanCount =
+                if (folderMode) 1 else 2
             registerImagesObserver(folderMode)
         }
     }
@@ -112,10 +124,10 @@ class LocalImagesFr : Fragment() {
                     binding.emptyLayout.viewStub?.inflate()
                 }
             }).also {
-                sharedViewModel.localFolderImages.observe(viewLifecycleOwner, it)
+                model.localFolders.observe(viewLifecycleOwner, it)
             }
         } else {
-            foldersObserver?.let { sharedViewModel.localFolderImages.removeObserver(it) }
+            foldersObserver?.let { model.localFolders.removeObserver(it) }
             imagesObserver = (imagesObserver ?: Observer {
                 adapter.submitList(it.data)
                 if (shouldShowEmptyLayout(it)) {

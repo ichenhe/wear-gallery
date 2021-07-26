@@ -24,7 +24,6 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.bean.ImageDateGroup
-import cc.chenhe.weargallery.common.bean.ImageFolderGroup
 import cc.chenhe.weargallery.common.util.ImageUtil
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
@@ -39,12 +38,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val groupImages: LiveData<List<ImageDateGroup>> = images.switchMap {
         liveData {
             emit(ImageUtil.groupImagesByDate(it))
-        }
-    }
-
-    val folderImages: LiveData<List<ImageFolderGroup>> = images.switchMap {
-        liveData {
-            emit(ImageUtil.groupImagesByFolder(it))
         }
     }
 

@@ -15,21 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cc.chenhe.weargallery.common.comm.bean
+package cc.chenhe.weargallery.ui.imagedetail
 
-import android.net.Uri
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
+import cc.chenhe.weargallery.common.util.ImageUtil
 
-/**
- * An entity representing a image folder on the remote.
- *
- * Unless otherwise specified, all fields represent attributes on the remote device.
- */
-interface IRemoteImageFolder {
-    val bucketId: Int
-    val bucketName: String
-    val imageCount: Int
+class ImageDetailViewModel(application: Application, bucketId: Int) :
+    AndroidViewModel(application) {
 
-    /** The first image's uri on remote device. */
-    val previewUri: Uri
-    val latestTime: Long
+    val images = ImageUtil.imagesFlow(application, bucketId).asLiveData()
+
 }

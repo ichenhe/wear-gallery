@@ -32,13 +32,10 @@ import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.SimpleItemDecoration
 import cc.chenhe.weargallery.databinding.FrFoldersBinding
 import cc.chenhe.weargallery.ui.legacy.PagerFrDirections
-import cc.chenhe.weargallery.ui.legacy.SharedViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FoldersFr : Fragment(), Toolbar.OnMenuItemClickListener {
 
-    private val sharedModel by sharedViewModel<SharedViewModel>()
     private val model by viewModel<FoldersViewModel>()
 
     private lateinit var binding: FrFoldersBinding
@@ -77,8 +74,8 @@ class FoldersFr : Fragment(), Toolbar.OnMenuItemClickListener {
 
         adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
             override fun onItemClick(view: View, position: Int) {
-                val action =
-                    PagerFrDirections.actionPagerFrToFolderImagesFr(adapter.currentList[position].bucketName)
+                val item = adapter.currentList[position]
+                val action = PagerFrDirections.actionPagerFrToFolderImagesFr(item.id, item.name)
                 findNavController().navigate(action)
             }
         }
@@ -94,10 +91,12 @@ class FoldersFr : Fragment(), Toolbar.OnMenuItemClickListener {
             )
         }
 
-        sharedModel.folderImages.observe(viewLifecycleOwner) {
-            binding.header.subtitleTextView.text = requireContext().resources
-                .getQuantityString(R.plurals.folders_subtitle, it.size, it.size)
-            adapter.submitList(it)
+        model.folders.observe(viewLifecycleOwner) { folders ->
+            if (folders != null) {
+                binding.header.subtitleTextView.text = requireContext().resources
+                    .getQuantityString(R.plurals.folders_subtitle, folders.size, folders.size)
+                adapter.submitList(folders)
+            }
         }
     }
 

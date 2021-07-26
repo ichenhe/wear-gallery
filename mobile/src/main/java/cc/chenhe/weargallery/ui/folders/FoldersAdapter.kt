@@ -26,15 +26,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cc.chenhe.weargallery.GlideApp
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.bean.ImageFolderGroup
+import cc.chenhe.weargallery.common.bean.ImageFolder
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
 
 private const val VIEW_TYPE_SMALL = 1 // linear
 private const val VIEW_TYPE_BIG = 2 // grid
 
-class FoldersAdapter(private val fragment: Fragment)
-    : BaseListAdapter<ImageFolderGroup, BaseViewHolder>(FoldersDiffCallback()) {
+class FoldersAdapter(private val fragment: Fragment) :
+    BaseListAdapter<ImageFolder, BaseViewHolder>(FoldersDiffCallback()) {
 
     private var layoutManager: GridLayoutManager? = null
 
@@ -57,9 +57,15 @@ class FoldersAdapter(private val fragment: Fragment)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return if (viewType == VIEW_TYPE_SMALL)
-            SmallViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item_folders_small, parent, false))
+            SmallViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.rv_item_folders_small, parent, false)
+            )
         else
-            BigViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item_folders_big, parent, false))
+            BigViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.rv_item_folders_big, parent, false)
+            )
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
@@ -72,29 +78,32 @@ class FoldersAdapter(private val fragment: Fragment)
     }
 
     private inner class SmallViewHolder(itemView: View) : BaseViewHolder(itemView) {
-        fun bind(data: ImageFolderGroup) {
-            setText(R.id.folderTitle, itemView.context
-                    .getString(R.string.folders_item_small_title, data.bucketName, data.children.size))
-            setText(R.id.folderPath, data.path ?: data.bucketName)
-            GlideApp.with(fragment).load(data.children[0].uri).into(getView(R.id.folderPreview))
+        fun bind(data: ImageFolder) {
+            setText(
+                R.id.folderTitle, itemView.context.getString(
+                    R.string.folders_item_small_title, data.name, data.imgNum
+                )
+            )
+            setText(R.id.folderPath, data.path)
+            GlideApp.with(fragment).load(data.preview.uri).into(getView(R.id.folderPreview))
         }
     }
 
     private inner class BigViewHolder(itemView: View) : BaseViewHolder(itemView) {
-        fun bind(data: ImageFolderGroup) {
-            setText(R.id.folderTitle, data.bucketName)
-            setText(R.id.folderImagesCount, data.children.size.toString())
-            GlideApp.with(fragment).load(data.children[0].uri).into(getView(R.id.folderPreview))
+        fun bind(data: ImageFolder) {
+            setText(R.id.folderTitle, data.name)
+            setText(R.id.folderImagesCount, data.imgNum.toString())
+            GlideApp.with(fragment).load(data.preview.uri).into(getView(R.id.folderPreview))
         }
     }
 }
 
-class FoldersDiffCallback : DiffUtil.ItemCallback<ImageFolderGroup>() {
-    override fun areItemsTheSame(oldItem: ImageFolderGroup, newItem: ImageFolderGroup): Boolean {
-        return oldItem.bucketName == newItem.bucketName
+class FoldersDiffCallback : DiffUtil.ItemCallback<ImageFolder>() {
+    override fun areItemsTheSame(oldItem: ImageFolder, newItem: ImageFolder): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: ImageFolderGroup, newItem: ImageFolderGroup): Boolean {
+    override fun areContentsTheSame(oldItem: ImageFolder, newItem: ImageFolder): Boolean {
         return oldItem == newItem
     }
 }

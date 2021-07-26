@@ -29,6 +29,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImageFolder
 import cc.chenhe.weargallery.common.bean.Image
@@ -49,7 +50,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import id.zelory.compressor.constraint.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.chenhe.lib.wearmsger.BothWayHub
@@ -169,7 +169,7 @@ class WearListenerService : WMListenerService() {
     }
 
     private fun processRequestImageFolders(request: MessageEvent) {
-        GlobalScope.launch {
+        lifecycleScope.launch {
             toastIfEnabled(R.string.watch_operation_search_gallery_ing)
             val folders = queryImageFolders(this@WearListenerService)
             val type = Types.newParameterizedType(List::class.java, RemoteImageFolder::class.java)
@@ -179,7 +179,7 @@ class WearListenerService : WMListenerService() {
     }
 
     private fun processRequestImagePreview(request: MessageEvent) {
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             val data = moshi.adapter(ImagePreviewReq::class.java).fromJsonQ(String(request.data))
                 ?: return@launch
             val resp = BothWayHub.obtainResponseDataRequest(request)
@@ -213,7 +213,7 @@ class WearListenerService : WMListenerService() {
     }
 
     private fun processRequestImages(request: MessageEvent) {
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             toastIfEnabled(R.string.watch_operation_get_pics_list_ing)
             val data = moshi.adapter(ImagesReq::class.java).fromJsonQ(String(request.data))
                 ?: return@launch
@@ -225,7 +225,7 @@ class WearListenerService : WMListenerService() {
     }
 
     private fun processRequestImageHd(request: MessageEvent) {
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             toastIfEnabled(R.string.watch_operation_send_hd_picture_ing)
             val data = moshi.adapter(ImageHdReq::class.java).fromJsonQ(String(request.data))
                 ?: return@launch

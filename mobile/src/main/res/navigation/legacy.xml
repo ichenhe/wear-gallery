@@ -18,10 +18,8 @@
             android:name="source"
             app:argType="cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr$Source" />
         <argument
-            android:name="sourceAttr"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
+            android:name="bucketId"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/pagerFr"
@@ -47,9 +45,6 @@
         android:name="cc.chenhe.weargallery.ui.folderimages.FolderImagesFr"
         android:label="FolderImagesFr"
         tools:layout="@layout/fr_folder_images">
-        <argument
-            android:name="folderPath"
-            app:argType="string" />
         <action
             android:id="@+id/action_folderImagesFr_to_imageDetailFr"
             app:destination="@id/imageDetailFr"
@@ -60,5 +55,11 @@
                 android:defaultValue="FOLDER"
                 app:argType="cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr$Source" />
         </action>
+        <argument
+            android:name="bucketId"
+            app:argType="integer" />
+        <argument
+            android:name="bucketName"
+            app:argType="string" />
     </fragment>
 </navigation>

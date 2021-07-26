@@ -20,14 +20,20 @@ package cc.chenhe.weargallery.ui.imagedetail.local
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import cc.chenhe.weargallery.common.bean.*
+import androidx.lifecycle.asLiveData
+import cc.chenhe.weargallery.common.bean.Image
+import cc.chenhe.weargallery.common.bean.Loading
+import cc.chenhe.weargallery.common.bean.Resource
+import cc.chenhe.weargallery.common.bean.Success
+import cc.chenhe.weargallery.common.util.ImageUtil
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
 import cc.chenhe.weargallery.uilts.loge
 import cc.chenhe.weargallery.uilts.logw
 
 private const val TAG = "LocalImageDetailVM"
 
-class LocalImageDetailViewModel(application: Application) : ImageDetailBaseViewModel<Image>(application) {
+class LocalImageDetailViewModel(application: Application) :
+    ImageDetailBaseViewModel<Image>(application) {
 
     private val _images = MediatorLiveData<Resource<List<Image>>>().apply { value = Loading() }
     override val images: LiveData<Resource<List<Image>>> = _images
@@ -49,7 +55,7 @@ class LocalImageDetailViewModel(application: Application) : ImageDetailBaseViewM
         }
     }
 
-    fun addFolderDataSource(ds: LiveData<Success<List<ImageFolderGroup>>>, bucketId: Int) {
+    fun addFolderDataSource(bucketId: Int) {
         if (bucketId == LocalImageDetailFr.BUCKET_ID_NA) {
             loge(TAG, "Unexpected bucket id, do you miss the parameters?")
             return
@@ -59,13 +65,8 @@ class LocalImageDetailViewModel(application: Application) : ImageDetailBaseViewM
             return
         }
         dataSourceAdded = true
-        _images.addSource(ds) { folders ->
-            folders.data?.find { it.bucketId == bucketId }?.let {
-                _images.value = Success(it.children)
-            } ?: kotlin.run {
-                // this bucket has been deleted
-                _images.value = Success(listOf())
-            }
+        _images.addSource(ImageUtil.imagesFlow(getApplication(), bucketId).asLiveData()) { imgs ->
+            if (imgs == null) _images.postValue(Loading()) else _images.postValue(Success(imgs))
         }
     }
 
