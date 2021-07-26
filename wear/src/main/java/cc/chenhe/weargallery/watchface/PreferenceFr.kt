@@ -18,18 +18,21 @@
 package cc.chenhe.weargallery.watchface
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.uilts.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.chenhe.wearvision.preference.PreferenceFragmentCompat
@@ -37,8 +40,6 @@ import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
-
-private const val REQUEST_BACKGROUND = 10
 
 private const val TAG = "WfPreference"
 
@@ -55,6 +56,25 @@ class PreferenceFr : PreferenceFragmentCompat() {
     private lateinit var positionPreference: Preference
     private lateinit var textPreference: Preference
     private lateinit var textColorPreference: Preference
+
+    private val selectBgImageLauncher =
+        registerForActivityResult(object : ActivityResultContract<Unit, Uri?>() {
+            override fun createIntent(context: Context, input: Unit?): Intent {
+                return Intent(Intent.ACTION_PICK).apply {
+                    setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+                }
+            }
+
+            override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+                return if (resultCode == Activity.RESULT_OK) intent?.data else null
+            }
+        }) { uri ->
+            if (uri != null) {
+                ProcessLifecycleOwner.get().lifecycleScope.launch {
+                    copyBackground(uri)
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,10 +110,7 @@ class PreferenceFr : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         when (preference?.key) {
             "preference_watchface_image" -> {
-                val intent = Intent(Intent.ACTION_PICK).apply {
-                    setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-                }
-                startActivityForResult(intent, REQUEST_BACKGROUND)
+                selectBgImageLauncher.launch(Unit)
             }
             "preference_watchface_text_position" -> {
                 findNavController().navigate(R.id.timeTextStyleFr)
@@ -105,25 +122,17 @@ class PreferenceFr : PreferenceFragmentCompat() {
                 findNavController().navigate(R.id.timeTextColorFr)
             }
             "preference_cot" -> {
-                startIntent(Intent(Intent.ACTION_VIEW,
-                        Uri.parse(if (isTicwear()) URI_APP_TW else URI_APP_AW)))
-                { toast(R.string.wf_preference_intent_err) }
+                val uri = Uri.parse(if (isTicwear()) URI_APP_TW else URI_APP_AW)
+                startIntent(Intent(Intent.ACTION_VIEW, uri)) {
+                    toast(R.string.wf_preference_intent_err)
+                }
             }
             else -> return super.onPreferenceTreeClick(preference)
         }
         return true
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_BACKGROUND && resultCode == Activity.RESULT_OK) {
-            val uri = data!!.data!!
-            GlobalScope.launch {
-                copyBackground(uri)
-            }
-        }
-    }
-
+    @Suppress("BlockingMethodInNonBlockingContext") // IO Dispatcher
     private suspend fun copyBackground(uri: Uri) = withContext(Dispatchers.IO) {
         logd(TAG, "Copying background image, uri=$uri")
         val targetFile = File(getWatchFaceResFolder(requireContext()), WATCH_FACE_BACKGROUND)
@@ -135,7 +144,8 @@ class PreferenceFr : PreferenceFragmentCompat() {
                 ins.copyTo(fos)
             }
         }
-        LocalBroadcastManager.getInstance(get()).sendBroadcast(Intent(ACTION_WATCH_FACE_BACKGROUND_CHANGED))
+        LocalBroadcastManager.getInstance(get())
+            .sendBroadcast(Intent(ACTION_WATCH_FACE_BACKGROUND_CHANGED))
         logd(TAG, "Copy background image complete.")
     }
 

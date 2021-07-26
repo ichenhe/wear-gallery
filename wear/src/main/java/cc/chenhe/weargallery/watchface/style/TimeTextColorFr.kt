@@ -29,7 +29,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -54,7 +53,11 @@ class TimeTextColorFr : SwipeDismissFr() {
     private lateinit var binding: WfFrTimeTextColorBinding
     private val model by viewModel<TimeTextColorViewModel>()
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    )
             : ViewBinding {
         return WfFrTimeTextColorBinding.inflate(inflater, container, false).also {
             binding = it
@@ -85,9 +88,9 @@ class TimeTextColorFr : SwipeDismissFr() {
     private inner class ColorAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
         private val colorsHex = arrayOf(
-                "#FFFFFF", "#000000", "#55565A",
-                "#E13025", "#FF9743", "#FDD249",
-                "#5EB27E", "#5D84E1", "#9475D2"
+            "#FFFFFF", "#000000", "#55565A",
+            "#E13025", "#FF9743", "#FDD249",
+            "#5EB27E", "#5D84E1", "#9475D2"
         )
 
         override fun getItemViewType(position: Int): Int {
@@ -101,8 +104,10 @@ class TimeTextColorFr : SwipeDismissFr() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
             return when (viewType) {
                 TYPE_COLOR -> {
-                    val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT)
+                    val lp = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
                     val chip = Chip(parent.context).also { chip ->
                         chip.isCheckedIconVisible = false
                         chip.layoutParams = lp
@@ -110,8 +115,10 @@ class TimeTextColorFr : SwipeDismissFr() {
                     BaseViewHolder(chip)
                 }
                 TYPE_TEXT -> {
-                    BaseViewHolder(LayoutInflater.from(parent.context)
-                            .inflate(R.layout.wf_rv_item_color, parent, false))
+                    BaseViewHolder(
+                        LayoutInflater.from(parent.context)
+                            .inflate(R.layout.wf_rv_item_color, parent, false)
+                    )
                 }
                 else -> throw  IllegalArgumentException("Unknown view type.")
             }
@@ -135,13 +142,15 @@ class TimeTextColorFr : SwipeDismissFr() {
                     et.setOnEditorActionListener { textView, i, _ ->
                         if (i == EditorInfo.IME_ACTION_DONE) {
                             try {
-                                val newColor = Color.parseColor("#" + textView.text.toString().replace(" ", ""))
+                                val newColor = Color.parseColor(
+                                    "#" + textView.text.toString().replace(" ", "")
+                                )
                                 model.setColor(newColor)
                             } catch (e: Exception) {
                                 toast(R.string.wf_preference_color_error)
                             }
                             (context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
-                                    ?.hideSoftInputFromWindow(textView.windowToken, 0)
+                                ?.hideSoftInputFromWindow(textView.windowToken, 0)
                             true
                         } else {
                             false
@@ -159,7 +168,7 @@ class TimeTextColorFr : SwipeDismissFr() {
             val chip = holder.itemView as Chip
             chip.setChipBackgroundColor(color)
             holder.itemView.setOnClickListener {
-                val i: Int = holder.adapterPosition - COLOR_LIST_OFFSET
+                val i: Int = holder.bindingAdapterPosition - COLOR_LIST_OFFSET
                 if (i in colorsHex.indices) {
                     model.setColor(Color.parseColor(colorsHex[i]))
                 }

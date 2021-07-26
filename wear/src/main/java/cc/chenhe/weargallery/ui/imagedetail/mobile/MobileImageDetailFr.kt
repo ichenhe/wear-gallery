@@ -17,12 +17,11 @@
 
 package cc.chenhe.weargallery.ui.imagedetail.mobile
 
-import android.app.Activity
-import android.content.Intent
-import android.content.IntentSender
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.observe
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseAdapter
@@ -33,14 +32,16 @@ import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-/**
- * Code used with [IntentSender] to request user permission to delete an image with scoped storage.
- */
-private const val DELETE_PERMISSION_REQUEST = 1
-
 class MobileImageDetailFr : ImageDetailBaseFr() {
 
     private val model: MobileImageDetailViewModel by viewModel()
+
+    private val deleteRequestLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                model.deletePendingImage()
+            }
+        }
 
     private lateinit var adapter: MobileImageDetailAdapter
 
@@ -58,7 +59,7 @@ class MobileImageDetailFr : ImageDetailBaseFr() {
 
         model.permissionNeededForDelete.observe(viewLifecycleOwner) { intentSender ->
             intentSender?.let {
-                startIntentSenderForResult(intentSender, DELETE_PERMISSION_REQUEST, null, 0, 0, 0, null)
+                deleteRequestLauncher.launch(IntentSenderRequest.Builder(it).build())
             }
         }
 
@@ -68,7 +69,8 @@ class MobileImageDetailFr : ImageDetailBaseFr() {
                 binding.imageMimeType.visibility = View.GONE
                 return@observe
             }
-            val mime = currentItemData.mime?.split("/")?.getOrNull(1)?.toUpperCase(Locale.getDefault())
+            val mime =
+                currentItemData.mime?.split("/")?.getOrNull(1)?.uppercase(Locale.getDefault())
             if (mime == null || mime != "GIF") {
                 // only display gif mime type
                 binding.imageMimeType.visibility = View.GONE
@@ -107,12 +109,5 @@ class MobileImageDetailFr : ImageDetailBaseFr() {
 
     override fun retry() {
         model.retry()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == DELETE_PERMISSION_REQUEST) {
-            model.deletePendingImage()
-        }
     }
 }

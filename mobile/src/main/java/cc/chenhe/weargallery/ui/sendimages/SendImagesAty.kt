@@ -25,7 +25,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.SimpleItemDecoration
@@ -33,7 +32,6 @@ import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
 import cc.chenhe.weargallery.databinding.AtySendImagesBinding
 import cc.chenhe.weargallery.service.SendPicturesService
-import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -140,7 +138,7 @@ class SendImagesAty : AppCompatActivity() {
         binding.header.toolbar.setNavigationOnClickListener {
             finish()
         }
-        (binding.header.root as CollapseHeaderLayout).setTitle(R.string.share_image_label)
+        binding.header.root.setTitle(R.string.share_image_label)
     }
 
     private fun showTargetFolderEditDialog() {
