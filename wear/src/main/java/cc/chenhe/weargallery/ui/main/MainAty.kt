@@ -37,7 +37,7 @@ import cc.chenhe.weargallery.ui.UpgradingAty
 import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.uilts.addQrCode
 import cc.chenhe.weargallery.uilts.showHuawei
-import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainAty : AppCompatActivity() {

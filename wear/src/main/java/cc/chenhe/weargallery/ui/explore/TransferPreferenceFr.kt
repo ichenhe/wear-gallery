@@ -21,8 +21,8 @@ import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
-import cc.chenhe.weargallery.wearvision.preference.PreferenceSwipeDismissFragmentCompat
+import me.chenhe.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.preference.PreferenceSwipeDismissFragmentCompat
 
 class TransferPreferenceFr : PreferenceSwipeDismissFragmentCompat() {
 

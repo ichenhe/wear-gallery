@@ -23,7 +23,7 @@ import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.uilts.PREFERENCE_KEEP_SCREEN_ON
-import cc.chenhe.weargallery.wearvision.preference.PreferenceSwipeDismissFragmentCompat
+import me.chenhe.wearvision.preference.PreferenceSwipeDismissFragmentCompat
 
 class DisplayPreferenceFr : PreferenceSwipeDismissFragmentCompat() {
 

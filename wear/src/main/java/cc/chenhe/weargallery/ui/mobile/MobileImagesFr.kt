@@ -35,7 +35,7 @@ import cc.chenhe.weargallery.uilts.addQrCode
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
 import cc.chenhe.weargallery.uilts.shouldShowLoadingLayout
 import cc.chenhe.weargallery.uilts.shouldShowRetryLayout
-import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 

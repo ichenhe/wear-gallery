@@ -10,7 +10,7 @@
         app:key="preference_watchface_image"
         app:title="@string/wf_preference_image" />
 
-    <cc.chenhe.weargallery.wearvision.preference.ListPreference
+    <me.chenhe.wearvision.preference.ListPreference
         app:defaultValue="@string/wf_preference_type_entry_value_analog"
         app:entries="@array/wf_preference_type_entries"
         app:entryValues="@array/wf_preference_type_entry_values"

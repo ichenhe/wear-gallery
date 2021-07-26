@@ -14,7 +14,7 @@
             type="cc.chenhe.weargallery.ui.common.RetryCallback" />
     </data>
 
-    <cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout
+    <me.chenhe.wearvision.widget.VisionCoordinatorLayout
         android:id="@+id/mobileImagesLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -68,5 +68,5 @@
             android:layout_height="match_parent"
             android:layout="@layout/view_empty"
             app:resource="@{sharedModel.remoteFolders}" />
-    </cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>
+    </me.chenhe.wearvision.widget.VisionCoordinatorLayout>
 </layout>

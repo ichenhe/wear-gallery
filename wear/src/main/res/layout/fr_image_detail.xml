@@ -31,7 +31,7 @@
             type="cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel" />
     </data>
 
-    <cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout
+    <me.chenhe.wearvision.widget.VisionCoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="@{model.keepScreenOn ?? false}">
@@ -164,5 +164,5 @@
             android:layout="@layout/view_empty"
             app:resource="@{images}" />
 
-    </cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>
+    </me.chenhe.wearvision.widget.VisionCoordinatorLayout>
 </layout>

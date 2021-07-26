@@ -23,7 +23,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.watchface.PreferenceAty
-import cc.chenhe.weargallery.wearvision.preference.PreferenceFragmentCompat
+import me.chenhe.wearvision.preference.PreferenceFragmentCompat
 
 class ExploreFr : PreferenceFragmentCompat() {
 

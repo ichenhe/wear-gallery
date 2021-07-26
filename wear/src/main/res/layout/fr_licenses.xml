@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<me.chenhe.wearvision.widget.VisionCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -33,4 +33,4 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/rv_item_license" />
 
-</cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>
+</me.chenhe.wearvision.widget.VisionCoordinatorLayout>

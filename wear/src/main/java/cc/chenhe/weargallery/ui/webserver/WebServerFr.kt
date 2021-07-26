@@ -23,7 +23,6 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.observe
 import androidx.viewbinding.ViewBinding
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.databinding.FrWebServerBinding
@@ -31,7 +30,7 @@ import cc.chenhe.weargallery.databinding.FrWebServerRunningBinding
 import cc.chenhe.weargallery.ui.common.SwipeDismissFr
 import cc.chenhe.weargallery.uilts.ZxingUtils
 import cc.chenhe.weargallery.uilts.toast
-import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 

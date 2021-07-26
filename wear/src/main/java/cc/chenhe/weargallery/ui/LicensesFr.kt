@@ -29,7 +29,7 @@ import cc.chenhe.weargallery.databinding.FrLicensesBinding
 import cc.chenhe.weargallery.databinding.RvItemLicenseBinding
 import cc.chenhe.weargallery.ui.common.SwipeDismissFr
 import cc.chenhe.weargallery.uilts.addQrCode
-import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.dialog.AlertDialog
 
 private const val MIT = "MIT License"
 private const val APACHE_2 = "Apache Software License 2.0"
@@ -80,7 +80,7 @@ class LicensesFr : SwipeDismissFr() {
             holder.setText(android.R.id.text2, l2)
 
             holder.itemView.setOnClickListener {
-                val data = list[holder.adapterPosition]
+                val data = list[holder.bindingAdapterPosition]
                 AlertDialog(requireContext()).apply {
                     title = data.name
                     setMessage(R.string.dialog_scan_to_visit)

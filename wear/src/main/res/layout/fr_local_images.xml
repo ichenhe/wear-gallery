@@ -10,7 +10,7 @@
             type="cc.chenhe.weargallery.ui.main.SharedViewModel" />
     </data>
 
-    <cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout
+    <me.chenhe.wearvision.widget.VisionCoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -41,8 +41,8 @@
                     android:layout_height="15dp"
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/title"
-                    android:tint="?android:attr/textColorPrimary"
                     app:imageDrawable="@{@drawable/ic_view_list}"
+                    app:tint="?android:attr/textColorPrimary"
                     tools:ignore="ContentDescription"
                     tools:srcCompat="@drawable/ic_view_list" />
             </RelativeLayout>
@@ -67,5 +67,5 @@
             android:layout_height="match_parent"
             android:layout="@layout/view_empty"
             app:resource="@{sharedModel.localImages}" />
-    </cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>
+    </me.chenhe.wearvision.widget.VisionCoordinatorLayout>
 </layout>

@@ -30,7 +30,7 @@ import cc.chenhe.weargallery.common.util.getVersionName
 import cc.chenhe.weargallery.databinding.FrAboutBinding
 import cc.chenhe.weargallery.ui.common.SwipeDismissFr
 import cc.chenhe.weargallery.uilts.addQrCode
-import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.dialog.AlertDialog
 
 class AboutFr : SwipeDismissFr() {
 

@@ -32,7 +32,7 @@ import androidx.core.content.ContextCompat
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.common.bean.*
-import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.dialog.AlertDialog
 import java.io.File
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract

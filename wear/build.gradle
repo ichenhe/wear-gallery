@@ -62,7 +62,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/core-3.3.3.jar')
     implementation project(':common')
-    implementation project(':wearvision')
 
     implementation "androidx.core:core-ktx:$ktxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
@@ -96,6 +95,7 @@ dependencies {
     implementation "me.panpf:sketch:$sketchVersion"
     implementation "me.panpf:sketch-gif:$sketchVersion"
     implementation("me.chenhe:wearmsger:$wearMsgerVersion")
+    implementation("me.chenhe:wearvision:0.1.1")
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.amshove.kluent:kluent-android:$kluentVersion"

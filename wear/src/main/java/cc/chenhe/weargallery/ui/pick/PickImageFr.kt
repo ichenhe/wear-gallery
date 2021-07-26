@@ -12,7 +12,7 @@ import cc.chenhe.weargallery.common.bean.ImageFolder
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.databinding.FrPickImageBinding
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
-import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PickImageFr : Fragment() {
