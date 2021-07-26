@@ -17,27 +17,19 @@
 
 package cc.chenhe.weargallery.ui.main
 
-import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cc.chenhe.weargallery.databinding.FrPagerBinding
-import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.uilts.ACTION_APPLICATION_UPGRADE_COMPLETE
-import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
-private const val REQUEST_INTRODUCE = 1
 
 class PagerFr : Fragment() {
 
@@ -59,15 +51,7 @@ class PagerFr : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (!checkPermission()) {
-            startActivityForResult(
-                Intent(requireContext(), IntroduceAty::class.java),
-                REQUEST_INTRODUCE
-            )
-        } else {
-            loadFragments()
-        }
+        loadFragments()
     }
 
     override fun onDestroyView() {
@@ -76,20 +60,6 @@ class PagerFr : Fragment() {
             LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(it)
         }
         upgradeReceiver = null
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_INTRODUCE) {
-            if (checkPermission()) {
-                loadFragments()
-                context?.let { ctx ->
-                    NotificationManagerCompat.from(ctx).cancel(NOTIFY_ID_PERMISSION)
-                }
-            } else {
-                activity?.finish()
-            }
-        }
     }
 
     private fun loadFragments() {
@@ -101,20 +71,6 @@ class PagerFr : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }
-    }
-
-    /**
-     * @return Whether has permissions.
-     */
-    private fun checkPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED
     }
 
     private inner class UpgradeReceiver : BroadcastReceiver() {

@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout="@layout/view_loading"
-            app:resource="@{sharedModel.remoteImageFolders}" />
+            app:resource="@{sharedModel.remoteFolders}" />
 
         <ViewStub
             android:id="@id/retryLayout"
@@ -60,13 +60,13 @@
             android:layout_height="match_parent"
             android:layout="@layout/view_retry"
             app:callback="@{retryCallback}"
-            app:resource="@{sharedModel.remoteImageFolders}" />
+            app:resource="@{sharedModel.remoteFolders}" />
 
         <ViewStub
             android:id="@id/emptyLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout="@layout/view_empty"
-            app:resource="@{sharedModel.remoteImageFolders}" />
+            app:resource="@{sharedModel.remoteFolders}" />
     </cc.chenhe.weargallery.wearvision.widget.VisionCoordinatorLayout>
 </layout>

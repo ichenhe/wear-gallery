@@ -107,7 +107,7 @@ class ControlledRunnerExampleImplementation<T> {
     }
 }
 
-private val KEY_DEFAULT = "default"
+private const val KEY_DEFAULT = "default"
 
 /**
  * A controlled runner decides what to do when new tasks are run.

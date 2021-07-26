@@ -17,12 +17,9 @@
 
 package cc.chenhe.weargallery.repository
 
-import android.app.RecoverableSecurityException
-import android.content.ContentUris
 import android.content.Context
 import android.content.IntentSender
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.bean.RemoteImageFolder
@@ -57,10 +54,10 @@ private const val TAG = "ImageFolderRepo"
  * Repository that handles [RemoteImageFolder] and [RemoteImage] objects.
  */
 class RemoteImageRepository(
-        private val moshi: Moshi,
-        private val imageFolderDao: RemoteImageFolderDao,
-        private val imageDao: RemoteImageDao,
-        private val previewCacheManager: MobilePreviewCacheManager
+    private val moshi: Moshi,
+    private val imageFolderDao: RemoteImageFolderDao,
+    private val imageDao: RemoteImageDao,
+    private val previewCacheManager: MobilePreviewCacheManager
 ) : ImageRepository() {
 
     private val previewReqRunner by lazy { ControlledRunner<DataCallback>() }
@@ -79,16 +76,22 @@ class RemoteImageRepository(
             override fun shouldFetch(data: List<RemoteImageFolder>?): Boolean = true
 
             override suspend fun fetchFromRemote(): ApiResponse<String> {
-                logd(TAG, "Request remote image folder, path=$PATH_REQ_IMAGE_FOLDERS")
-                return BothWayHub.requestForMessage(context, null, PATH_REQ_IMAGE_FOLDERS, "").toApiResp {
-                    it.getStringData()!!
-                }
+                logd(TAG, "Request remote image folders, path=$PATH_REQ_IMAGE_FOLDERS")
+                return BothWayHub.requestForMessage(context, null, PATH_REQ_IMAGE_FOLDERS, "")
+                    .toApiResp {
+                        it.getStringData()!!
+                    }
             }
 
-            override suspend fun saveRemoteResult(cached: List<RemoteImageFolder>?,
-                                                  data: String) = withContext(Dispatchers.IO) {
-                val type = Types.newParameterizedType(List::class.java, RemoteImageFolder::class.java)
+            override suspend fun saveRemoteResult(
+                cached: List<RemoteImageFolder>?,
+                data: String
+            ) = withContext(Dispatchers.IO) {
+                val type =
+                    Types.newParameterizedType(List::class.java, RemoteImageFolder::class.java)
                 val adapter: JsonAdapter<List<RemoteImageFolder>> = moshi.adapter(type)
+
+                @Suppress("BlockingMethodInNonBlockingContext") // IO Dispatcher
                 val folders = adapter.fromJson(data) ?: listOf()
                 cached?.subtract(folders)?.let { subtract ->
                     if (subtract.isNotEmpty()) {
@@ -104,7 +107,8 @@ class RemoteImageRepository(
 
     suspend fun loadImagePreview(context: Context, uri: Uri): Uri? {
         return object : RemoteAssetResource() {
-            override fun loadFromCache(): Uri? = previewCacheManager.getCacheImage(uri)?.let { Uri.fromFile(it) }
+            override fun loadFromCache(): Uri? =
+                previewCacheManager.getCacheImage(uri)?.let { Uri.fromFile(it) }
 
             override suspend fun fetchFromRemote(): DataCallback {
                 val req = moshi.adapter(ImagePreviewReq::class.java).toJson(ImagePreviewReq(uri))
@@ -133,7 +137,10 @@ class RemoteImageRepository(
             override suspend fun onFetchFailed(data: RemoteAssetError) {
                 if (data.reason == RemoteAssetError.REASON_REMOTE_ERROR) {
                     // Maybe the picture has been deleted, let's delete the record and preview cache.
-                    logd(TAG, "Failed to fetch remote image preview: REMOTE_ERROR, uri=${uri}, deleting record and cache.")
+                    logd(
+                        TAG,
+                        "Failed to fetch remote image preview: REMOTE_ERROR, uri=${uri}, deleting record and cache."
+                    )
                     imageDao.delete(uri)
                     previewCacheManager.deleteCacheImage(uri)
                 }
@@ -159,14 +166,19 @@ class RemoteImageRepository(
                 }
             }
 
-            override suspend fun saveRemoteResult(cached: List<RemoteImage>?,
-                                                  data: String) = withContext(Dispatchers.IO) {
+            override suspend fun saveRemoteResult(
+                cached: List<RemoteImage>?,
+                data: String
+            ) = withContext(Dispatchers.IO) {
                 val type = Types.newParameterizedType(List::class.java, RemoteImage::class.java)
                 val adapter: JsonAdapter<List<RemoteImage>> = moshi.adapter(type)
                 val images = adapter.fromJsonQ(data) ?: return@withContext
                 cached?.subtract(images)?.let { subtract ->
                     if (subtract.isNotEmpty()) {
-                        logd(TAG, "Subtract ${subtract.size} remote pictures in bucket <${bucketId}>.")
+                        logd(
+                            TAG,
+                            "Subtract ${subtract.size} remote pictures in bucket <${bucketId}>."
+                        )
                         loge(TAG, subtract.toString())
                         // The picture has been deleted, let's delete the record and preview cache.
                         imageDao.delete(subtract)
@@ -192,7 +204,13 @@ class RemoteImageRepository(
                 val req = moshi.adapter(ImageHdReq::class.java).toJson(ImageHdReq(remoteImage.uri))
                 return hdReqRunner.joinPreviousOrRun(remoteImage.uri.toString()) {
                     logd(TAG, "Fetch HD picture from remote. remoteUri=${remoteImage.uri}")
-                    BothWayHub.requestForData(context, null, PATH_REQ_IMAGE_HD, req, REQUEST_IMAGE_HD_TIMEOUT)
+                    BothWayHub.requestForData(
+                        context,
+                        null,
+                        PATH_REQ_IMAGE_HD,
+                        req,
+                        REQUEST_IMAGE_HD_TIMEOUT
+                    )
                 }.also {
                     logd(TAG, "Fetch HD picture from remote. result=${it.result}")
                 }
@@ -226,31 +244,11 @@ class RemoteImageRepository(
      * @see deleteLocalImage
      */
     suspend fun deleteHdImage(context: Context, remoteImage: RemoteImage): IntentSender? {
-        return remoteImage.localUri?.let { deleteLocalImage(context, it) }
-    }
-
-    /**
-     * Delete local image from files and media store. Update the database if it is associated with a remote cache.
-     *
-     * @return `null` if success. An [IntentSender] will be returned if scope storage is enabled and we have no
-     * permissions to delete the target.
-     */
-    suspend fun deleteLocalImage(context: Context, localUri: Uri)
-            : IntentSender? = withContext(Dispatchers.IO) {
-        try {
-            context.contentResolver.delete(localUri,
-                    "${MediaStore.Images.Media._ID} = ?", arrayOf(ContentUris.parseId(localUri).toString()))
+        return remoteImage.localUri?.let {
             // update remote image cache database
-            imageDao.clearLocalUri(localUri)
-        } catch (e: SecurityException) {
-            if (scopeStorageEnabled()) {
-                val recoverableException = e as? RecoverableSecurityException ?: throw RuntimeException(e.message, e)
-                return@withContext recoverableException.userAction.actionIntent.intentSender
-            } else {
-                throw e
-            }
+            imageDao.clearLocalUri(it)
+            deleteLocalImage(context, it)
         }
-        null
     }
 
 }

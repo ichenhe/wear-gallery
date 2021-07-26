@@ -17,32 +17,69 @@
 
 package cc.chenhe.weargallery.ui.main
 
-import android.app.Activity
+import android.Manifest
+import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
+import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.ui.UpgradingAty
+import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.uilts.addQrCode
 import cc.chenhe.weargallery.uilts.showHuawei
 import cc.chenhe.weargallery.wearvision.dialog.AlertDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * Code used with [IntentSender] to request user permission to delete an image with scoped storage.
- */
-private const val DELETE_PERMISSION_REQUEST = 1
-
 class MainAty : AppCompatActivity() {
 
     private val sharedViewModel: SharedViewModel by viewModel()
 
+    private val introduceLauncher =
+        registerForActivityResult(object : ActivityResultContract<Unit, Unit>() {
+            override fun createIntent(context: Context, input: Unit?): Intent {
+                return Intent(context, IntroduceAty::class.java)
+            }
+
+            override fun parseResult(resultCode: Int, intent: Intent?) {
+            }
+        }) {
+            if (!hasPermission()) {
+                finish()
+                return@registerForActivityResult
+            }
+            NotificationManagerCompat.from(this).cancel(NOTIFY_ID_PERMISSION)
+            checkUpgradeProcess()
+        }
+
+    private val upgradeAtyLauncher =
+        registerForActivityResult(UpgradingAty.UpgradeContract()) { ok ->
+            if (ok)
+                init()
+            else
+                finish()
+        }
+
+    private val deleteRequestLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                sharedViewModel.deletePendingImage()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 1 Check Huawei
         if (checkHuaWei() && showHuawei(this)) {
             AlertDialog(this).apply {
                 setTitle(R.string.app_hw_title)
@@ -54,48 +91,53 @@ class MainAty : AppCompatActivity() {
                     showHuawei(this@MainAty, !isSkipChecked)
                 }
                 setOnDismissListener {
-                    init()
+                    checkPermission()
                 }
             }.show()
             return
         }
+        checkPermission()
+    }
 
-        val launcher = registerForActivityResult(UpgradingAty.UpgradeContract()) { ok ->
-            if (ok)
-                init()
-            else
-                finish()
+    // 2 Check permission
+    private fun checkPermission() {
+        if (hasPermission()) {
+            checkUpgradeProcess()
+        } else {
+            introduceLauncher.launch(Unit)
         }
-        if (UpgradingAty.startIfNecessary(this, launcher))
-            return
+    }
 
+    // 3 Check upgrade process
+    private fun checkUpgradeProcess() {
+        if (UpgradingAty.startIfNecessary(this, upgradeAtyLauncher))
+            return
         init()
     }
 
+    // 4 init
     private fun init() {
         setContentView(R.layout.aty_main)
 
         sharedViewModel.permissionNeededForDelete.observe(this) { intentSender ->
-            intentSender?.let {
-                startIntentSenderForResult(
-                    intentSender,
-                    DELETE_PERMISSION_REQUEST,
-                    null,
-                    0,
-                    0,
-                    0,
-                    null
-                )
+            if (intentSender != null) {
+                deleteRequestLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == DELETE_PERMISSION_REQUEST) {
-            sharedViewModel.deletePendingImage()
-        }
+    /**
+     * @return Whether has permissions.
+     */
+    private fun hasPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED && (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q ||
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED)
     }
-
 
 }

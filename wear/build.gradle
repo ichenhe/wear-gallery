@@ -15,11 +15,11 @@ if (localPropertiesFile.isFile()) {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "cc.chenhe.weargallery"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 220600011 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName "v6.0.1-preview"
 

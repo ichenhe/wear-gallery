@@ -17,16 +17,20 @@
 
 package cc.chenhe.weargallery.repository
 
+import android.app.RecoverableSecurityException
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
+import android.content.IntentSender
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import cc.chenhe.weargallery.uilts.IMAGE_RECEIVE_FOLDER_NAME
 import cc.chenhe.weargallery.uilts.imageReceiveRelativePath
+import cc.chenhe.weargallery.uilts.scopeStorageEnabled
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -45,20 +49,28 @@ open class ImageRepository {
      *
      * @return The [Uri] in local device, `null` if failed to save.
      */
-    suspend fun saveImage(context: Context, displayName: String, takenTime: Long, ins: InputStream,
-                          folderName: String? = null)
-            : Uri? = withContext(Dispatchers.IO) {
-        // NOT equal here. since requestLegacyExternalStorage=true.
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            saveImageScopeStorage(context, displayName, takenTime, ins, folderName)
+    suspend fun saveImage(
+        context: Context,
+        displayName: String,
+        takenTime: Long,
+        ins: InputStream,
+        folderName: String? = null
+    ): Uri? = withContext(Dispatchers.IO) {
+        if (scopeStorageEnabled()) {
+            saveImageScopeStorage(context, displayName, ins, folderName)
         } else {
             saveImageLegacy(context, displayName, takenTime, ins, folderName)
         }
     }
 
-    private suspend fun saveImageScopeStorage(context: Context, displayName: String, takenTime: Long, ins: InputStream,
-                                              folderName: String? = null)
-            : Uri? = withContext(Dispatchers.IO) {
+    @RequiresApi(Build.VERSION_CODES.Q)
+    @Suppress("BlockingMethodInNonBlockingContext") // IO Dispatcher
+    private suspend fun saveImageScopeStorage(
+        context: Context,
+        displayName: String,
+        ins: InputStream,
+        folderName: String? = null
+    ): Uri? = withContext(Dispatchers.IO) {
         // create item
         val saveFolder = if (folderName.isNullOrEmpty()) {
             imageReceiveRelativePath
@@ -68,10 +80,10 @@ open class ImageRepository {
         var values = ContentValues().apply {
             put(MediaStore.Images.Media.RELATIVE_PATH, saveFolder)
             put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
-            put(MediaStore.Images.Media.DATE_TAKEN, takenTime)
             put(MediaStore.Images.Media.IS_PENDING, true)
         }
-        val uri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        val uri =
+            context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
                 ?: return@withContext null
         // write file
         context.contentResolver.openOutputStream(uri)?.use { os ->
@@ -86,16 +98,25 @@ open class ImageRepository {
         return@withContext uri
     }
 
-    @Suppress("DEPRECATION")
-    private suspend fun saveImageLegacy(context: Context, displayName: String, takenTime: Long, ins: InputStream,
-                                        folderName: String? = null)
-            : Uri? = withContext(Dispatchers.IO) {
+    @Suppress("DEPRECATION", "BlockingMethodInNonBlockingContext") // IO Dispatcher
+    private suspend fun saveImageLegacy(
+        context: Context,
+        displayName: String,
+        takenTime: Long,
+        ins: InputStream,
+        folderName: String? = null
+    ): Uri? = withContext(Dispatchers.IO) {
         // create folder
         val folder = if (folderName.isNullOrEmpty()) {
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                    IMAGE_RECEIVE_FOLDER_NAME)
+            File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                IMAGE_RECEIVE_FOLDER_NAME
+            )
         } else {
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), folderName)
+            File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                folderName
+            )
         }
         if (!folder.isDirectory) {
             folder.mkdirs()
@@ -112,9 +133,10 @@ open class ImageRepository {
         // existUri=null means not exist
         val projection = arrayOf(MediaStore.Images.Media._ID)
         val selection = "${MediaStore.Images.Media.DATA} = ?"
-        val selectionArgs = arrayOf(file.absolutePath)
-        val existUri: Uri? = context.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-                selection, selectionArgs, null)?.use { cursor ->
+        val existUri: Uri? = context.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
+            selection, arrayOf(file.absolutePath), null
+        )?.use { cursor ->
             if (cursor.moveToFirst()) {
                 val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
                 ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
@@ -128,6 +150,7 @@ open class ImageRepository {
         BitmapFactory.decodeFile(file.absolutePath, options)
 
         // insert into or update media store
+        @Suppress("InlinedApi")
         val values = ContentValues().apply {
             put(MediaStore.Images.Media.DATA, file.absolutePath)
             put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
@@ -137,11 +160,41 @@ open class ImageRepository {
             put(MediaStore.Images.Media.MIME_TYPE, options.outMimeType)
         }
         if (existUri != null) {
-            context.contentResolver.update(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values,
-                    "${MediaStore.Images.Media._ID} = ?", arrayOf(ContentUris.parseId(existUri).toString()))
+            context.contentResolver.update(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                values,
+                "${MediaStore.Images.Media._ID} = ?",
+                arrayOf(ContentUris.parseId(existUri).toString())
+            )
             existUri
         } else {
             context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         }
+    }
+
+    /**
+     * Delete local image from files and media store. Update the database if it is associated with a remote cache.
+     *
+     * @return `null` if success. An [IntentSender] will be returned if scope storage is enabled and we have no
+     * permissions to delete the target.
+     */
+    suspend fun deleteLocalImage(context: Context, localUri: Uri)
+            : IntentSender? = withContext(Dispatchers.IO) {
+        try {
+            context.contentResolver.delete(
+                localUri,
+                "${MediaStore.Images.Media._ID} = ?",
+                arrayOf(ContentUris.parseId(localUri).toString())
+            )
+        } catch (e: SecurityException) {
+            if (scopeStorageEnabled()) {
+                val recoverableException =
+                    e as? RecoverableSecurityException ?: throw RuntimeException(e.message, e)
+                return@withContext recoverableException.userAction.actionIntent.intentSender
+            } else {
+                throw e
+            }
+        }
+        null
     }
 }

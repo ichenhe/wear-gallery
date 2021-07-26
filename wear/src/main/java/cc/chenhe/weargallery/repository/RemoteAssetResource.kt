@@ -58,13 +58,17 @@ abstract class RemoteAssetResource {
         if (!resp.isSuccess()) {
             return RemoteAssetError(RemoteAssetError.REASON_COMM_ERROR)
         }
-        val dataMap = resp.dataMapItem?.getDataMap() ?: return RemoteAssetError(RemoteAssetError.REASON_REMOTE_ERROR)
+        val dataMap = resp.dataMapItem?.dataMap
+            ?: return RemoteAssetError(RemoteAssetError.REASON_REMOTE_ERROR)
 
-        if (dataMap.containsKey(ITEM_RESULT) && dataMap.getInt(ITEM_RESULT, RESULT_ERROR) == RESULT_ERROR) {
+        if (dataMap.containsKey(ITEM_RESULT)
+            && dataMap.getInt(ITEM_RESULT, RESULT_ERROR) == RESULT_ERROR
+        ) {
             return RemoteAssetError(RemoteAssetError.REASON_REMOTE_ERROR, dataMap)
         }
 
-        val asset = extractAsset(dataMap) ?: return RemoteAssetError(RemoteAssetError.REASON_REMOTE_ERROR, dataMap)
+        val asset = extractAsset(dataMap)
+            ?: return RemoteAssetError(RemoteAssetError.REASON_REMOTE_ERROR, dataMap)
         val newCache = saveToCache(asset) ?: loadFromCache()
 
         return if (newCache != null) {
@@ -115,12 +119,12 @@ sealed class RemoteAsset {
 }
 
 class RemoteAssetSuccess(
-        override val asset: Uri
+    override val asset: Uri
 ) : RemoteAsset()
 
 class RemoteAssetError(
-        @RemoteAssetErrorReason val reason: Int,
-        val extra: DataMap? = null
+    @RemoteAssetErrorReason val reason: Int,
+    val extra: DataMap? = null
 ) : RemoteAsset() {
 
     override val asset: Uri? = null

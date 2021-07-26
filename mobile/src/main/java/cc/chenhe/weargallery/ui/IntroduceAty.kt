@@ -31,7 +31,6 @@ class IntroduceAty : IntroActivity() {
         if (Build.VERSION.SDK_INT >= 23 && !checkStoragePermissions(this)) {
             val permissions = arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             addSlide(
                 SimpleSlide.Builder()

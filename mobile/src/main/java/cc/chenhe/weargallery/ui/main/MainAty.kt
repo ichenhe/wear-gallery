@@ -19,18 +19,22 @@ package cc.chenhe.weargallery.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.common.util.HUA_WEI
+import cc.chenhe.weargallery.common.util.checkHuaWei
 import cc.chenhe.weargallery.databinding.AtyMainBinding
 import cc.chenhe.weargallery.service.AppUpgradeService
 import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.utils.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.utils.checkStoragePermissions
 import cc.chenhe.weargallery.utils.resetStatusBarTextColor
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class MainAty : AppCompatActivity() {
@@ -51,7 +55,7 @@ class MainAty : AppCompatActivity() {
                 return@registerForActivityResult
             }
             NotificationManagerCompat.from(this).cancel(NOTIFY_ID_PERMISSION)
-            setContentView(R.layout.aty_main)
+            setContentView(binding.root)
         }
 
 
@@ -60,26 +64,26 @@ class MainAty : AppCompatActivity() {
         binding = AtyMainBinding.inflate(layoutInflater)
 
 
-//        if (checkHuaWei()) {
-//            MaterialAlertDialogBuilder(this)
-//                .setTitle(R.string.app_hw_title)
-//                .setMessage(R.string.app_hw_message)
-//                .setPositiveButton(R.string.app_hw_view) { _, _ ->
-//                    val intent = Intent().apply {
-//                        action = Intent.ACTION_VIEW
-//                        data = Uri.parse(HUA_WEI)
-//                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                    }
-//                    startActivity(intent)
-//                    finish()
-//                }
-//                .setNegativeButton(R.string.app_hw_exit) { _, _ ->
-//                    finish()
-//                }
-//                .setCancelable(false)
-//                .show()
-//            return
-//        }
+        if (checkHuaWei()) {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.app_hw_title)
+                .setMessage(R.string.app_hw_message)
+                .setPositiveButton(R.string.app_hw_view) { _, _ ->
+                    val intent = Intent().apply {
+                        action = Intent.ACTION_VIEW
+                        data = Uri.parse(HUA_WEI)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    startActivity(intent)
+                    finish()
+                }
+                .setNegativeButton(R.string.app_hw_exit) { _, _ ->
+                    finish()
+                }
+                .setCancelable(false)
+                .show()
+            return
+        }
         if (AppUpgradeService.shouldRunUpgrade(this) && !AppUpgradeService.isRunning())
             ContextCompat.startForegroundService(this, Intent(this, AppUpgradeService::class.java))
         if (!checkStoragePermissions(this)) {

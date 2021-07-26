@@ -34,6 +34,8 @@ abstract class RemoteBoundResource<ResultType, RequestType> {
     fun asFlow() = flow<Resource<ResultType>> {
         emit(Loading())
 
+        // use the current cache data to determine whether it should be obtained remotely
+        // so only the first data is meaningful
         val cacheValue = loadFromCache().first()
 
         if (shouldFetch(cacheValue)) {
@@ -49,7 +51,13 @@ abstract class RemoteBoundResource<ResultType, RequestType> {
                 }
                 is ApiErrorResponse -> {
                     onFetchFailed(resp)
-                    emitAll(loadFromCache().map { Error(code = resp.code, message = resp.errorMessage, data = it) })
+                    emitAll(loadFromCache().map {
+                        Error(
+                            code = resp.code,
+                            message = resp.errorMessage,
+                            data = it
+                        )
+                    })
                 }
             }
         } else {
@@ -65,6 +73,11 @@ abstract class RemoteBoundResource<ResultType, RequestType> {
      */
     fun asLiveData() = asFlow().asLiveData()
 
+    /**
+     * Since the cache may be updated at any time, a Flow is required to represent the realtime data.
+     *
+     * @return Data in cache.
+     */
     protected abstract fun loadFromCache(): Flow<ResultType?>
 
     /**
@@ -78,7 +91,8 @@ abstract class RemoteBoundResource<ResultType, RequestType> {
      * Extract data from the wrapper [ApiResponse] class. This method will only be called if [resp] is
      * [ApiSuccessResponse].
      */
-    protected open fun processResponse(resp: ApiSuccessResponse<RequestType>): RequestType = resp.data
+    protected open fun processResponse(resp: ApiSuccessResponse<RequestType>): RequestType =
+        resp.data
 
     /**
      * Save the fresh response to cache.

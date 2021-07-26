@@ -49,9 +49,8 @@ class SharedViewModel(
      */
     var currentPosition = -1
 
-    private val _fetchRemoteImageFolders = MutableLiveData(true)
-    val remoteImageFolders =
-        _fetchRemoteImageFolders.switchMap { imageRepo.loadImageFolder(application) }
+    private val _fetchRemoteFolders = MutableLiveData(true)
+    val remoteFolders = _fetchRemoteFolders.switchMap { imageRepo.loadImageFolder(application) }
 
     private var pendingDeleteImage: Uri? = null
     private val _permissionNeededForDelete = MutableLiveData<IntentSender?>()
@@ -62,7 +61,7 @@ class SharedViewModel(
     }
 
     fun retryFetchRemoteImageFolders() {
-        _fetchRemoteImageFolders.value = true
+        _fetchRemoteFolders.value = true
     }
 
     fun deleteLocalImage(localUri: Uri) {

@@ -72,7 +72,7 @@ class MobileImagesFr : Fragment(), RetryCallback {
             }
         }
 
-        sharedViewModel.remoteImageFolders.observe(viewLifecycleOwner) {
+        sharedViewModel.remoteFolders.observe(viewLifecycleOwner) {
             it.data?.let { data -> adapter.submitList(data) }
             when {
                 shouldShowRetryLayout(it) -> {
