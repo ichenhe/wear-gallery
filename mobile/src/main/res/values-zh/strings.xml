@@ -83,14 +83,8 @@
 
     <string name="share_image_label">发送到手表</string>
 
-    <string name="about_slogan">现代化的开源手表图库应用</string>
-    <string name="about_thank_title">特别感谢</string>
-    <string name="about_thank_content">设备：@TicWatch\n产品：@果冻\n图标：@五音律吕 @一佳一 @Lance.Moe @碱式碳酸铜\n翻译：@海棠花未眠 @碱式碳酸铜</string>
-    <string name="about_os_title">源代码</string>
-    <string name="about_os_content">GitHub: https://github.com/liangchenhe55/wear-gallery\n\n反馈问题请前往 GitHub issues.\n欢迎 Fork/PR. 求 Star (๑•ᴗ•๑)</string>
-    <string name="about_follow_title">关注</string>
-    <string name="about_follow_content">Telegram 频道：https://t.me/weargallery_news\n企鹅交流群：549321774</string>
-    <string name="about_licence">开源许可证</string>
+    <string name="about_slogan">现代化的开源手表相册</string>
+    <string name="about_licence"><u>开源许可证</u></string>
 
     <string name="update_no_web_view">请先安装浏览器</string>
 

@@ -40,10 +40,6 @@
             android:name=".ui.IntroduceAty"
             android:theme="@style/Theme.Intro" />
         <activity
-            android:name=".ui.AboutAty"
-            android:launchMode="singleTask"
-            android:theme="@style/AppBaseTheme.About" />
-        <activity
             android:name=".ui.sendimages.SendImagesAty"
             android:label="@string/share_image_label">
             <intent-filter>

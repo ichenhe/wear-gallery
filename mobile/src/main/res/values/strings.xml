@@ -91,13 +91,10 @@
     <string name="share_image_label">Send to watch</string>
 
     <string name="about_slogan">An open source Wear OS gallery</string>
-    <string name="about_thank_title">Thanks</string>
-    <string name="about_thank_content">Equipment: @TicWatch\nPM: @果冻\nIcon: @五音律吕 @一佳一 @Lance.Moe @碱式碳酸铜\nTranslate: @海棠花未眠 @碱式碳酸铜</string>
-    <string name="about_os_title">Source Code</string>
-    <string name="about_os_content">GitHub: https://github.com/liangchenhe55/wear-gallery</string>
-    <string name="about_follow_title">Follow</string>
-    <string name="about_follow_content">Telegram channel: https://t.me/weargallery_news\nQQ group：549321774</string>
-    <string name="about_licence">Open Source Licenses</string>
+    <string name="about_github" translatable="false"><u>github.com/ichenhe/wear-gallery</u></string>
+    <string name="about_tg" translatable="false"><u>t.me/weargallery_news</u></string>
+    <string name="about_qq" translatable="false">549321774</string>
+    <string name="about_licence"><u>Open Source Licenses</u></string>
 
     <string name="update_no_web_view">Please install a web browser first.</string>
 

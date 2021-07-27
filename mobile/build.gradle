@@ -71,12 +71,12 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.work:work-runtime-ktx:2.5.0")
-    implementation "io.insert-koin:koin-android:$koinVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation "androidx.core:core-ktx:$ktxVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroidVersion"
 
+    implementation "io.insert-koin:koin-android:$koinVersion"
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
     implementation "com.google.android.material:material:$materialVersion"
@@ -84,14 +84,6 @@ dependencies {
     implementation "id.zelory:compressor:3.0.1"
     implementation "com.heinrichreimersoftware:material-intro:$materialIntroVersion"
     implementation("me.chenhe:wearmsger:$wearMsgerVersion")
-
-
-    // AndroidLinks
-    implementation 'com.drakeet.about:about:2.4.1'
-    implementation 'com.drakeet.multitype:multitype:4.0.0'
-    implementation 'com.drakeet.about:about-extension:2.4.1'
-    //noinspection GradleDependency
-    implementation 'com.alibaba:fastjson:1.1.70.android' // required by android links
 
     // pictures
     implementation 'com.github.bumptech.glide:glide:4.12.0'

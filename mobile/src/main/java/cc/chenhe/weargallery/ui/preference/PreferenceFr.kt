@@ -30,7 +30,6 @@ import androidx.preference.PreferenceFragmentCompat
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.getVersionCode
 import cc.chenhe.weargallery.common.util.getVersionName
-import cc.chenhe.weargallery.ui.AboutAty
 import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
 import cc.chenhe.weargallery.utils.UPDATE_URL
 import cc.chenhe.weargallery.utils.requireCompatAty
@@ -67,7 +66,7 @@ class PreferenceFr : PreferenceFragmentCompat() {
                 openMarket()
             }
             "about" -> {
-                startActivity(Intent(context, AboutAty::class.java))
+                findNavController().navigate(PreferenceFrDirections.actionPreferenceFrToAboutFr())
             }
             "donate" -> {
                 startAliPay()

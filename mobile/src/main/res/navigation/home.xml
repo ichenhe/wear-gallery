@@ -17,5 +17,23 @@
     <fragment
         android:id="@+id/preferenceFr"
         android:name="cc.chenhe.weargallery.ui.preference.PreferenceFr"
-        android:label="PreferenceFr" />
+        android:label="PreferenceFr">
+        <action
+            android:id="@+id/action_preferenceFr_to_aboutFr"
+            app:destination="@id/aboutFr" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFr"
+        android:name="cc.chenhe.weargallery.ui.preference.AboutFr"
+        android:label=""
+        tools:layout="@layout/fr_about">
+        <action
+            android:id="@+id/action_aboutFr_to_licenseFr"
+            app:destination="@id/licenseFr" />
+    </fragment>
+    <fragment
+        android:id="@+id/licenseFr"
+        android:name="cc.chenhe.weargallery.ui.preference.LicenseFr"
+        android:label="@string/about_licence"
+        tools:layout="@layout/fr_license" />
 </navigation>
