@@ -70,6 +70,7 @@ class AppUpgradeService : LifecycleService() {
     private fun doWork() {
         val success = try {
             doWorkInternal()
+            setLastStartVersion(this, getVersionCode(this))
             logi(TAG, "Upgrade successful")
             true
         } catch (e: Exception) {
