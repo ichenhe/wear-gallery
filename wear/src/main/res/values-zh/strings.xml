@@ -2,6 +2,7 @@
 
     <string name="app_name">腕间图库</string>
     <string name="tip">提示</string>
+    <string name="confirm">确认</string>
     <string name="retry">重试</string>
     <string name="help">需要帮助？</string>
     <string name="empty">空空如也</string>
@@ -22,7 +23,7 @@
     <string name="drawer_local_gallery">本地图片</string>
     <string name="drawer_phone_gallery">手机图片</string>
     <string name="drawer_explore">扩展</string>
-    u
+
     <string name="image_operation_rotate_left">向左旋转</string>
     <string name="image_operation_rotate_right">向右旋转</string>
     <string name="image_operation_hd">加载原图</string>
@@ -30,6 +31,9 @@
     <string name="image_detail_zoom_in">放大</string>
     <string name="image_detail_zoom_out">缩小</string>
 
+    <string name="local_title_selection">已选择%1$d</string>
+    <string name="local_delete_images_confirm">你真的要删除这%1$d张图片吗？</string>
+    <string name="local_delete_image_folders_confirm">你真的要删除这%1$d个文件夹的图片吗？</string>
     <string name="local_err_permission_title">错误</string>
     <string name="local_err_permission_content">读写sd卡权限是扫描本地图片所必须的，请授予。</string>
     <string name="mobile_load_gallery_err_tip">帮助</string>

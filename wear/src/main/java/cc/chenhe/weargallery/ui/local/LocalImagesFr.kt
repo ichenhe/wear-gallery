@@ -17,12 +17,16 @@
 
 package cc.chenhe.weargallery.ui.local
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import cc.chenhe.weargallery.R
@@ -34,6 +38,7 @@ import cc.chenhe.weargallery.ui.main.PagerFrDirections
 import cc.chenhe.weargallery.ui.main.SharedViewModel
 import cc.chenhe.weargallery.uilts.loge
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
+import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -66,16 +71,106 @@ class LocalImagesFr : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ((binding.delete.layoutParams as CoordinatorLayout.LayoutParams).behavior as FabBehavior)
+            .scope = viewLifecycleOwner.lifecycleScope
 
         loadImages()
 
+        model.inSelectionMode.observe(viewLifecycleOwner) {
+            val duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+            if (it) {
+                binding.title.text =
+                    getString(R.string.local_title_selection, adapter.checkedItem?.size ?: 0)
+                binding.listGridType.setImageResource(R.drawable.ic_view_cancel)
+                // show delete button
+                binding.delete.apply {
+                    scaleX = 0f
+                    scaleY = 0f
+                    visibility = View.VISIBLE
+                    animate().scaleX(1f).scaleY(1f).setDuration(duration)
+                        .setListener(null).start()
+                }
+            } else {
+                binding.title.setText(R.string.drawer_local_gallery)
+                val folderMode = model.folderMode.value
+                if (folderMode != null)
+                    binding.listGridType.setImageResource(
+                        if (folderMode) R.drawable.ic_view_list else R.drawable.ic_view_grid
+                    )
+                // hide delete button
+                binding.delete.apply {
+                    animate().scaleX(0f).scaleY(0f).setDuration(duration)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                visibility = View.GONE
+                            }
+                        })
+                }
+            }
+        }
+
+        adapter.checkedItemChangedListener = { checked ->
+            binding.title.text = getString(R.string.local_title_selection, checked.size)
+        }
+
         binding.localImageHeader.setOnClickListener {
-            model.toggleListMode()
+            if (adapter.inSelectionMode) {
+                adapter.quitSelectionMode()
+            } else {
+                model.toggleListMode()
+            }
+        }
+
+        // restore selection mode if view is destroyed
+        // so this is a one-time operation, no need to observe
+        if (model.inSelectionMode.value!! != adapter.inSelectionMode) {
+            if (model.inSelectionMode.value!!)
+                adapter.enterSelectionMode()
+            else
+                adapter.quitSelectionMode()
+        }
+
+        binding.delete.setOnClickListener {
+            val checked = adapter.checkedItem
+            if (checked.isNullOrEmpty())
+                return@setOnClickListener
+            if (model.folderMode.value != true) {
+                // delete images
+                val data = checked.map { (it as Image).uri }
+                AlertDialog(requireContext()).apply {
+                    setTitle(R.string.confirm)
+                    message = getString(R.string.local_delete_images_confirm, data.size)
+                    setNegativeButtonIcon(R.drawable.ic_dialog_close, null)
+                    setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { _, _ ->
+                        sharedViewModel.deleteLocalImages(data)
+                        adapter.quitSelectionMode()
+                        dismiss()
+                    }
+                }.show()
+            } else {
+                // delete folders
+                val data = checked.map { it as ImageFolder }
+                AlertDialog(requireContext()).apply {
+                    setTitle(R.string.confirm)
+                    message = getString(R.string.local_delete_image_folders_confirm, data.size)
+                    setNegativeButtonIcon(R.drawable.ic_dialog_close, null)
+                    setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { _, _ ->
+                        sharedViewModel.deleteLocalImageFolders(data)
+                        adapter.quitSelectionMode()
+                        dismiss()
+                    }
+                }.show()
+            }
         }
     }
 
     private fun loadImages() {
-        adapter = LocalImagesAdapter()
+        adapter = LocalImagesAdapter(requireContext())
+
+        adapter.selectionModeChangedListener = { inSelectionMode ->
+            model.setSelectionMode(inSelectionMode) // save current selection mode
+        }
+
         adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
             override fun onItemClick(view: View, position: Int) {
                 sharedViewModel.currentPosition = position
@@ -108,7 +203,10 @@ class LocalImagesFr : Fragment() {
         }
 
         model.folderMode.observe(viewLifecycleOwner) { folderMode ->
-            binding.listGridType.setImageResource(if (folderMode) R.drawable.ic_view_list else R.drawable.ic_view_grid)
+            if (model.inSelectionMode.value != true)
+                binding.listGridType.setImageResource(
+                    if (folderMode) R.drawable.ic_view_list else R.drawable.ic_view_grid
+                )
             (binding.imagesRecyclerView.layoutManager as GridLayoutManager).spanCount =
                 if (folderMode) 1 else 2
             registerImagesObserver(folderMode)

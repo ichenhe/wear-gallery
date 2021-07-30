@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="2dp">
+    android:foreground="?attr/selectableItemBackground"
+    android:padding="2dp"
+    tools:ignore="UnusedAttribute">
 
     <me.panpf.sketch.SketchImageView
         android:id="@+id/itemImage"
@@ -17,4 +19,16 @@
         tools:background="#B2FF59"
         tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <cc.chenhe.weargallery.common.view.CheckableImageView
+        android:id="@+id/checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/ic_item_check_frame"
+        android:padding="24dp"
+        android:visibility="gone"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_item_check" />
 </androidx.constraintlayout.widget.ConstraintLayout>

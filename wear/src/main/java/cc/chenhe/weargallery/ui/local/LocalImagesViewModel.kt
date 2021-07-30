@@ -18,10 +18,7 @@
 package cc.chenhe.weargallery.ui.local
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.*
 import cc.chenhe.weargallery.common.bean.Loading
 import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.common.util.ImageUtil
@@ -36,7 +33,16 @@ class LocalImagesViewModel(application: Application) : AndroidViewModel(applicat
         if (folders == null) Loading(null) else Success(folders)
     }
 
+    private val _inSelectionMode = MutableLiveData(false)
+    val inSelectionMode: LiveData<Boolean> = _inSelectionMode
+
     fun toggleListMode() {
         folderMode(getApplication(), !(folderMode.value ?: false))
+    }
+
+    fun setSelectionMode(inSelectionMode: Boolean) {
+        if (inSelectionMode != _inSelectionMode.value!!) {
+            _inSelectionMode.value = inSelectionMode
+        }
     }
 }

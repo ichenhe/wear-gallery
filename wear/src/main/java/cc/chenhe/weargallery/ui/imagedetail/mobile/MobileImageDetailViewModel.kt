@@ -18,21 +18,18 @@
 package cc.chenhe.weargallery.ui.imagedetail.mobile
 
 import android.app.Application
-import android.content.IntentSender
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.common.bean.Loading
 import cc.chenhe.weargallery.common.bean.Resource
+import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.repository.RemoteImageRepository
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
 import kotlinx.coroutines.launch
 
 class MobileImageDetailViewModel(
-        application: Application,
-        private val repo: RemoteImageRepository
+    application: Application,
+    private val repo: RemoteImageRepository
 ) : ImageDetailBaseViewModel<RemoteImage>(application) {
 
 
@@ -45,10 +42,8 @@ class MobileImageDetailViewModel(
         }
     }
 
-    private var pendingDeleteImage: RemoteImage? = null
-    private val _permissionNeededForDelete = MutableLiveData<IntentSender?>()
-    val permissionNeededForDelete: LiveData<IntentSender?> = _permissionNeededForDelete
-
+    private val _deleteRequestEvent = MutableLiveData<ImageRepository.Pending?>()
+    val deleteRequestEvent: LiveData<ImageRepository.Pending?> = _deleteRequestEvent
 
     init {
         init()
@@ -70,21 +65,13 @@ class MobileImageDetailViewModel(
         }
     }
 
-    fun deletePendingImage() {
-        pendingDeleteImage?.let {
-            pendingDeleteImage = null
-            deleteHd(it)
-        }
-    }
-
     fun deleteHd(image: RemoteImage) {
-        viewModelScope.launch {
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
             // Signal to the Fragment that it needs to request permission and try the delete again if it succeeds.
-            val intentSender = repo.deleteHdImage(getApplication(), image)
-            if (intentSender != null) {
-                pendingDeleteImage = image
+            val pending = repo.deleteHdImage(getApplication(), image)
+            if (pending != null) {
+                _deleteRequestEvent.postValue(pending)
             }
-            _permissionNeededForDelete.postValue(intentSender)
         }
     }
 }

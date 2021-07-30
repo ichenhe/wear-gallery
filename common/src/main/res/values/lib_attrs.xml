@@ -19,4 +19,7 @@
     </declare-styleable>
     <attr name="maskImageViewStyle" format="reference" tools:ignore="ResourceName" />
 
+    <declare-styleable name="CheckableImageView" tools:ignore="ResourceName">
+        <attr name="android:checked" />
+    </declare-styleable>
 </resources>

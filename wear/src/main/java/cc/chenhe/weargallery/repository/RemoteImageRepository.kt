@@ -18,7 +18,6 @@
 package cc.chenhe.weargallery.repository
 
 import android.content.Context
-import android.content.IntentSender
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import cc.chenhe.weargallery.bean.RemoteImage
@@ -56,9 +55,9 @@ private const val TAG = "ImageFolderRepo"
 class RemoteImageRepository(
     private val moshi: Moshi,
     private val imageFolderDao: RemoteImageFolderDao,
-    private val imageDao: RemoteImageDao,
+    imageDao: RemoteImageDao,
     private val previewCacheManager: MobilePreviewCacheManager
-) : ImageRepository() {
+) : ImageRepository(imageDao) {
 
     private val previewReqRunner by lazy { ControlledRunner<DataCallback>() }
     private val hdReqRunner by lazy { ControlledRunner<DataCallback>() }
@@ -141,7 +140,7 @@ class RemoteImageRepository(
                         TAG,
                         "Failed to fetch remote image preview: REMOTE_ERROR, uri=${uri}, deleting record and cache."
                     )
-                    imageDao.delete(uri)
+                    remoteImageDao.delete(uri)
                     previewCacheManager.deleteCacheImage(uri)
                 }
             }
@@ -154,7 +153,7 @@ class RemoteImageRepository(
     fun loadImages(context: Context, bucketId: Int): LiveData<Resource<List<RemoteImage>>> {
         return object : RemoteBoundResource<List<RemoteImage>, String>() {
             override fun loadFromCache(): Flow<List<RemoteImage>?> {
-                return imageDao.fetchAll(bucketId)
+                return remoteImageDao.fetchAll(bucketId)
             }
 
             override fun shouldFetch(data: List<RemoteImage>?): Boolean = true
@@ -181,7 +180,7 @@ class RemoteImageRepository(
                         )
                         loge(TAG, subtract.toString())
                         // The picture has been deleted, let's delete the record and preview cache.
-                        imageDao.delete(subtract)
+                        remoteImageDao.delete(subtract)
                         previewCacheManager.deleteCacheImage(subtract)
                     }
                 }
@@ -189,7 +188,7 @@ class RemoteImageRepository(
                 // Otherwise things get messy since we have to judge whether the cache is invalid which means we should
                 // query the database before try to update them and will cause serious performance issues.
                 logd(TAG, "Try to insert ${images.size} remote pictures in bucket <${bucketId}>.")
-                imageDao.insert(images)
+                remoteImageDao.insert(images)
             }
         }.asLiveData()
     }
@@ -228,7 +227,7 @@ class RemoteImageRepository(
                     val localUri = saveImage(context, remoteImage.name, remoteImage.takenTime, it)
                     if (localUri != null) {
                         // update cache database
-                        imageDao.setLocalUri(remoteImage.uri, localUri)
+                        remoteImageDao.setLocalUri(remoteImage.uri, localUri)
                     } else {
                         logw(TAG, "Failed to save HD picture, uri on remote=${remoteImage.uri}")
                     }
@@ -243,11 +242,10 @@ class RemoteImageRepository(
      *
      * @see deleteLocalImage
      */
-    suspend fun deleteHdImage(context: Context, remoteImage: RemoteImage): IntentSender? {
+    suspend fun deleteHdImage(context: Context, remoteImage: RemoteImage): Pending? {
         return remoteImage.localUri?.let {
             // update remote image cache database
-            imageDao.clearLocalUri(it)
-            deleteLocalImage(context, it)
+            deleteLocalImage(context, listOf(it))
         }
     }
 

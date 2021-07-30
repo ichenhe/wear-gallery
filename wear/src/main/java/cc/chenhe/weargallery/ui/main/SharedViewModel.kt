@@ -18,19 +18,20 @@
 package cc.chenhe.weargallery.ui.main
 
 import android.app.Application
-import android.content.IntentSender
 import android.net.Uri
 import androidx.lifecycle.*
 import cc.chenhe.weargallery.common.bean.Image
+import cc.chenhe.weargallery.common.bean.ImageFolder
 import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.common.util.ImageLiveData
+import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.repository.RemoteImageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class SharedViewModel(
     application: Application,
-    private val imageRepo: RemoteImageRepository
+    private val imageRepo: RemoteImageRepository,
 ) : AndroidViewModel(application) {
 
     private val _localImages = ImageScopeLiveData().map { Success(it) }
@@ -52,9 +53,16 @@ class SharedViewModel(
     private val _fetchRemoteFolders = MutableLiveData(true)
     val remoteFolders = _fetchRemoteFolders.switchMap { imageRepo.loadImageFolder(application) }
 
-    private var pendingDeleteImage: Uri? = null
-    private val _permissionNeededForDelete = MutableLiveData<IntentSender?>()
-    val permissionNeededForDelete: LiveData<IntentSender?> = _permissionNeededForDelete
+
+    /** @see deleteRequestEvent */
+    private val _deleteRequestEvent = MutableLiveData<ImageRepository.Pending?>(null)
+
+    /**
+     * If value change to non-null, a request is needed to make.
+     *
+     * **Note: This represents a event, not a state, so it's value is meaningless unless it just changed.**
+     */
+    val deleteRequestEvent: LiveData<ImageRepository.Pending?> = _deleteRequestEvent
 
     private inner class ImageScopeLiveData : ImageLiveData(getApplication()) {
         override fun getCoroutineScope(): CoroutineScope = viewModelScope
@@ -64,20 +72,37 @@ class SharedViewModel(
         _fetchRemoteFolders.value = true
     }
 
+    /**
+     * @see deleteLocalImages
+     */
     fun deleteLocalImage(localUri: Uri) {
-        viewModelScope.launch {
-            val intentSender = imageRepo.deleteLocalImage(getApplication(), localUri)
-            if (intentSender != null) {
-                pendingDeleteImage = localUri
+        deleteLocalImages(listOf(localUri))
+    }
+
+    /**
+     * Delete given images. UI should observe [deleteRequestEvent] to get result.
+     *
+     * Initial value is `null`. If user's confirmation is requested, value will change to non-null.
+     */
+    fun deleteLocalImages(localUris: Collection<Uri>) {
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            val pending = imageRepo.deleteLocalImage(getApplication(), localUris)
+            if (pending != null) {
+                _deleteRequestEvent.postValue(pending)
             }
-            _permissionNeededForDelete.postValue(intentSender)
         }
     }
 
-    fun deletePendingImage() {
-        pendingDeleteImage?.let {
-            pendingDeleteImage = null
-            deleteLocalImage(it)
+    /**
+     * @see deleteLocalImages
+     */
+    fun deleteLocalImageFolders(folders: Collection<ImageFolder>) {
+        val ids = folders.map { it.id }
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            val pending = imageRepo.deleteLocalImageFolders(getApplication(), ids)
+            if (pending != null) {
+                _deleteRequestEvent.postValue(pending)
+            }
         }
     }
 }

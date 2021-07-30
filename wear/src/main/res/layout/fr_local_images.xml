@@ -15,15 +15,20 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             style="?attr/wv_windowAppBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp">
 
             <RelativeLayout
                 android:id="@+id/localImageHeader"
                 style="?attr/wv_windowAppBarContentStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:background="?android:attr/selectableItemBackground"
                 app:layout_scrollFlags="scroll|enterAlways">
 
@@ -37,11 +42,10 @@
 
                 <ImageView
                     android:id="@+id/listGridType"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/title"
-                    app:imageDrawable="@{@drawable/ic_view_list}"
+                    android:layout_toEndOf="@id/title"
                     app:tint="?android:attr/textColorPrimary"
                     tools:ignore="ContentDescription"
                     tools:srcCompat="@drawable/ic_view_list" />
@@ -67,5 +71,17 @@
             android:layout_height="match_parent"
             android:layout="@layout/view_empty"
             app:resource="@{sharedModel.localImages}" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/wv_margin_medium"
+            android:contentDescription="@string/image_operation_delete"
+            android:visibility="gone"
+            app:layout_behavior=".ui.local.FabBehavior"
+            app:srcCompat="@drawable/ic_local_image_delete"
+            app:tint="@color/white" />
     </me.chenhe.wearvision.widget.VisionCoordinatorLayout>
 </layout>

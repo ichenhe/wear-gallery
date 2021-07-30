@@ -17,29 +17,46 @@
 
 package cc.chenhe.weargallery.ui.imagedetail.mobile
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImage
+import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseAdapter
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseFr
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
+import cc.chenhe.weargallery.uilts.logd
 import cc.chenhe.weargallery.uilts.toast
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class MobileImageDetailFr : ImageDetailBaseFr() {
+    companion object {
+        private const val TAG = "MobileImageDetailFr"
+    }
 
     private val model: MobileImageDetailViewModel by viewModel()
+    private val remoteImageDao: RemoteImageDao by inject()
 
+    private var pendingUris: Collection<Uri>? = null
     private val deleteRequestLauncher =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-            if (it.resultCode == AppCompatActivity.RESULT_OK) {
-                model.deletePendingImage()
+            if (it.resultCode != AppCompatActivity.RESULT_OK) {
+                logd(TAG, "${pendingUris?.size ?: 0} Image deletion request is rejected.")
+                return@registerForActivityResult
+            }
+            logd(TAG, "Image deletion is approved, try to clear ${pendingUris?.size ?: 0}$ fields.")
+            ProcessLifecycleOwner.get().lifecycleScope.launch {
+                pendingUris?.also { uris -> remoteImageDao.clearLocalUri(uris) }
             }
         }
 
@@ -57,9 +74,10 @@ class MobileImageDetailFr : ImageDetailBaseFr() {
             adapter.submitList(images.data)
         }
 
-        model.permissionNeededForDelete.observe(viewLifecycleOwner) { intentSender ->
-            intentSender?.let {
-                deleteRequestLauncher.launch(IntentSenderRequest.Builder(it).build())
+        model.deleteRequestEvent.observe(viewLifecycleOwner) { pending ->
+            pending?.let {
+                pendingUris = it.uris
+                deleteRequestLauncher.launch(IntentSenderRequest.Builder(it.intentSender).build())
             }
         }
 

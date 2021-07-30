@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_check_off">
+
+    <target
+        android:name="path"
+        android:animation="@animator/widget_two_state_color_to_on" />
+</animated-vector>

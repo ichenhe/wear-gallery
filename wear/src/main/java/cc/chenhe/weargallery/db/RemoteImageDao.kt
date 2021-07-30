@@ -49,4 +49,9 @@ abstract class RemoteImageDao {
     @Query("UPDATE cache_mobile_image SET local_uri = null WHERE local_uri = :localUri")
     abstract suspend fun clearLocalUri(localUri: Uri)
 
+    /**
+     * Clear field `local_uri` with value in [uris].
+     */
+    @Query("UPDATE cache_mobile_image SET local_uri = null WHERE local_uri in (:uris)")
+    abstract suspend fun clearLocalUri(uris: Collection<Uri>): Int
 }

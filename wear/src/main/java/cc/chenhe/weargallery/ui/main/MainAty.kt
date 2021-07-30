@@ -21,28 +21,39 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
+import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.ui.UpgradingAty
 import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.uilts.addQrCode
+import cc.chenhe.weargallery.uilts.logd
 import cc.chenhe.weargallery.uilts.showHuawei
+import kotlinx.coroutines.launch
 import me.chenhe.wearvision.dialog.AlertDialog
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainAty : AppCompatActivity() {
+    companion object {
+        private const val TAG = "MainAty"
+    }
 
     private val sharedViewModel: SharedViewModel by viewModel()
+    private val remoteImageDao: RemoteImageDao by inject()
 
     private val introduceLauncher =
         registerForActivityResult(object : ActivityResultContract<Unit, Unit>() {
@@ -69,12 +80,17 @@ class MainAty : AppCompatActivity() {
                 finish()
         }
 
-    private val deleteRequestLauncher =
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-            if (it.resultCode == RESULT_OK) {
-                sharedViewModel.deletePendingImage()
-            }
+    private var pendingUris: Collection<Uri>? = null
+    private val deleteRequestLauncher = registerForActivityResult(StartIntentSenderForResult()) {
+        if (it.resultCode != RESULT_OK) {
+            logd(TAG, "${pendingUris?.size ?: 0} Image deletion request is rejected.")
+            return@registerForActivityResult
         }
+        logd(TAG, "Image deletion is approved, try to clear ${pendingUris?.size ?: 0}$ fields.")
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            pendingUris?.also { uris -> remoteImageDao.clearLocalUri(uris) }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,9 +135,12 @@ class MainAty : AppCompatActivity() {
     private fun init() {
         setContentView(R.layout.aty_main)
 
-        sharedViewModel.permissionNeededForDelete.observe(this) { intentSender ->
-            if (intentSender != null) {
-                deleteRequestLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
+        sharedViewModel.deleteRequestEvent.observe(this) { pending ->
+            if (pending != null) {
+                pendingUris = pending.uris
+                deleteRequestLauncher.launch(
+                    IntentSenderRequest.Builder(pending.intentSender).build()
+                )
             }
         }
     }

@@ -17,26 +17,46 @@
 
 package cc.chenhe.weargallery.repository
 
-import android.app.RecoverableSecurityException
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.Context
-import android.content.IntentSender
+import android.app.Activity
+import android.app.PendingIntent
+import android.content.*
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Binder
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import cc.chenhe.weargallery.uilts.IMAGE_RECEIVE_FOLDER_NAME
-import cc.chenhe.weargallery.uilts.imageReceiveRelativePath
-import cc.chenhe.weargallery.uilts.scopeStorageEnabled
+import cc.chenhe.weargallery.db.RemoteImageDao
+import cc.chenhe.weargallery.uilts.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.InputStream
+import kotlin.text.isNullOrEmpty
 
-open class ImageRepository {
+open class ImageRepository(
+    // need this to update cache's 'local_uri' field
+    protected val remoteImageDao: RemoteImageDao,
+) {
+    companion object {
+        private const val TAG = "ImageRepository"
+    }
+
+    /**
+     * Represent a pending operation that need user's approve. [Activity.startIntentSender] should
+     * be called with [intentSender] to make a request.
+     *
+     * For us, it currently only represents a delete operation.
+     */
+    class Pending(
+        private val pendingIntent: PendingIntent,
+        /** Resources associated with this operation. */
+        val uris: Collection<Uri>,
+    ) {
+        val intentSender: IntentSender get() = pendingIntent.intentSender
+    }
 
     /**
      * Save a image input stream to file system and media store.
@@ -173,28 +193,135 @@ open class ImageRepository {
     }
 
     /**
-     * Delete local image from files and media store. Update the database if it is associated with a remote cache.
+     * Delete local images. If result is nonnull, [Activity.startIntentSenderForResult] must be
+     * called with [PendingIntent.getIntentSender] to request user's confirmation. If activity
+     * result is [Activity.RESULT_OK], the contents have been deleted.
      *
-     * @return `null` if success. An [IntentSender] will be returned if scope storage is enabled and we have no
-     * permissions to delete the target.
+     * Update the database if it is associated with a remote cache. But if confirmation is required,
+     * this job will be handed over to final callback to finish.
+     *
+     * @return PendingIntent that use to request user's confirmation.
      */
-    suspend fun deleteLocalImage(context: Context, localUri: Uri)
-            : IntentSender? = withContext(Dispatchers.IO) {
-        try {
-            context.contentResolver.delete(
-                localUri,
-                "${MediaStore.Images.Media._ID} = ?",
-                arrayOf(ContentUris.parseId(localUri).toString())
-            )
-        } catch (e: SecurityException) {
-            if (scopeStorageEnabled()) {
-                val recoverableException =
-                    e as? RecoverableSecurityException ?: throw RuntimeException(e.message, e)
-                return@withContext recoverableException.userAction.actionIntent.intentSender
-            } else {
-                throw e
+    suspend fun deleteLocalImage(context: Context, uris: Collection<Uri>): Pending? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (tryDeleteLocalImageDirectly(context, uris)) {
+                remoteImageDao.clearLocalUri(uris)
+                return null
+            }
+            val p = MediaStore.createDeleteRequest(context.applicationContext.contentResolver, uris)
+            Pending(p, uris)
+            // we don't know if the user will approve this deletion, so clear cache fields later
+        } else {
+            deleteLocalImagesLegacy(context, uris)
+            remoteImageDao.clearLocalUri(uris)
+            return null
+        }
+    }
+
+    /**
+     * On or above Android 11, try to delete contents directly. This method will check the uris'
+     * permission first.
+     *
+     * @return Whether the content has been deleted.
+     */
+    private suspend fun tryDeleteLocalImageDirectly(context: Context, uris: Collection<Uri>)
+            : Boolean = withContext(Dispatchers.IO) {
+        if (uris.isEmpty()) return@withContext true
+        // Too many iteration queries can affect performance.
+        // The main use case of this function is:
+        // When the user deletes the HD cache in the remote picture menu, try to avoid additional
+        // authorization requests. Because usually we have direct access to these files.
+        // In this case, only one picture should be deleted at a time. So 5 is enough.
+        if (uris.size > 5) return@withContext false
+        for (uri in uris) {
+            if (context.checkUriPermission(
+                    uri,
+                    Binder.getCallingPid(),
+                    Binder.getCallingUid(),
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@withContext false
             }
         }
-        null
+        // we have all permissions, delete it directly
+        for (uri in uris) {
+            context.applicationContext.contentResolver.delete(uri, null, null)
+        }
+        true
+    }
+
+    private suspend fun deleteLocalImagesLegacy(context: Context, uris: Collection<Uri>) =
+        withContext(Dispatchers.IO) {
+            for (uri in uris) {
+                try {
+                    context.applicationContext.contentResolver.delete(uri, null, null)
+                } catch (e: Exception) {
+                    loge(TAG, "Failed to delete local image. uri=$uri")
+                }
+            }
+        }
+
+    /**
+     * Delete **all** images in given buckets.
+     *
+     * @see deleteLocalImage
+     */
+    suspend fun deleteLocalImageFolders(
+        context: Context,
+        bucketIds: Collection<Int>
+    ): Pending? = withContext(Dispatchers.IO) {
+        if (bucketIds.isEmpty()) return@withContext null // shortcut for empty
+        val uris = queryImageIds(context.applicationContext, bucketIds).map {
+            ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, it.toLong())
+        }
+        if (uris.isEmpty()) return@withContext null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val p = MediaStore.createDeleteRequest(context.applicationContext.contentResolver, uris)
+            Pending(p, uris)
+            // we don't know if the user will approve this deletion, so clear cache fields later
+        } else {
+            deleteImageFoldersLegacy(context, bucketIds)
+            remoteImageDao.clearLocalUri(uris)
+            null
+        }
+    }
+
+    /**
+     * Query all eligible images in [MediaStore.Images.Media.EXTERNAL_CONTENT_URI].
+     *
+     * @param bucketId Images' bucket id.
+     */
+    private suspend fun queryImageIds(context: Context, bucketId: Collection<Int>): List<Int> =
+        withContext(Dispatchers.IO) {
+            context.applicationContext.contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Images.Media._ID),
+                "${MediaStore.Images.Media.BUCKET_ID} in (?)",
+                arrayOf(bucketId.joinToString(", ")),
+                null
+            )?.use { cursor ->
+                val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                val result = ArrayList<Int>(cursor.count)
+                while (cursor.moveToNext()) {
+                    result += cursor.getInt(idIndex)
+                }
+                return@withContext result
+            }
+            emptyList()
+        }
+
+    /**
+     * @return The number of rows deleted.
+     */
+    private suspend fun deleteImageFoldersLegacy(
+        context: Context,
+        bucketIds: Collection<Int>
+    ): Int = withContext(Dispatchers.IO) {
+        context.applicationContext.contentResolver.delete(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            "${MediaStore.Images.Media.BUCKET_ID} in (?)",
+            arrayOf(bucketIds.joinToString(", "))
+        )
     }
 }

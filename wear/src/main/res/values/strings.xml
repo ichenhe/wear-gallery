@@ -2,6 +2,7 @@
 
     <string name="app_name">Wear Gallery</string>
     <string name="tip">Tip</string>
+    <string name="confirm">Confirm</string>
     <string name="retry">Retry</string>
     <string name="help">Need help?</string>
     <string name="empty">No content</string>
@@ -31,6 +32,9 @@
     <string name="image_detail_zoom_in">Zoom in</string>
     <string name="image_detail_zoom_out">Zoom out</string>
 
+    <string name="local_title_selection">%1$d checked</string>
+    <string name="local_delete_images_confirm">Do you really want to delete these %1$d pictures?</string>
+    <string name="local_delete_image_folders_confirm">Do you really want to delete pictures in these %1$d folders?</string>
     <string name="local_err_permission_title">Error</string>
     <string name="local_err_permission_content">Read and write sd card permissions are necessary to scan the local image, please grant.</string>
     <string name="mobile_load_gallery_err_tip">Help</string>
