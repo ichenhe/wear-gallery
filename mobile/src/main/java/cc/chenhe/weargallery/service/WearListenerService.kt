@@ -55,6 +55,7 @@ import kotlinx.coroutines.withContext
 import me.chenhe.lib.wearmsger.BothWayHub
 import me.chenhe.lib.wearmsger.service.WMListenerService
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -83,7 +84,7 @@ class WearListenerService : WMListenerService() {
             return true
         }
         val intent = Intent(this, MainAty::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         val notify = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_PERMISSION)
             .setSmallIcon(R.drawable.ic_notify_permission)
             .setContentTitle(getString(R.string.notify_permission_title))
@@ -109,7 +110,8 @@ class WearListenerService : WMListenerService() {
                 data = Uri.parse(HUA_WEI)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
-            val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+            val pendingIntent =
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             val notify = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_PERMISSION)
                 .setSmallIcon(R.drawable.ic_notify_permission)
                 .setContentTitle(getString(R.string.notify_huawei_title))
@@ -151,13 +153,13 @@ class WearListenerService : WMListenerService() {
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
-        logd(TAG, "onMessageReceived, path=${messageEvent.path}")
+        Timber.tag(TAG).d("onMessageReceived, path=${messageEvent.path}")
         if (checkHuaWeiDevice()) {
-            logw(TAG, "This is a Huawei device, discard request.")
+            Timber.tag(TAG).i("This is a Huawei device, discard msg request.")
             return
         }
         if (!checkPermissions()) {
-            logw(TAG, "Missing necessary permissions, discard request.")
+            Timber.tag(TAG).w("Missing necessary permissions, discard msg request.")
             return
         }
         when (messageEvent.path) {
@@ -194,16 +196,14 @@ class WearListenerService : WMListenerService() {
                     quality(60)
                 }
                 val b = compressed.readBytes()
-                logd(
-                    TAG,
-                    "Compress complete, uri=${data.uri}, size=${b.size / 1024}KB, time=${SystemClock.uptimeMillis() - startTime}"
-                )
+                Timber.tag(TAG)
+                    .v("Compress complete, uri=${data.uri}, size=${b.size / 1024}KB, time=${SystemClock.uptimeMillis() - startTime}")
                 resp.dataMap.apply {
                     putInt(ITEM_RESULT, RESULT_OK)
                     putAsset(ITEM_IMAGE, Asset.createFromBytes(b))
                 }
             } catch (e: Exception) {
-                logw(TAG, "Compress image error. uri=${data.uri}", e)
+                Timber.tag(TAG).w(e, "Compress image error. uri=${data.uri}")
                 resp.dataMap.putInt(ITEM_RESULT, RESULT_ERROR)
             } finally {
                 compressed?.delete()
@@ -240,7 +240,7 @@ class WearListenerService : WMListenerService() {
                 }
             } catch (e: FileNotFoundException) {
                 toastIfEnabled(R.string.watch_operation_send_hd_picture_fail)
-                logd(TAG, "Image file not exist, uri=${data.uri}")
+                Timber.tag(TAG).w("Image file not exist, uri=%s", data.uri)
                 resp.dataMap.putInt(ITEM_RESULT, RESULT_ERROR)
             } catch (e: Exception) {
                 toastIfEnabled(R.string.watch_operation_send_hd_picture_fail)

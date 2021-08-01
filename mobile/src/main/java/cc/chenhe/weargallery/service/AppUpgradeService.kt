@@ -12,6 +12,7 @@ import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.getVersionCode
 import cc.chenhe.weargallery.utils.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class AppUpgradeService : LifecycleService() {
 
@@ -56,7 +57,7 @@ class AppUpgradeService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         if (instance != null) {
-            logw(TAG, "Service is running, ignore this start command. id=$startId")
+            Timber.tag(TAG).i("Service is running, ignore this start command. id=$startId")
             return START_NOT_STICKY
         }
         instance = this
@@ -71,10 +72,10 @@ class AppUpgradeService : LifecycleService() {
         val success = try {
             doWorkInternal()
             setLastStartVersion(this, getVersionCode(this))
-            logi(TAG, "Upgrade successful")
+            Timber.tag(TAG).i("Upgrade successful")
             true
         } catch (e: Exception) {
-            loge(TAG, "Failed to upgrade.", e)
+            Timber.tag(TAG).e(e, "Failed to upgrade.")
             false
         }
         val i = Intent(ACTION_APP_UPGRADE_COMPLETE).putExtra("success", success)
@@ -95,7 +96,7 @@ class AppUpgradeService : LifecycleService() {
     }
 
     override fun onDestroy() {
-        logd(TAG, "Service destroy")
+        Timber.tag(TAG).d("Service destroy")
         super.onDestroy()
         instance = null
     }

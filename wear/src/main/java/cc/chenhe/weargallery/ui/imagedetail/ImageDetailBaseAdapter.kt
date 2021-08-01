@@ -26,8 +26,8 @@ import cc.chenhe.weargallery.common.ui.BaseViewHolder
 import cc.chenhe.weargallery.databinding.PagerItemImageDetailBinding
 import cc.chenhe.weargallery.uilts.IMAGE_ZOOM_CONSECUTIVE_SCALE
 import cc.chenhe.weargallery.uilts.IMAGE_ZOOM_SINGLE_SCALE
-import cc.chenhe.weargallery.uilts.logd
 import me.panpf.sketch.SketchImageView
+import timber.log.Timber
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -35,10 +35,12 @@ import kotlin.math.min
 private const val TAG = "ImageDetailBaseAdapter"
 
 abstract class ImageDetailBaseAdapter<T, VH : ImageDetailBaseAdapter.ImageDetailBaseViewHolder>(
-        diffCallback: DiffUtil.ItemCallback<T>) : BaseListAdapter<T, VH>(diffCallback) {
+    diffCallback: DiffUtil.ItemCallback<T>
+) : BaseListAdapter<T, VH>(diffCallback) {
 
     private val imageViews = WeakHashMap<Int, SketchImageView>()  // <position, view>
-    private val itemImageViewOnClickListener = View.OnClickListener { itemImageViewClickListener?.invoke(it) }
+    private val itemImageViewOnClickListener =
+        View.OnClickListener { itemImageViewClickListener?.invoke(it) }
 
     var itemImageViewClickListener: ((view: View) -> Unit)? = null
 
@@ -50,7 +52,7 @@ abstract class ImageDetailBaseAdapter<T, VH : ImageDetailBaseAdapter.ImageDetail
         set(value) {
             if (field && !value) {
                 field = value
-                logd(TAG, "Clear pending flag, call notifyItemRangeChanged() with payload.")
+                Timber.tag(TAG).d("Clear pending flag, call notifyItemRangeChanged() with payload.")
                 notifyItemRangeChanged(0, itemCount, true)
             } else {
                 field = value
@@ -68,8 +70,8 @@ abstract class ImageDetailBaseAdapter<T, VH : ImageDetailBaseAdapter.ImageDetail
         }
     }
 
-    open class ImageDetailBaseViewHolder(val binding: PagerItemImageDetailBinding)
-        : BaseViewHolder(binding.root) {
+    open class ImageDetailBaseViewHolder(val binding: PagerItemImageDetailBinding) :
+        BaseViewHolder(binding.root) {
         init {
             binding.pagerSketchImage.apply {
                 isZoomEnabled = true

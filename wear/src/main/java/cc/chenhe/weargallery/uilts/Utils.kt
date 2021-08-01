@@ -25,7 +25,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -194,27 +193,3 @@ fun registerImportantPrecessingNotificationChannel(context: Context) {
             .createNotificationChannel(channel)
     }
 }
-
-
-// -------------------------------------------------------------------------------------
-// Logs
-// -------------------------------------------------------------------------------------
-
-private const val TAG = "WearGalleryW"
-
-internal fun logd(tag: String, msg: String) {
-    Log.d(TAG, "[$tag] $msg")
-}
-
-internal fun logi(tag: String, msg: String) {
-    Log.i(TAG, "[$tag] $msg")
-}
-
-internal fun loge(tag: String, msg: String) {
-    Log.e(TAG, "[$tag] $msg")
-}
-
-internal fun logw(tag: String, msg: String) {
-    Log.w(TAG, "[$tag] $msg")
-}
-

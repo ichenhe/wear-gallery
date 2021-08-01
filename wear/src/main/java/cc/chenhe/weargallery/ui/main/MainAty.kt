@@ -40,12 +40,13 @@ import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.ui.UpgradingAty
 import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.uilts.addQrCode
-import cc.chenhe.weargallery.uilts.logd
 import cc.chenhe.weargallery.uilts.showHuawei
+import com.tencent.mars.xlog.Log
 import kotlinx.coroutines.launch
 import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class MainAty : AppCompatActivity() {
     companion object {
@@ -83,10 +84,11 @@ class MainAty : AppCompatActivity() {
     private var pendingUris: Collection<Uri>? = null
     private val deleteRequestLauncher = registerForActivityResult(StartIntentSenderForResult()) {
         if (it.resultCode != RESULT_OK) {
-            logd(TAG, "${pendingUris?.size ?: 0} Image deletion request is rejected.")
+            Timber.tag(TAG).d("${pendingUris?.size ?: 0} Image deletion request is rejected.")
             return@registerForActivityResult
         }
-        logd(TAG, "Image deletion is approved, try to clear ${pendingUris?.size ?: 0}$ fields.")
+        Timber.tag(TAG)
+            .d("Image deletion is approved, try to clear ${pendingUris?.size ?: 0}$ fields.")
         ProcessLifecycleOwner.get().lifecycleScope.launch {
             pendingUris?.also { uris -> remoteImageDao.clearLocalUri(uris) }
         }
@@ -143,6 +145,12 @@ class MainAty : AppCompatActivity() {
                 )
             }
         }
+        Log.i(TAG, "test1")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.appenderClose()
     }
 
     /**

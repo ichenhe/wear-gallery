@@ -34,6 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.get
+import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
@@ -90,7 +91,7 @@ class UpgradeService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         if (running) {
-            logw(TAG, "Upgrade process already running, skip this command.")
+            Timber.tag(TAG).w("Upgrade process already running, skip this command.")
             return START_NOT_STICKY
         }
 
@@ -114,7 +115,7 @@ class UpgradeService : LifecycleService() {
     }
 
     private fun complete() {
-        logd(TAG, "Upgrade complete.")
+        Timber.tag(TAG).d("Upgrade complete.")
         lastStartVersion(this, getVersionCode(this))
         LocalBroadcastManager.getInstance(this)
             .sendBroadcast(Intent(ACTION_APPLICATION_UPGRADE_COMPLETE))
@@ -123,7 +124,7 @@ class UpgradeService : LifecycleService() {
     }
 
     private suspend fun startUpgrade(oldVersion: Long, currentVersion: Long) {
-        logd(TAG, "Upgrade process started: $oldVersion → $currentVersion")
+        Timber.tag(TAG).i("Upgrade process started: $oldVersion → $currentVersion")
 
         if (oldVersion < VERSION_5_1_1210) {
             migrate_5_1_1210()
@@ -152,20 +153,20 @@ class UpgradeService : LifecycleService() {
             // move pictures to media store
             val hdDir = File(cacheDir, "originalPics")
             if (hdDir.isDirectory) {
-                logd(TAG, "Copy pictures in HD cache dir to public dir.")
+                Timber.tag(TAG).d("Copy pictures in HD cache dir to public dir.")
                 val repo = get<ImageRepository>()
                 hdDir.listFiles()?.forEach { file ->
                     if (!file.isFile)
                         return@forEach
                     val time = ExifUtils.getOriginalDateTime(file)
-                    logd(TAG, "Save ${file.path}, ms time stamp=$time")
+                    Timber.tag(TAG).d("Save ${file.path}, ms time stamp=$time")
                     FileInputStream(file).use { ins ->
                         repo.saveImage(this@UpgradeService, file.name, time, ins)
                     }
                     file.delete()
                 }
                 hdDir.deleteRecursively()
-                logd(TAG, "Done!")
+                Timber.tag(TAG).d("Done!")
             }
         }
     }

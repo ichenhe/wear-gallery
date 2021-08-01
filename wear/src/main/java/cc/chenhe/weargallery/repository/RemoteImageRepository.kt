@@ -22,6 +22,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.bean.RemoteImageFolder
+import cc.chenhe.weargallery.common.bean.ApiErrorResponse
 import cc.chenhe.weargallery.common.bean.ApiResponse
 import cc.chenhe.weargallery.common.bean.RemoteBoundResource
 import cc.chenhe.weargallery.common.bean.Resource
@@ -45,6 +46,7 @@ import kotlinx.coroutines.withContext
 import me.chenhe.lib.wearmsger.BothWayHub
 import me.chenhe.lib.wearmsger.DataHub
 import me.chenhe.lib.wearmsger.bean.DataCallback
+import timber.log.Timber
 import java.io.InputStream
 
 private const val TAG = "ImageFolderRepo"
@@ -75,11 +77,16 @@ class RemoteImageRepository(
             override fun shouldFetch(data: List<RemoteImageFolder>?): Boolean = true
 
             override suspend fun fetchFromRemote(): ApiResponse<String> {
-                logd(TAG, "Request remote image folders, path=$PATH_REQ_IMAGE_FOLDERS")
+                Timber.tag(TAG).d("Request remote image folders, path=$PATH_REQ_IMAGE_FOLDERS")
                 return BothWayHub.requestForMessage(context, null, PATH_REQ_IMAGE_FOLDERS, "")
                     .toApiResp {
                         it.getStringData()!!
                     }
+            }
+
+            override fun onFetchFailed(resp: ApiErrorResponse<String>) {
+                super.onFetchFailed(resp)
+                Timber.tag(TAG).w("Failed to get remote folders. code=%d", resp.code)
             }
 
             override suspend fun saveRemoteResult(
@@ -94,11 +101,11 @@ class RemoteImageRepository(
                 val folders = adapter.fromJson(data) ?: listOf()
                 cached?.subtract(folders)?.let { subtract ->
                     if (subtract.isNotEmpty()) {
-                        logd(TAG, "Subtract ${subtract.size} remote picture folders.")
+                        Timber.tag(TAG).d("Subtract %d remote picture folders.", subtract.size)
                         imageFolderDao.delete(subtract)
                     }
                 }
-                logd(TAG, "Upsert ${folders.size} remote picture folders.")
+                Timber.tag(TAG).d("Upsert %d remote picture folders.", folders.size)
                 imageFolderDao.upsert(folders)
             }
         }.asLiveData()
@@ -136,10 +143,8 @@ class RemoteImageRepository(
             override suspend fun onFetchFailed(data: RemoteAssetError) {
                 if (data.reason == RemoteAssetError.REASON_REMOTE_ERROR) {
                     // Maybe the picture has been deleted, let's delete the record and preview cache.
-                    logd(
-                        TAG,
-                        "Failed to fetch remote image preview: REMOTE_ERROR, uri=${uri}, deleting record and cache."
-                    )
+                    Timber.tag(TAG)
+                        .d("Failed to fetch remote image preview: REMOTE_ERROR, uri=$uri, deleting record and cache.")
                     remoteImageDao.delete(uri)
                     previewCacheManager.deleteCacheImage(uri)
                 }
@@ -174,11 +179,8 @@ class RemoteImageRepository(
                 val images = adapter.fromJsonQ(data) ?: return@withContext
                 cached?.subtract(images)?.let { subtract ->
                     if (subtract.isNotEmpty()) {
-                        logd(
-                            TAG,
-                            "Subtract ${subtract.size} remote pictures in bucket <${bucketId}>."
-                        )
-                        loge(TAG, subtract.toString())
+                        Timber.tag(TAG)
+                            .d("Subtract ${subtract.size} remote pictures in bucket <$bucketId>.")
                         // The picture has been deleted, let's delete the record and preview cache.
                         remoteImageDao.delete(subtract)
                         previewCacheManager.deleteCacheImage(subtract)
@@ -187,7 +189,8 @@ class RemoteImageRepository(
                 // We don't use `update` here because we assume that picture of the same uri should be constant.
                 // Otherwise things get messy since we have to judge whether the cache is invalid which means we should
                 // query the database before try to update them and will cause serious performance issues.
-                logd(TAG, "Try to insert ${images.size} remote pictures in bucket <${bucketId}>.")
+                Timber.tag(TAG)
+                    .d("Try to insert ${images.size} remote pictures in bucket <${bucketId}>.")
                 remoteImageDao.insert(images)
             }
         }.asLiveData()
@@ -202,7 +205,7 @@ class RemoteImageRepository(
             override suspend fun fetchFromRemote(): DataCallback {
                 val req = moshi.adapter(ImageHdReq::class.java).toJson(ImageHdReq(remoteImage.uri))
                 return hdReqRunner.joinPreviousOrRun(remoteImage.uri.toString()) {
-                    logd(TAG, "Fetch HD picture from remote. remoteUri=${remoteImage.uri}")
+                    Timber.tag(TAG).d("Fetch HD picture from remote. remoteUri=%s", remoteImage.uri)
                     BothWayHub.requestForData(
                         context,
                         null,
@@ -211,12 +214,12 @@ class RemoteImageRepository(
                         REQUEST_IMAGE_HD_TIMEOUT
                     )
                 }.also {
-                    logd(TAG, "Fetch HD picture from remote. result=${it.result}")
+                    Timber.tag(TAG).d("Fetch HD picture from remote. result=%s", it.result)
                 }
             }
 
             override suspend fun extractAsset(dataMap: DataMap): InputStream? {
-                logd(TAG, "Extract HD picture asset. remoteUri=${remoteImage.uri}")
+                Timber.tag(TAG).d("Extract HD picture asset. remoteUri=%s", remoteImage.uri)
                 return dataMap.getAsset(ITEM_IMAGE)?.let { asset ->
                     DataHub.getInputStreamForAsset(context, asset)
                 }
@@ -229,7 +232,8 @@ class RemoteImageRepository(
                         // update cache database
                         remoteImageDao.setLocalUri(remoteImage.uri, localUri)
                     } else {
-                        logw(TAG, "Failed to save HD picture, uri on remote=${remoteImage.uri}")
+                        Timber.tag(TAG)
+                            .w("Failed to save HD picture, uri on remote=%s", remoteImage.uri)
                     }
                     return localUri
                 }

@@ -32,6 +32,7 @@ import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.uilts.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.io.File
 import java.io.InputStream
 import kotlin.text.isNullOrEmpty
@@ -257,7 +258,7 @@ open class ImageRepository(
                 try {
                     context.applicationContext.contentResolver.delete(uri, null, null)
                 } catch (e: Exception) {
-                    loge(TAG, "Failed to delete local image. uri=$uri")
+                    Timber.tag(TAG).e("Failed to delete local image. uri=%s", uri)
                 }
             }
         }

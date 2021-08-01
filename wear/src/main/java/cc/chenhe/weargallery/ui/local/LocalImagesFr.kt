@@ -36,11 +36,11 @@ import cc.chenhe.weargallery.databinding.FrLocalImagesBinding
 import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailFr
 import cc.chenhe.weargallery.ui.main.PagerFrDirections
 import cc.chenhe.weargallery.ui.main.SharedViewModel
-import cc.chenhe.weargallery.uilts.loge
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
 import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class LocalImagesFr : Fragment() {
 
@@ -184,7 +184,7 @@ class LocalImagesFr : Fragment() {
                             item.id
                         )
                     } else {
-                        loge(TAG, "Now it's in folder mode but item is not a ImageFolder.")
+                        Timber.tag(TAG).e("Now it's in folder mode but item is not a ImageFolder.")
                         return
                     }
                 } else {

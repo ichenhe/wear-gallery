@@ -21,31 +21,32 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.uilts.*
+import timber.log.Timber
 
 private const val TAG = "TimeTextViewModel"
 
 class TimeTextFormatViewModel(application: Application) : AndroidViewModel(application) {
 
     val tagsMap = mapOf(
-            R.id.line to TIME_TAG_LINE,
-            R.id.hour to TIME_TAG_HOUR,
-            R.id.min to TIME_TAG_MIN,
-            R.id.colon to TIME_TAG_COLON,
-            R.id.year to TIME_TAG_YEAR,
-            R.id.month to TIME_TAG_MONTH,
-            R.id.day to TIME_TAG_DAY,
-            R.id.slash to TIME_TAG_SLASH
+        R.id.line to TIME_TAG_LINE,
+        R.id.hour to TIME_TAG_HOUR,
+        R.id.min to TIME_TAG_MIN,
+        R.id.colon to TIME_TAG_COLON,
+        R.id.year to TIME_TAG_YEAR,
+        R.id.month to TIME_TAG_MONTH,
+        R.id.day to TIME_TAG_DAY,
+        R.id.slash to TIME_TAG_SLASH
     )
 
     val tagsNameIds = mapOf(
-            TIME_TAG_LINE to R.string.wf_text_line,
-            TIME_TAG_HOUR to R.string.wf_text_hour,
-            TIME_TAG_MIN to R.string.wf_text_min,
-            TIME_TAG_COLON to R.string.wf_text_colon,
-            TIME_TAG_YEAR to R.string.wf_text_year,
-            TIME_TAG_MONTH to R.string.wf_text_month,
-            TIME_TAG_DAY to R.string.wf_text_day,
-            TIME_TAG_SLASH to R.string.wf_text_slash
+        TIME_TAG_LINE to R.string.wf_text_line,
+        TIME_TAG_HOUR to R.string.wf_text_hour,
+        TIME_TAG_MIN to R.string.wf_text_min,
+        TIME_TAG_COLON to R.string.wf_text_colon,
+        TIME_TAG_YEAR to R.string.wf_text_year,
+        TIME_TAG_MONTH to R.string.wf_text_month,
+        TIME_TAG_DAY to R.string.wf_text_day,
+        TIME_TAG_SLASH to R.string.wf_text_slash
     )
 
     /**
@@ -66,7 +67,7 @@ class TimeTextFormatViewModel(application: Application) : AndroidViewModel(appli
             setWatchFaceTimeFormat(getApplication(), _tags)
             true
         } else {
-            logd(TAG, "tags list is empty, skip save.")
+            Timber.tag(TAG).d("tags list is empty, skip save.")
             false
         }
     }

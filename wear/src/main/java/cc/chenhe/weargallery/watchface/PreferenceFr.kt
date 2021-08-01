@@ -38,6 +38,7 @@ import kotlinx.coroutines.withContext
 import me.chenhe.wearvision.preference.PreferenceFragmentCompat
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 
@@ -134,7 +135,7 @@ class PreferenceFr : PreferenceFragmentCompat() {
 
     @Suppress("BlockingMethodInNonBlockingContext") // IO Dispatcher
     private suspend fun copyBackground(uri: Uri) = withContext(Dispatchers.IO) {
-        logd(TAG, "Copying background image, uri=$uri")
+        Timber.tag(TAG).d("Copying background image, uri=%s", uri)
         val targetFile = File(getWatchFaceResFolder(requireContext()), WATCH_FACE_BACKGROUND)
         if (targetFile.isFile) {
             targetFile.delete()
@@ -146,7 +147,7 @@ class PreferenceFr : PreferenceFragmentCompat() {
         }
         LocalBroadcastManager.getInstance(get())
             .sendBroadcast(Intent(ACTION_WATCH_FACE_BACKGROUND_CHANGED))
-        logd(TAG, "Copy background image complete.")
+        Timber.tag(TAG).d("Copy background image complete.")
     }
 
     private fun testIntent(intent: Intent): Boolean {

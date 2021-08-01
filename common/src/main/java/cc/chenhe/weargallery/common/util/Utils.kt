@@ -29,10 +29,8 @@ const val GITHUB = "https://github.com/liangchenhe55/wear-gallery/"
 const val GITHUB_RELEASE = GITHUB + "releases"
 const val TELEGRAM = "https://t.me/weargallery_news"
 
-const val FIREBASE_KEY_DEVICE = "device_type"
-
 fun checkHuaWei(): Boolean {
-    return android.os.Build.MANUFACTURER.toLowerCase(Locale.getDefault()).contains("huawei")
+    return android.os.Build.MANUFACTURER.lowercase(Locale.getDefault()).contains("huawei")
 }
 
 fun getVersionCode(context: Context): Long {
@@ -53,6 +51,8 @@ fun getVersionName(context: Context): String {
         ""
     }
 }
+
+fun getLogDir(context: Context): File = File(context.externalCacheDir ?: context.cacheDir, "xlog")
 
 private const val MILLIS_IN_DAY = 24 * 3600 * 1000L
 

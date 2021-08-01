@@ -25,14 +25,14 @@ import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.View
-import cc.chenhe.weargallery.uilts.logw
 import cc.chenhe.weargallery.watchface.painter.DigitalPainter
 import cc.chenhe.weargallery.watchface.painter.Painter
+import timber.log.Timber
 import java.util.*
 
 private const val TAG = "WatchFaceView"
 
-/**
+/**ØØ
  * A view to display digital watch face. This view can ensure consistent behavior with the actual watch face service.
  * Full screen size is highly recommended.
  *
@@ -40,7 +40,7 @@ private const val TAG = "WatchFaceView"
  * construction parameters.
  */
 class DigitalWatchFaceView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {
@@ -91,8 +91,9 @@ class DigitalWatchFaceView @JvmOverloads constructor(
             h = (w / ratio).toInt()
         }
         if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY ||
-                MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
-            logw(TAG, "Automatically resize to fit the screen ratio. w=$w, h=$h")
+            MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY
+        ) {
+            Timber.tag(TAG).w("Automatically resize to fit the screen ratio. w=$w, h=$h")
         }
         setMeasuredDimension(w, h)
     }

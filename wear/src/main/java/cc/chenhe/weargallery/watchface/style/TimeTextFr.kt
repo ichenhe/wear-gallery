@@ -27,10 +27,10 @@ import androidx.viewbinding.ViewBinding
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.databinding.WfFrTimeTextBinding
 import cc.chenhe.weargallery.ui.common.SwipeDismissFr
-import cc.chenhe.weargallery.uilts.logw
 import cc.chenhe.weargallery.uilts.toast
 import com.google.android.material.chip.Chip
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 private const val TAG = "TimeTextFr"
 
@@ -39,7 +39,11 @@ class TimeTextFr : SwipeDismissFr() {
     private lateinit var binding: WfFrTimeTextBinding
     private val model by viewModel<TimeTextFormatViewModel>()
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): ViewBinding {
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): ViewBinding {
         return WfFrTimeTextBinding.inflate(inflater, container, false).also {
             binding = it
         }
@@ -73,14 +77,16 @@ class TimeTextFr : SwipeDismissFr() {
             if (resId != null) {
                 addTagChip(getString(resId), false)
             } else {
-                logw(TAG, "Can not find tag's display name res id. tag=$tag")
+                Timber.tag(TAG).w("Can not find tag's display name res id. tag=$tag")
             }
         }
     }
 
     private fun addTagChip(displayName: CharSequence, scrollToEnd: Boolean) {
-        val chip: Chip = LayoutInflater.from(binding.checkedGroup.context).inflate(R.layout.wf_view_time_text_chip,
-                binding.checkedGroup, false) as Chip
+        val chip: Chip = LayoutInflater.from(binding.checkedGroup.context).inflate(
+            R.layout.wf_view_time_text_chip,
+            binding.checkedGroup, false
+        ) as Chip
         chip.text = displayName
         chip.setOnCloseIconClickListener(onChipCloseListener)
         binding.checkedGroup.addView(chip)

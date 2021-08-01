@@ -28,11 +28,12 @@ import androidx.lifecycle.liveData
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.util.ImageUtil.queryImages
 import cc.chenhe.weargallery.utils.fetchImageColumnWidth
-import cc.chenhe.weargallery.utils.logw
+import timber.log.Timber
 
 private const val TAG = "SendImagesViewModel"
 
-class SendImagesViewModel(application: Application, intent: Intent) : AndroidViewModel(application) {
+class SendImagesViewModel(application: Application, intent: Intent) :
+    AndroidViewModel(application) {
 
     val columnWidth = fetchImageColumnWidth(application)
 
@@ -57,7 +58,7 @@ class SendImagesViewModel(application: Application, intent: Intent) : AndroidVie
                 intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
             }
             else -> {
-                logw(TAG, "Unknown intent action = ${intent.action}.")
+                Timber.tag(TAG).w("Unknown intent, action=%s", intent.action)
                 null
             }
         }

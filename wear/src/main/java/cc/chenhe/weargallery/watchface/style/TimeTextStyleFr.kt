@@ -27,12 +27,12 @@ import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
 import cc.chenhe.weargallery.databinding.WfFrTimeTextStyleBinding
 import cc.chenhe.weargallery.ui.common.SwipeDismissFr
-import cc.chenhe.weargallery.uilts.logd
 import cc.chenhe.weargallery.uilts.setWatchFaceTextSize
 import cc.chenhe.weargallery.uilts.setWatchFaceTimePosition
 import cc.chenhe.weargallery.view.DigitalWatchFaceView
 import cc.chenhe.weargallery.view.LongPressImageView
 import org.koin.android.ext.android.get
+import timber.log.Timber
 
 private const val VIEW_TYPE_POSITION = 1
 private const val VIEW_TYPE_SIZE = 2
@@ -50,7 +50,11 @@ class TimeTextStyleFr : SwipeDismissFr() {
 
     private lateinit var binding: WfFrTimeTextStyleBinding
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    )
             : ViewBinding {
         return WfFrTimeTextStyleBinding.inflate(inflater, container, false).also {
             binding = it
@@ -90,12 +94,12 @@ class TimeTextStyleFr : SwipeDismissFr() {
         val x = binding.watchFaceView.timeX
         val y = binding.watchFaceView.timeY
         if (x != DigitalWatchFaceView.NO_VALUE && y != DigitalWatchFaceView.NO_VALUE) {
-            logd(TAG, "Save watch face time position. x=$x, y=$y")
+            Timber.tag(TAG).d("Save watch face time position. x=$x, y=$y")
             setWatchFaceTimePosition(get(), x, y)
         }
         val textSize = binding.watchFaceView.timeTextSize
         if (textSize != DigitalWatchFaceView.NO_VALUE) {
-            logd(TAG, "Save watch face time text size=$textSize.")
+            Timber.tag(TAG).d("Save watch face time text size=$textSize.")
             setWatchFaceTextSize(get(), textSize)
         }
     }
@@ -144,8 +148,10 @@ class TimeTextStyleFr : SwipeDismissFr() {
         }
 
         private fun createPositionItem(parent: ViewGroup): BaseViewHolder {
-            val vh = BaseViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.wf_menu_time_text_position, parent, false))
+            val vh = BaseViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.wf_menu_time_text_position, parent, false)
+            )
             vh.getView<LongPressImageView>(R.id.up).setListener()
             vh.getView<LongPressImageView>(R.id.down).setListener()
             vh.getView<LongPressImageView>(R.id.left).setListener()
@@ -154,8 +160,10 @@ class TimeTextStyleFr : SwipeDismissFr() {
         }
 
         private fun createSizeItem(parent: ViewGroup): BaseViewHolder {
-            val vh = BaseViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.wf_menu_time_text_size, parent, false))
+            val vh = BaseViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.wf_menu_time_text_size, parent, false)
+            )
             vh.getView<LongPressImageView>(R.id.zoomOut).setListener()
             vh.getView<LongPressImageView>(R.id.zoomIn).setListener()
             return vh

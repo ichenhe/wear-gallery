@@ -20,15 +20,15 @@ package cc.chenhe.weargallery.ui.imagedetail.mobile
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.databinding.PagerItemImageDetailBinding
 import cc.chenhe.weargallery.repository.RemoteImageRepository
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseAdapter
-import cc.chenhe.weargallery.uilts.logd
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.panpf.sketch.SketchImageView
@@ -37,17 +37,22 @@ import me.panpf.sketch.request.CancelCause
 import me.panpf.sketch.request.DisplayListener
 import me.panpf.sketch.request.ErrorCause
 import me.panpf.sketch.request.ImageFrom
+import timber.log.Timber
 
 private const val TAG = "ImageDetailAdapter"
 
 class MobileImageDetailAdapter(
-        private val fragment: MobileImageDetailFr,
-        private val resp: RemoteImageRepository
-) : ImageDetailBaseAdapter<RemoteImage, MobileImageDetailAdapter.DetailViewHolder>(MobileImageDetailDiffCallback()) {
+    private val fragment: MobileImageDetailFr,
+    private val resp: RemoteImageRepository
+) : ImageDetailBaseAdapter<RemoteImage, MobileImageDetailAdapter.DetailViewHolder>(
+    MobileImageDetailDiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailViewHolder {
-        return DetailViewHolder(PagerItemImageDetailBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false))
+        return DetailViewHolder(
+            PagerItemImageDetailBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
@@ -55,7 +60,11 @@ class MobileImageDetailAdapter(
         holder.bind(getItem(position), false)
     }
 
-    override fun onBindViewHolder(holder: DetailViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        holder: DetailViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
         if (payloads.isNullOrEmpty()) {
             onBindViewHolder(holder, position)
         } else {
@@ -63,8 +72,8 @@ class MobileImageDetailAdapter(
         }
     }
 
-    inner class DetailViewHolder(binding: PagerItemImageDetailBinding)
-        : ImageDetailBaseViewHolder(binding) {
+    inner class DetailViewHolder(binding: PagerItemImageDetailBinding) :
+        ImageDetailBaseViewHolder(binding) {
 
         init {
             binding.pagerSketchImage.isZoomEnabled = true
@@ -98,7 +107,8 @@ class MobileImageDetailAdapter(
                     override fun onError(cause: ErrorCause) {
                         // Failed to load cached HD images.
                         // The file may have been deleted so let's invalidate the cache.
-                        logd(TAG, "Failed to load cached HD picture, localUri=${data.localUri}, invalidate the cache")
+                        Timber.tag(TAG)
+                            .d("Failed to load cached HD picture, localUri=${data.localUri}, invalidate the cache")
                         fragment.deleteHdImage(data)
                         // No need to load preview here since RecyclerView will refresh after database is changed.
                     }
@@ -110,9 +120,10 @@ class MobileImageDetailAdapter(
 
         private fun loadImagePreview(data: RemoteImage) {
             binding.pagerSketchImage.setImageResource(R.drawable.bg_pic_default)
-            GlobalScope.launch {
-                val cacheUri = resp.loadImagePreview(fragment.requireContext(), data.uri) ?: return@launch
-                if (binding.pagerSketchImage.getTag(R.id.tag_image_position) as Int == adapterPosition) {
+            ProcessLifecycleOwner.get().lifecycleScope.launch {
+                val cacheUri =
+                    resp.loadImagePreview(fragment.requireContext(), data.uri) ?: return@launch
+                if (binding.pagerSketchImage.getTag(R.id.tag_image_position) as Int == bindingAdapterPosition) {
                     withContext(Dispatchers.Main) {
                         binding.pagerSketchImage.displayImage(cacheUri.toString())
                         binding.pagerSketchImage.resetRotation()
@@ -136,13 +147,19 @@ class MobileImageDetailAdapter(
 
         override fun onError(cause: ErrorCause) {}
 
-        override fun onCompleted(drawable: Drawable, imageFrom: ImageFrom, imageAttrs: ImageAttrs) {}
+        override fun onCompleted(
+            drawable: Drawable,
+            imageFrom: ImageFrom,
+            imageAttrs: ImageAttrs
+        ) {
+        }
     }
 
 }
 
 private class MobileImageDetailDiffCallback : DiffUtil.ItemCallback<RemoteImage>() {
-    override fun areItemsTheSame(oldItem: RemoteImage, newItem: RemoteImage): Boolean = oldItem.uri == newItem.uri
+    override fun areItemsTheSame(oldItem: RemoteImage, newItem: RemoteImage): Boolean =
+        oldItem.uri == newItem.uri
 
     override fun areContentsTheSame(oldItem: RemoteImage, newItem: RemoteImage): Boolean {
         return oldItem == newItem && oldItem.localUri == newItem.localUri

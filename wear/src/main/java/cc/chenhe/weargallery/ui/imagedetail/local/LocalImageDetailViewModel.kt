@@ -27,8 +27,7 @@ import cc.chenhe.weargallery.common.bean.Resource
 import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.common.util.ImageUtil
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
-import cc.chenhe.weargallery.uilts.loge
-import cc.chenhe.weargallery.uilts.logw
+import timber.log.Timber
 
 private const val TAG = "LocalImageDetailVM"
 
@@ -46,7 +45,7 @@ class LocalImageDetailViewModel(application: Application) :
 
     fun addImageDataSource(ds: LiveData<Success<List<Image>>>) {
         if (dataSourceAdded) {
-            logw(TAG, "Data source has been added, drop this request.")
+            Timber.tag(TAG).w("Data source has been added, drop this request.")
             return
         }
         dataSourceAdded = true
@@ -57,11 +56,11 @@ class LocalImageDetailViewModel(application: Application) :
 
     fun addFolderDataSource(bucketId: Int) {
         if (bucketId == LocalImageDetailFr.BUCKET_ID_NA) {
-            loge(TAG, "Unexpected bucket id, do you miss the parameters?")
+            Timber.tag(TAG).e("Unexpected bucket id, do you miss the parameters?")
             return
         }
         if (dataSourceAdded) {
-            logw(TAG, "Data source has been added, drop this request.")
+            Timber.tag(TAG).w("Data source has been added, drop this request.")
             return
         }
         dataSourceAdded = true

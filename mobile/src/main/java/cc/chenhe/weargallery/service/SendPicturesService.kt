@@ -22,11 +22,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.os.IBinder
 import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.comm.*
@@ -37,13 +38,13 @@ import com.google.android.gms.wearable.Asset
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import me.chenhe.lib.wearmsger.BothWayHub
 import me.chenhe.lib.wearmsger.bean.BothWayCallback
 import org.koin.android.ext.android.get
+import timber.log.Timber
 import java.io.FileNotFoundException
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
@@ -60,7 +61,7 @@ private const val SEND_TIMEOUT = 3
 private const val SEND_RECEIVE_ERROR = 4
 private const val SEND_FAILED_UNKNOWN = 5
 
-class SendPicturesService : Service() {
+class SendPicturesService : LifecycleService() {
 
     @Parcelize
     data class Job(
@@ -99,17 +100,16 @@ class SendPicturesService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         val jobs = intent?.getParcelableArrayExtra(EXTRA_JOBS)?.filterIsInstance<Job>()
         if (jobs.isNullOrEmpty()) {
-            logw(TAG, "Can not find job information, drop this command.")
-            return super.onStartCommand(intent, flags, startId)
+            Timber.tag(TAG).w("Can not find job information, drop this command.")
+            return START_NOT_STICKY
         }
         queue.addAll(jobs)
         startSendIfNecessary()
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
-
-    override fun onBind(p0: Intent?): IBinder? = null
 
     private fun startSendIfNecessary() {
         // update notification
@@ -134,7 +134,7 @@ class SendPicturesService : Service() {
      * It is the caller's responsibility to ensure that this function is not called repeatedly.
      */
     private fun send() {
-        GlobalScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             while (true) {
                 val current = queue.poll().also { currentSending = it }
                 if (current == null) {
@@ -215,7 +215,7 @@ class SendPicturesService : Service() {
                         }
                     }
             } catch (e: FileNotFoundException) {
-                logd(TAG, "Image file not exist, uri=${job.image.uri}")
+                Timber.tag(TAG).d("Image file not exist, uri=%s", job.image.uri)
                 return@withContext SEND_FILE_NOT_EXIST
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -280,7 +280,7 @@ class SendPicturesService : Service() {
 
     private fun notifySendFinish() {
         val intent = Intent(this, MainAty::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val n = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_SEND_RESULT)
             .setSmallIcon(R.drawable.ic_notify_done)
@@ -295,7 +295,7 @@ class SendPicturesService : Service() {
 
     private fun notifySendFailed(@StringRes message: Int) {
         val intent = Intent(this, MainAty::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val text =
             getString(R.string.notify_send_images_failed_content, getString(message), successCount)

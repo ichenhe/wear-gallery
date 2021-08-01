@@ -45,6 +45,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi:$moshiVersion"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
     compileOnly("me.chenhe:wearmsger:$wearMsgerVersion")
+    api ("com.jakewharton.timber:timber:$timber")
+
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "androidx.test:core:$testVersion" // Robolectric environment

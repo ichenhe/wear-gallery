@@ -27,10 +27,10 @@ import androidx.lifecycle.map
 import cc.chenhe.lib.watchfacehelper.BaseWatchFaceService
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.uilts.fetchWatchFaceStyle
-import cc.chenhe.weargallery.uilts.logw
 import cc.chenhe.weargallery.watchface.painter.AnalogPainter
 import cc.chenhe.weargallery.watchface.painter.DigitalPainter
 import cc.chenhe.weargallery.watchface.painter.Painter
+import timber.log.Timber
 import java.util.*
 
 private const val TAG = "WatchFaceSer"
@@ -51,7 +51,7 @@ class WatchFaceService : BaseWatchFaceService() {
                 analogStyle -> StyleMode.Analog
                 digitalStyle -> StyleMode.Digital
                 else -> {
-                    logw(TAG, "Unknown watch face style type <$original>, use analog mode.")
+                    Timber.tag(TAG).w("Unknown watch face style type <$original>, use analog mode.")
                     StyleMode.Analog
                 }
             }

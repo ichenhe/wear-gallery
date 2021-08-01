@@ -59,6 +59,7 @@ ext {
     wearMsgerVersion = '2.0.2'
     sketchVersion = '2.7.1'
     materialIntroVersion = '2.0.0'
+    timber = "4.7.1"
 
     // test
     testVersion = '1.4.0'

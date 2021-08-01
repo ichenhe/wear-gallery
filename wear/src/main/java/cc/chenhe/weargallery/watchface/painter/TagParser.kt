@@ -19,6 +19,7 @@ package cc.chenhe.weargallery.watchface.painter
 
 import cc.chenhe.weargallery.uilts.*
 import cc.chenhe.weargallery.watchface.ITimeHolder
+import timber.log.Timber
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -26,7 +27,7 @@ import kotlin.collections.HashMap
  * Must call [onFrameStart] every time of each frame start to make sure update tags.
  */
 internal class TagParser(
-        private val timeHolder: ITimeHolder
+    private val timeHolder: ITimeHolder
 ) {
     companion object {
         private const val TAG = "TagParser"
@@ -37,8 +38,10 @@ internal class TagParser(
 
     private val calendar = timeHolder.calendar()
 
-    private val keys: Array<String> = arrayOf(TIME_TAG_LINE, TIME_TAG_HOUR, TIME_TAG_MIN, TIME_TAG_COLON,
-            TIME_TAG_YEAR, TIME_TAG_MONTH, TIME_TAG_DAY, TIME_TAG_SLASH)
+    private val keys: Array<String> = arrayOf(
+        TIME_TAG_LINE, TIME_TAG_HOUR, TIME_TAG_MIN, TIME_TAG_COLON,
+        TIME_TAG_YEAR, TIME_TAG_MONTH, TIME_TAG_DAY, TIME_TAG_SLASH
+    )
 
     /**
      * The value of each tag.
@@ -95,11 +98,11 @@ internal class TagParser(
     private fun insert(tag: String) {
         var p = 1
         tag.forEach { c ->
-            if (trie[p][c.toInt()] == 0) {
+            if (trie[p][c.code] == 0) {
                 tot += 1
-                trie[p][c.toInt()] = tot
+                trie[p][c.code] = tot
             }
-            p = trie[p][c.toInt()]
+            p = trie[p][c.code]
         }
         end[p] = tag.length
     }
@@ -112,10 +115,10 @@ internal class TagParser(
         builder.clear()
         for (c in str) {
             builder.append(c)
-            if (c.toInt() !in 0..126) {
+            if (c.code !in 0..126) {
                 continue // 忽略非 ascii 字符
             }
-            var k = trie[p][c.toInt()]
+            var k = trie[p][c.code]
             while (k > 1) {
                 // 匹配成功，找到一个模式串
                 if (end[k] != 0) {
@@ -137,7 +140,7 @@ internal class TagParser(
                 }
                 k = fail[k] // 匹配失败，继续下一轮
             }
-            p = trie[p][c.toInt()] // 继续走
+            p = trie[p][c.code] // 继续走
         }
         return builder
     }
@@ -185,7 +188,7 @@ internal class TagParser(
             else -> null
         }
         values[tag] = r?.toString() ?: run {
-            logw(TAG, "Not find value for tag <$tag>")
+            Timber.tag(TAG).w("Not find value for tag <$tag>")
             ""
         }
     }

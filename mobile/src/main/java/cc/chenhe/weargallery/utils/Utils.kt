@@ -23,7 +23,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
@@ -110,26 +109,4 @@ fun registerImportantPrecessingNotificationChannel(context: Context) {
         context.getSystemService(NotificationManager::class.java)!!
             .createNotificationChannel(channel)
     }
-}
-
-// -------------------------------------------------------------------------------------
-// Logs
-// -------------------------------------------------------------------------------------
-
-private const val TAG = "WearGalleryM"
-
-internal fun logd(tag: String, msg: String) {
-    Log.d(TAG, "[$tag] $msg")
-}
-
-internal fun logi(tag: String, msg: String) {
-    Log.i(TAG, "[$tag] $msg")
-}
-
-internal fun loge(tag: String, msg: String, e: Exception? = null) {
-    Log.e(TAG, "[$tag] $msg", e)
-}
-
-internal fun logw(tag: String, msg: String, e: Exception? = null) {
-    Log.w(TAG, "[$tag] $msg", e)
 }

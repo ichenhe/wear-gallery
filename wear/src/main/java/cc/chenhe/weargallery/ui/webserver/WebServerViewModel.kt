@@ -34,13 +34,12 @@ import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.WebServer
 import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.uilts.context
-import cc.chenhe.weargallery.uilts.loge
-import cc.chenhe.weargallery.uilts.logi
 import cc.chenhe.weargallery.uilts.setIfNot
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.chenhe.lib.wearmsger.WM
+import timber.log.Timber
 
 const val TAG = "WebServerVM"
 
@@ -188,9 +187,9 @@ class WebServerViewModel(
                 _serverState.setIfNot(SERVER_STATE_RUNNING)
                 val ip = getLanIp()?.let { it + ":" + server.listeningPort }
                 _serverIp.setIfNot(ip)
-                logi(TAG, "Web server start: $ip")
+                Timber.tag(TAG).i("Web server start: $ip")
             } catch (e: Exception) {
-                loge(TAG, "Web server start failed.")
+                Timber.tag(TAG).i("Web server start failed.")
                 serverErrorMsg =
                     context.getString(R.string.server_failed, e.message) // must set message first
                 _serverState.setIfNot(SERVER_STATE_FAIL)

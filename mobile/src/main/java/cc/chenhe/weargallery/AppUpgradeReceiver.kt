@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import cc.chenhe.weargallery.service.AppUpgradeService
-import cc.chenhe.weargallery.utils.logi
+import timber.log.Timber
 
 class AppUpgradeReceiver : BroadcastReceiver() {
 
@@ -16,11 +16,11 @@ class AppUpgradeReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_MY_PACKAGE_REPLACED)
             return
-        logi(TAG, "Receive MY_PACKAGE_REPLACED broadcast.")
+        Timber.tag(TAG).i("Receive MY_PACKAGE_REPLACED broadcast.")
         if (AppUpgradeService.isRunning()) {
-            logi(TAG, "Upgrade service is running.")
+            Timber.tag(TAG).i("Upgrade service is running.")
         } else {
-            logi(TAG, "Start upgrade service.")
+            Timber.tag(TAG).i("Start upgrade service.")
             ContextCompat
                 .startForegroundService(context, Intent(context, AppUpgradeService::class.java))
         }

@@ -17,8 +17,8 @@
 
 package cc.chenhe.weargallery.uilts.diskcache
 
-import cc.chenhe.weargallery.uilts.loge
 import okio.*
+import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.Callable
@@ -103,7 +103,7 @@ class DiskLruCache private constructor(
                     return cache
                 } catch (e: Exception) {
                     // Rebuild the cache if any errors are encountered
-                    loge(TAG, "DiskLruCache $directory is corrupt: ${e.message}, removing")
+                    Timber.tag(TAG).e(e, "DiskLruCache $directory is corrupt, removing")
                     cache.delete()
                 }
             }

@@ -33,8 +33,7 @@ import cc.chenhe.weargallery.service.UpgradeService
 import cc.chenhe.weargallery.ui.UpgradingAty.Companion.startIfNecessary
 import cc.chenhe.weargallery.uilts.ACTION_APPLICATION_UPGRADE_COMPLETE
 import cc.chenhe.weargallery.uilts.lastStartVersion
-import cc.chenhe.weargallery.uilts.logd
-import cc.chenhe.weargallery.uilts.logi
+import timber.log.Timber
 
 /**
  * An Activity to show the progress of upgrading and data migration. In most cases you should use [startIfNecessary]
@@ -71,7 +70,7 @@ class UpgradingAty : AppCompatActivity() {
                 launcher.launch(upgradeServiceRunning)
                 true
             } else {
-                logd(TAG, "No need to perform data migration, update version code directly.")
+                Timber.tag(TAG).d("No need to perform data migration.")
                 false
             }
         }
@@ -100,7 +99,7 @@ class UpgradingAty : AppCompatActivity() {
         receiver = object : BroadcastReceiver() {
             override fun onReceive(ctx: Context?, intent: Intent?) {
                 if (intent?.action == ACTION_APPLICATION_UPGRADE_COMPLETE) {
-                    logi(TAG, "Receive upgrade complete signal, finish activity.")
+                    Timber.tag(TAG).i("Receive upgrade complete signal, finish activity.")
                     onUpgradeComplete()
                 }
             }
@@ -113,14 +112,14 @@ class UpgradingAty : AppCompatActivity() {
                 // Since the service is running before activity start, but it has stopped now.
                 // The only reason is the upgrade process has completed before activity fully start.
                 // So we just trigger a complete signal.
-                logi(TAG, "Upgrade service has completed, finish directly.")
+                Timber.tag(TAG).i("Upgrade service has completed, finish directly.")
                 onUpgradeComplete()
             }
             // Otherwise, we should wait for the broadcast signal of service completion.
-            logi(TAG, "Upgrade service is running, just wait.")
+            Timber.tag(TAG).i("Upgrade service is running, just wait.")
         } else {
             // Start upgrade service and wait for the broadcast.
-            logi(TAG, "Start upgrade service and wait.")
+            Timber.tag(TAG).i("Start upgrade service and wait.")
             UpgradeService.start(this, lastStartVersion(this))
         }
     }

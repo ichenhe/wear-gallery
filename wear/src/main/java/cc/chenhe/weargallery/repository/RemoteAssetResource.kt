@@ -21,11 +21,11 @@ import android.net.Uri
 import androidx.annotation.IntDef
 import cc.chenhe.weargallery.common.comm.ITEM_RESULT
 import cc.chenhe.weargallery.common.comm.RESULT_ERROR
-import cc.chenhe.weargallery.uilts.loge
 import com.google.android.gms.wearable.DataMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.chenhe.lib.wearmsger.bean.DataCallback
+import timber.log.Timber
 import java.io.InputStream
 
 private const val TAG = "RemoteAssetResource"
@@ -74,7 +74,8 @@ abstract class RemoteAssetResource {
         return if (newCache != null) {
             RemoteAssetSuccess(newCache)
         } else {
-            loge(TAG, "The cache is still null after save to it, consider as communication error.")
+            Timber.tag(TAG)
+                .e("The cache is still null after save to it, consider as communication error.")
             RemoteAssetError(RemoteAssetError.REASON_COMM_ERROR)
         }
     }
