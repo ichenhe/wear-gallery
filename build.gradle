@@ -23,6 +23,15 @@ buildscript {
 
 allprojects {
     repositories {
+        maven {
+            url "https://maven.pkg.github.com/ichenhe/Actions-Mars"
+            // about credentials see https://github.community/t/download-from-github-package-registry-without-authentication/14407/111
+            credentials {
+                username("chenhe-pub")
+                password("&#103;hp_iEietheghA8ocZN0vCEvb6qCCx0xsU4YMFBf")
+            }
+        }
+
         // mirrors for china
         maven { url "https://maven.aliyun.com/repository/public" }
         maven { url "https://maven.aliyun.com/repository/google" }

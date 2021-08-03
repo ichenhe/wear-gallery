@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
+import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.databinding.AtyMainBinding
 import cc.chenhe.weargallery.service.AppUpgradeService
 import cc.chenhe.weargallery.ui.IntroduceAty
@@ -92,5 +93,10 @@ class MainAty : AppCompatActivity() {
             setContentView(binding.root)
             resetStatusBarTextColor(binding.root)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        xlogAppenderFlushSafely()
     }
 }

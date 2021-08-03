@@ -3,6 +3,7 @@ package cc.chenhe.weargallery.ui.legacy
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.databinding.AtyLegacyBinding
 import cc.chenhe.weargallery.utils.resetStatusBarTextColor
 
@@ -17,5 +18,10 @@ class LegacyAty : AppCompatActivity() {
         binding = AtyLegacyBinding.inflate(layoutInflater)
         setContentView(binding.root)
         resetStatusBarTextColor(binding.root)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        xlogAppenderFlushSafely()
     }
 }

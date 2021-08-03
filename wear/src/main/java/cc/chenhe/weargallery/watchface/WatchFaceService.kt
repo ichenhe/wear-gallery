@@ -26,6 +26,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.map
 import cc.chenhe.lib.watchfacehelper.BaseWatchFaceService
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.uilts.fetchWatchFaceStyle
 import cc.chenhe.weargallery.watchface.painter.AnalogPainter
 import cc.chenhe.weargallery.watchface.painter.DigitalPainter
@@ -176,5 +177,10 @@ class WatchFaceService : BaseWatchFaceService() {
 
     private enum class StyleMode {
         Analog, Digital
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        xlogAppenderFlushSafely()
     }
 }

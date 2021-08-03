@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.getVersionCode
+import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.service.UpgradeService
 import cc.chenhe.weargallery.ui.UpgradingAty.Companion.startIfNecessary
 import cc.chenhe.weargallery.uilts.ACTION_APPLICATION_UPGRADE_COMPLETE
@@ -134,6 +135,7 @@ class UpgradingAty : AppCompatActivity() {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(it)
             receiver = null
         }
+        xlogAppenderFlushSafely()
         super.onDestroy()
     }
 

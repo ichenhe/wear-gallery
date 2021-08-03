@@ -20,6 +20,7 @@ package cc.chenhe.weargallery.common.util
 import android.content.Context
 import androidx.core.content.pm.PackageInfoCompat
 import com.squareup.moshi.JsonAdapter
+import com.tencent.mars.xlog.Log
 import java.io.File
 import java.util.*
 import kotlin.math.abs
@@ -28,6 +29,18 @@ const val HUA_WEI = "https://github.com/liangchenhe55/wear-gallery/wiki/huawei_z
 const val GITHUB = "https://github.com/liangchenhe55/wear-gallery/"
 const val GITHUB_RELEASE = GITHUB + "releases"
 const val TELEGRAM = "https://t.me/weargallery_news"
+
+fun xlogAppenderCloseSafely() {
+    if (Log.getImpl() != null) {
+        Log.appenderClose()
+    }
+}
+
+fun xlogAppenderFlushSafely() {
+    if (Log.getImpl() != null) {
+        Log.appenderFlush()
+    }
+}
 
 fun checkHuaWei(): Boolean {
     return android.os.Build.MANUFACTURER.lowercase(Locale.getDefault()).contains("huawei")

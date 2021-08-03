@@ -18,6 +18,9 @@
 package cc.chenhe.weargallery
 
 import android.app.Application
+import cc.chenhe.weargallery.common.util.UncaughtExceptionHandler
+import cc.chenhe.weargallery.common.util.XlogTree
+import com.tencent.mars.xlog.Xlog
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -30,7 +33,11 @@ class MyApplication : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(XlogTree(this, Xlog.LEVEL_DEBUG))
         }
+
+        Thread.setDefaultUncaughtExceptionHandler(UncaughtExceptionHandler)
 
         startKoin {
             androidLogger()

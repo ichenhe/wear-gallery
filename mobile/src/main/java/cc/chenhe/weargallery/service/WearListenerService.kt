@@ -197,7 +197,7 @@ class WearListenerService : WMListenerService() {
                 }
                 val b = compressed.readBytes()
                 Timber.tag(TAG)
-                    .v("Compress complete, uri=${data.uri}, size=${b.size / 1024}KB, time=${SystemClock.uptimeMillis() - startTime}")
+                    .d("Compress complete, uri=${data.uri}, size=${b.size / 1024}KB, time=${SystemClock.uptimeMillis() - startTime}")
                 resp.dataMap.apply {
                     putInt(ITEM_RESULT, RESULT_OK)
                     putAsset(ITEM_IMAGE, Asset.createFromBytes(b))

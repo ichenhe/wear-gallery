@@ -35,13 +35,13 @@ import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
+import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.ui.UpgradingAty
 import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.uilts.addQrCode
 import cc.chenhe.weargallery.uilts.showHuawei
-import com.tencent.mars.xlog.Log
 import kotlinx.coroutines.launch
 import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.android.ext.android.inject
@@ -145,12 +145,11 @@ class MainAty : AppCompatActivity() {
                 )
             }
         }
-        Log.i(TAG, "test1")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.appenderClose()
+        xlogAppenderFlushSafely()
     }
 
     /**
