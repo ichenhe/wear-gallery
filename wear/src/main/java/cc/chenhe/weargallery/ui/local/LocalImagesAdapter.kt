@@ -204,11 +204,12 @@ class LocalImagesAdapter(context: Context) :
                         return true
                     }
                     MotionEvent.ACTION_CANCEL -> {
+                        v.isPressed = false
+                        holder.itemView.cancelLongPress()
                         handler.removeMessages(MSG_START_ENTER_SELECTION_MODE)
                         if (SystemClock.uptimeMillis() - downTime < longClickTimeout + longAnimDuration) {
                             // animation of enter selection mode is interrupted
                             handler.sendEmptyMessage(MSG_CANCEL_ENTER_SELECTION_MODE)
-                            v.isPressed = false
                             return true
                         }
                     }
