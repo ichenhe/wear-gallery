@@ -29,6 +29,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.*
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
@@ -40,22 +41,23 @@ import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
 import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class LocalImagesFr : Fragment() {
-
-    companion object {
-        private const val TAG = "LocalImagesFr"
-    }
 
     private val sharedViewModel: SharedViewModel by sharedViewModel()
     private val model: LocalImagesViewModel by viewModel()
 
     private lateinit var binding: FrLocalImagesBinding
-    private lateinit var adapter: LocalImagesAdapter
 
     private var imagesObserver: Observer<Success<List<Image>>>? = null
     private var foldersObserver: Observer<in Resource<out List<ImageFolder>>>? = null
+
+    /** Get the current adapter that related to list. */
+    private val adapter: LocalImagesBaseAdapter<*>?
+        get() = binding.imagesRecyclerView.adapter as? LocalImagesBaseAdapter<*>
+
+    // Here is null-safe because the live data has initial value.
+    private val inFolderView: Boolean get() = model.folderMode.value!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,13 +76,15 @@ class LocalImagesFr : Fragment() {
         ((binding.delete.layoutParams as CoordinatorLayout.LayoutParams).behavior as FabBehavior)
             .scope = viewLifecycleOwner.lifecycleScope
 
-        loadImages()
+        model.folderMode.observe(viewLifecycleOwner) { folderMode ->
+            resetRecyclerView(folderMode, binding.imagesRecyclerView.adapter != null)
+        }
 
         model.inSelectionMode.observe(viewLifecycleOwner) {
             val duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
             if (it) {
                 binding.title.text =
-                    getString(R.string.local_title_selection, adapter.checkedItem?.size ?: 0)
+                    getString(R.string.local_title_selection, adapter?.checkedItem?.size ?: 0)
                 binding.listGridType.setImageResource(R.drawable.ic_view_cancel)
                 // show delete button
                 binding.delete.apply {
@@ -92,11 +96,9 @@ class LocalImagesFr : Fragment() {
                 }
             } else {
                 binding.title.setText(R.string.drawer_local_gallery)
-                val folderMode = model.folderMode.value
-                if (folderMode != null)
-                    binding.listGridType.setImageResource(
-                        if (folderMode) R.drawable.ic_view_list else R.drawable.ic_view_grid
-                    )
+                binding.listGridType.setImageResource(
+                    if (inFolderView) R.drawable.ic_view_list else R.drawable.ic_view_grid
+                )
                 // hide delete button
                 binding.delete.apply {
                     animate().scaleX(0f).scaleY(0f).setDuration(duration)
@@ -109,32 +111,20 @@ class LocalImagesFr : Fragment() {
             }
         }
 
-        adapter.checkedItemChangedListener = { checked ->
-            binding.title.text = getString(R.string.local_title_selection, checked.size)
-        }
-
         binding.localImageHeader.setOnClickListener {
-            if (adapter.inSelectionMode) {
-                adapter.quitSelectionMode()
+            if (adapter?.inSelectionMode == true) {
+                requireNotNull(adapter).quitSelectionMode()
             } else {
                 model.toggleListMode()
             }
         }
 
-        // restore selection mode if view is destroyed
-        // so this is a one-time operation, no need to observe
-        if (model.inSelectionMode.value!! != adapter.inSelectionMode) {
-            if (model.inSelectionMode.value!!)
-                adapter.enterSelectionMode()
-            else
-                adapter.quitSelectionMode()
-        }
-
         binding.delete.setOnClickListener {
-            val checked = adapter.checkedItem
+            val inFolderView = requireNotNull(adapter) is LocalImagesFolderAdapter
+            val checked = requireNotNull(adapter).checkedItem
             if (checked.isNullOrEmpty())
                 return@setOnClickListener
-            if (model.folderMode.value != true) {
+            if (!inFolderView) {
                 // delete images
                 val data = checked.map { (it as Image).uri }
                 AlertDialog(requireContext()).apply {
@@ -143,7 +133,7 @@ class LocalImagesFr : Fragment() {
                     setNegativeButtonIcon(R.drawable.ic_dialog_close, null)
                     setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { _, _ ->
                         sharedViewModel.deleteLocalImages(data)
-                        adapter.quitSelectionMode()
+                        adapter?.quitSelectionMode()
                         dismiss()
                     }
                 }.show()
@@ -156,7 +146,7 @@ class LocalImagesFr : Fragment() {
                     setNegativeButtonIcon(R.drawable.ic_dialog_close, null)
                     setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { _, _ ->
                         sharedViewModel.deleteLocalImageFolders(data)
-                        adapter.quitSelectionMode()
+                        adapter?.quitSelectionMode()
                         dismiss()
                     }
                 }.show()
@@ -164,79 +154,132 @@ class LocalImagesFr : Fragment() {
         }
     }
 
-    private fun loadImages() {
-        adapter = LocalImagesAdapter(requireContext())
-
-        adapter.selectionModeChangedListener = { inSelectionMode ->
-            model.setSelectionMode(inSelectionMode) // save current selection mode
+    private fun resetRecyclerView(folderMode: Boolean, animation: Boolean) {
+        binding.listGridType.setImageResource(
+            if (folderMode) R.drawable.ic_view_list else R.drawable.ic_view_grid
+        )
+        if (!animation) {
+            resetAdapterAndObserver(folderMode)
+            return
         }
-
-        adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
-            override fun onItemClick(view: View, position: Int) {
-                sharedViewModel.currentPosition = position
-
-                // Jump to detail fragment
-                val action = if (model.folderMode.value!!) {
-                    val item = adapter.getItemData(position)
-                    if (item is ImageFolder) {
-                        PagerFrDirections.actionPagerFrToLocalImageDetailFr(
-                            LocalImageDetailFr.Source.FOLDER,
-                            item.id
-                        )
-                    } else {
-                        Timber.tag(TAG).e("Now it's in folder mode but item is not a ImageFolder.")
-                        return
-                    }
-                } else {
-                    PagerFrDirections.actionPagerFrToLocalImageDetailFr(
-                        LocalImageDetailFr.Source.IMAGES,
-                        LocalImageDetailFr.BUCKET_ID_NA
-                    )
+        val duration =
+            requireContext().resources.getInteger(android.R.integer.config_shortAnimTime)
+        binding.imagesRecyclerView.animate().setDuration(duration.toLong()).alpha(0f)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    binding.imagesRecyclerView.adapter = null
+                    resetAdapterAndObserver(folderMode)
+                    binding.imagesRecyclerView.animate().setDuration(duration.toLong())
+                        .alpha(1f).setListener(null).start()
                 }
-                findNavController().navigate(action)
-            }
-        }
-
-        binding.imagesRecyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2)
-            adapter = this@LocalImagesFr.adapter
-        }
-
-        model.folderMode.observe(viewLifecycleOwner) { folderMode ->
-            if (model.inSelectionMode.value != true) {
-                binding.listGridType.setImageResource(
-                    if (folderMode) R.drawable.ic_view_list else R.drawable.ic_view_grid
-                )
-            }
-            binding.imagesRecyclerView.apply {
-                (layoutManager as GridLayoutManager).spanCount = if (folderMode) 1 else 2
-            }
-            registerImagesObserver(folderMode)
-        }
+            })
+            .start()
     }
 
-    private fun registerImagesObserver(isFolderMode: Boolean) {
-        if (isFolderMode) {
-            imagesObserver?.let { sharedViewModel.localImages.removeObserver(it) }
+    /**
+     * Create a new adapter that matches the given view type and set it to the list view.
+     * Meanwhile create a observer if needed and start observe the corresponding data source.
+     * And remove unnecessary observer.
+     *
+     * This method should only be called in [resetRecyclerView].
+     */
+    private fun resetAdapterAndObserver(folderMode: Boolean) {
+        val newAdapter = createAdapter(folderMode)
+        if (newAdapter is LocalImagesFolderAdapter) {
+            // folder mode
+            binding.imagesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            imagesObserver?.also { sharedViewModel.localImages.removeObserver(it) }
+        } else if (newAdapter is LocalImagesGridAdapter) {
+            // grid mode
+            binding.imagesRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+            foldersObserver?.also { model.localFolders.removeObserver(it) }
+        }
+
+        binding.imagesRecyclerView.adapter = newAdapter
+        if (newAdapter is LocalImagesFolderAdapter) {
             foldersObserver = (foldersObserver ?: Observer {
-                adapter.submitList(it.data)
-                if (shouldShowEmptyLayout(it)) {
-                    binding.emptyLayout.viewStub?.inflate()
+                val currentAdapter = binding.imagesRecyclerView.adapter ?: return@Observer
+                if (currentAdapter is LocalImagesFolderAdapter) {
+                    currentAdapter.submitList(it.data)
+                    if (shouldShowEmptyLayout(it)) {
+                        binding.emptyLayout.viewStub?.inflate()
+                    }
                 }
             }).also {
                 model.localFolders.observe(viewLifecycleOwner, it)
             }
-        } else {
-            foldersObserver?.let { model.localFolders.removeObserver(it) }
+        } else if (newAdapter is LocalImagesGridAdapter) {
             imagesObserver = (imagesObserver ?: Observer {
-                adapter.submitList(it.data)
-                if (shouldShowEmptyLayout(it)) {
-                    binding.emptyLayout.viewStub?.inflate()
+                val currentAdapter = binding.imagesRecyclerView.adapter ?: return@Observer
+                if (currentAdapter is LocalImagesGridAdapter) {
+                    currentAdapter.submitList(it.data)
+                    if (shouldShowEmptyLayout(it)) {
+                        binding.emptyLayout.viewStub?.inflate()
+                    }
                 }
             }).also {
                 sharedViewModel.localImages.observe(viewLifecycleOwner, it)
             }
         }
+    }
+
+    /**
+     * Create a new adapter that matches the given view type.
+     */
+    private fun createAdapter(folderMode: Boolean): LocalImagesBaseAdapter<*> {
+        val adapter: LocalImagesBaseAdapter<*>
+        if (folderMode) {
+            adapter = LocalImagesFolderAdapter(requireContext()).apply {
+                itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
+                    override fun onItemClick(view: View, position: Int) {
+                        sharedViewModel.currentPosition = position
+                        val action = PagerFrDirections.actionPagerFrToLocalImageDetailFr(
+                            LocalImageDetailFr.Source.FOLDER,
+                            getItemData(position)!!.id
+                        )
+                        findNavController().navigate(action)
+                    }
+                }
+            }
+        } else {
+            adapter = LocalImagesGridAdapter(requireContext()).apply {
+                itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
+                    override fun onItemClick(view: View, position: Int) {
+                        sharedViewModel.currentPosition = position
+                        val action = PagerFrDirections.actionPagerFrToLocalImageDetailFr(
+                            LocalImageDetailFr.Source.IMAGES,
+                            LocalImageDetailFr.BUCKET_ID_NA
+                        )
+                        findNavController().navigate(action)
+                    }
+                }
+            }
+        }
+        adapter.selectionModeChangedListener = { inSelectionMode ->
+            model.setSelectionMode(inSelectionMode) // save current selection mode
+        }
+
+        adapter.checkedItemChangedListener = { checked ->
+            binding.title.text = getString(R.string.local_title_selection, checked.size)
+        }
+
+        // restore selection mode if view is destroyed
+        // so this is a one-time operation, no need to observe
+        if (model.inSelectionMode.value!! != adapter.inSelectionMode) {
+            if (model.inSelectionMode.value!!)
+                adapter.enterSelectionMode()
+            else
+                adapter.quitSelectionMode()
+        }
+
+        return adapter
+    }
+
+    override fun onDestroyView() {
+        binding.imagesRecyclerView.adapter = null  // trigger adapter's onDetachedFromRecyclerView
+        super.onDestroyView()
     }
 
 }

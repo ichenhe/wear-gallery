@@ -1,20 +1,3 @@
-/**
- * Copyright (C) 2020 Chenhe
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 package cc.chenhe.weargallery.ui.local
 
 import android.animation.Animator
@@ -25,29 +8,18 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.os.SystemClock
-import android.view.*
+import android.view.HapticFeedbackConstants
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewConfiguration
+import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import cc.chenhe.weargallery.common.bean.Image
-import cc.chenhe.weargallery.common.bean.ImageFolder
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
-import cc.chenhe.weargallery.common.util.fileName
-import cc.chenhe.weargallery.databinding.RvItemLocalFolderBinding
-import cc.chenhe.weargallery.databinding.RvItemLocalImageBinding
-import coil.load
 
-private const val TYPE_IMAGE = 1
-private const val TYPE_FOLDER = 2
-
-/**
- * This adapter only accept a list of [Image] or [ImageFolder]. [Any] is declared here to avoid extra wrapper.
- * Item view will adapt the type of given data.
- *
- * @throws IllegalArgumentException The type of given data is neither [Image] nor [ImageFolder].
- */
-class LocalImagesAdapter(context: Context) :
-    BaseListAdapter<Any, LocalImagesAdapter.SelectableVH>(LocalImagesDiffCallback()) {
+abstract class LocalImagesBaseAdapter<T>(context: Context, diffCallback: DiffUtil.ItemCallback<T>) :
+    BaseListAdapter<T, LocalImagesBaseAdapter<T>.SelectableVH>(diffCallback) {
 
     companion object {
         /** Start the process of entering selection mode. */
@@ -81,21 +53,32 @@ class LocalImagesAdapter(context: Context) :
         context.resources.getInteger(android.R.integer.config_shortAnimTime)
     private val longClickTimeout = ViewConfiguration.getLongPressTimeout()
 
-    /**
-     * For touch feedback without vibration permission.
-     */
-    private var recyclerView: View? = null
-
-
-    private var _checkedItem: MutableSet<Any>? = null
-
-    val checkedItem: Set<Any>? get() = _checkedItem
+    private var _checkedItem: MutableSet<T>? = null
+    val checkedItem: Set<T>? get() = _checkedItem
 
     val inSelectionMode: Boolean get() = _checkedItem != null
 
     var selectionModeChangedListener: ((inSelectionMode: Boolean) -> Unit)? = null
 
-    var checkedItemChangedListener: ((checked: Set<Any>) -> Unit)? = null
+    var checkedItemChangedListener: ((checked: Set<T>) -> Unit)? = null
+
+    fun quitSelectionMode() {
+        _checkedItem = null
+        notifyItemRangeChanged(0, itemCount, PAYLOAD_CHANGE_SELECTION_MODE)
+        selectionModeChangedListener?.invoke(false)
+    }
+
+    fun enterSelectionMode() {
+        _checkedItem = mutableSetOf()
+        notifyItemRangeChanged(0, itemCount, PAYLOAD_CHANGE_SELECTION_MODE)
+        selectionModeChangedListener?.invoke(true)
+    }
+
+    fun getItemData(position: Int): T? = currentList.getOrNull(position)
+
+
+    /** For touch feedback without vibration permission. */
+    private var recyclerView: View? = null
 
     private val handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
@@ -125,38 +108,7 @@ class LocalImagesAdapter(context: Context) :
         }
     }
 
-    fun quitSelectionMode() {
-        _checkedItem = null
-        notifyItemRangeChanged(0, itemCount, PAYLOAD_CHANGE_SELECTION_MODE)
-        selectionModeChangedListener?.invoke(false)
-    }
-
-    fun enterSelectionMode() {
-        _checkedItem = mutableSetOf()
-        notifyItemRangeChanged(0, itemCount, PAYLOAD_CHANGE_SELECTION_MODE)
-        selectionModeChangedListener?.invoke(true)
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
-            is Image -> TYPE_IMAGE
-            is ImageFolder -> TYPE_FOLDER
-            else -> throw IllegalArgumentException("Unknown item type.")
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableVH {
-        return when (viewType) {
-            TYPE_IMAGE -> ImageVH(
-                RvItemLocalImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-            TYPE_FOLDER -> FolderVH(
-                RvItemLocalFolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-            else -> throw IllegalArgumentException("Unknown item view type.")
-        }
-    }
-
+    @CallSuper
     override fun onBindViewHolder(holder: SelectableVH, position: Int) {
         super.onBindViewHolder(holder, position)
         holder.itemView.setOnTouchListener(object : View.OnTouchListener {
@@ -232,16 +184,12 @@ class LocalImagesAdapter(context: Context) :
             }
             holder.hideCheckBox(false)
         }
-
-        when (holder) {
-            is ImageVH -> holder.bind(getItem(position) as Image)
-            is FolderVH -> holder.bind(getItem(position) as ImageFolder)
-        }
     }
 
     /**
      * Process partial refresh. Mainly changes related to selection.
      */
+    @CallSuper
     override fun onBindViewHolder(
         holder: SelectableVH,
         position: Int,
@@ -316,9 +264,6 @@ class LocalImagesAdapter(context: Context) :
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
-    // -----------------------------------------------------------------------------------
-    // ViewHolder
-    // -----------------------------------------------------------------------------------
 
     abstract inner class SelectableVH(itemView: View) : BaseViewHolder(itemView) {
         /**
@@ -336,110 +281,43 @@ class LocalImagesAdapter(context: Context) :
             if (checkbox.visibility == View.VISIBLE && checkbox.alpha == 1f)
                 return
             if (animation)
-                checkbox.apply {
-                    alpha = 0f
-                    visibility = View.VISIBLE
-                    animate().alpha(1f).setDuration(shortAnimDuration.toLong())
-                        .setListener(null)
-                        .start()
-                }
+                checkbox.fadeIn()
             else
-                checkbox.apply {
-                    alpha = 1f
-                    visibility = View.VISIBLE
-                }
+                checkbox.show()
         }
 
         fun hideCheckBox(animation: Boolean) {
             if (checkbox.visibility == View.GONE)
                 return
             if (animation)
-                checkbox.animate().alpha(0f).setDuration(shortAnimDuration.toLong())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            checkbox.visibility = View.GONE
-                        }
-                    })
-                    .start()
+                checkbox.fadeOut()
             else
-                checkbox.visibility = View.GONE
+                checkbox.hide()
         }
     }
 
-    private var gridImageSize = 0
+    private fun View.show() {
+        alpha = 1f
+        visibility = View.VISIBLE
+    }
 
-    private inner class ImageVH(private val binding: RvItemLocalImageBinding) :
-        SelectableVH(binding.root) {
-        override val scaleRoot: View
-            get() = binding.itemImage
+    private fun View.fadeIn() {
+        alpha = 0f
+        visibility = View.VISIBLE
+        animate().alpha(1f).setDuration(shortAnimDuration.toLong()).setListener(null).start()
+    }
 
-        override val checkbox: View
-            get() = binding.checkbox
+    private fun View.hide() {
+        visibility = View.GONE
+    }
 
-        fun bind(image: Image) {
-            if (gridImageSize == 0 && binding.itemImage.width > 0) {
-                gridImageSize = binding.itemImage.width
-            }
-            binding.itemImage.load(image.uri) {
-                crossfade(true)
-                if (gridImageSize > 0) {
-                    size(gridImageSize, gridImageSize)
+    private fun View.fadeOut() {
+        animate().alpha(0f).setDuration(shortAnimDuration.toLong())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    visibility = View.GONE
                 }
-            }
-        }
-
-        override fun setChecked(checked: Boolean) {
-            binding.checkbox.isChecked = checked
-        }
-
-        override fun isChecked(): Boolean = binding.checkbox.isChecked
-    }
-
-    private inner class FolderVH(private val binding: RvItemLocalFolderBinding) :
-        SelectableVH(binding.root) {
-        override val scaleRoot: View
-            get() = binding.content
-
-        override val checkbox: View
-            get() = binding.checkbox
-
-        fun bind(folder: ImageFolder) {
-            binding.itemImageCount.text = folder.imgNum.toString()
-            binding.folderName.text = folder.name.fileName
-            binding.itemImage.load(folder.preview.uri) {
-                crossfade(true)
-            }
-        }
-
-        override fun setChecked(checked: Boolean) {
-            binding.checkbox.isChecked = checked
-        }
-
-        override fun isChecked(): Boolean = binding.checkbox.isChecked
-    }
-
-    fun getItemData(position: Int): Any? = currentList.getOrNull(position)
-}
-
-private class LocalImagesDiffCallback : DiffUtil.ItemCallback<Any>() {
-    override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
-        return when (oldItem) {
-            is Image -> {
-                if (newItem is Image) oldItem.uri == newItem.uri else false
-            }
-            is ImageFolder -> {
-                if (newItem is ImageFolder) oldItem.id == newItem.id else false
-            }
-            else -> false
-        }
-    }
-
-    @SuppressLint("DiffUtilEquals") // misinformation
-    override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
-        if (oldItem is Image && newItem is Image)
-            return oldItem == newItem
-        return if (oldItem is ImageFolder && newItem is ImageFolder)
-            oldItem == newItem
-        else false
+            })
+            .start()
     }
 }
