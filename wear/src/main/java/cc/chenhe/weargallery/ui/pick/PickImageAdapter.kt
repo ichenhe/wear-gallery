@@ -24,12 +24,18 @@ import androidx.recyclerview.widget.RecyclerView
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.databinding.RvItemPickImageBinding
-import cc.chenhe.weargallery.uilts.displayContentImage
+import coil.load
 
 class PickImageAdapter : BaseListAdapter<Image, PickImageAdapter.PickViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PickViewHolder {
-        return PickViewHolder(RvItemPickImageBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return PickViewHolder(
+            RvItemPickImageBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: PickViewHolder, position: Int) {
@@ -37,9 +43,20 @@ class PickImageAdapter : BaseListAdapter<Image, PickImageAdapter.PickViewHolder>
         holder.bind(getItem(position))
     }
 
-    inner class PickViewHolder(private val binding: RvItemPickImageBinding) : RecyclerView.ViewHolder(binding.root) {
+    private var gridImageSize = 0
+
+    inner class PickViewHolder(private val binding: RvItemPickImageBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(image: Image) {
-            binding.itemImage.displayContentImage(image.uri)
+            if (gridImageSize == 0 && binding.itemImage.width > 0) {
+                gridImageSize = binding.itemImage.width
+            }
+            binding.itemImage.load(image.uri) {
+                crossfade(true)
+                if (gridImageSize > 0) {
+                    size(gridImageSize, gridImageSize)
+                }
+            }
         }
     }
 
@@ -47,7 +64,8 @@ class PickImageAdapter : BaseListAdapter<Image, PickImageAdapter.PickViewHolder>
 }
 
 private class DiffCallback : DiffUtil.ItemCallback<Image>() {
-    override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem.uri == newItem.uri
+    override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean =
+        oldItem.uri == newItem.uri
 
     override fun areContentsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem == newItem
 

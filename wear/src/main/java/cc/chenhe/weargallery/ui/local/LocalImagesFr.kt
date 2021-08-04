@@ -203,12 +203,14 @@ class LocalImagesFr : Fragment() {
         }
 
         model.folderMode.observe(viewLifecycleOwner) { folderMode ->
-            if (model.inSelectionMode.value != true)
+            if (model.inSelectionMode.value != true) {
                 binding.listGridType.setImageResource(
                     if (folderMode) R.drawable.ic_view_list else R.drawable.ic_view_grid
                 )
-            (binding.imagesRecyclerView.layoutManager as GridLayoutManager).spanCount =
-                if (folderMode) 1 else 2
+            }
+            binding.imagesRecyclerView.apply {
+                (layoutManager as GridLayoutManager).spanCount = if (folderMode) 1 else 2
+            }
             registerImagesObserver(folderMode)
         }
     }

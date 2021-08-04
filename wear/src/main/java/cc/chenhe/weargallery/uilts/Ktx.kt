@@ -19,21 +19,15 @@ package cc.chenhe.weargallery.uilts
 
 import android.app.Application
 import android.content.Context
-import android.net.Uri
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import me.panpf.sketch.SketchImageView
 
 
 fun Fragment.toast(@StringRes resId: Int, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(requireContext(), resId, duration).show()
-}
-
-fun SketchImageView.displayContentImage(uri: Uri) {
-    displayContentImage(uri.toString())
 }
 
 val AndroidViewModel.context: Context get() = getApplication<Application>()

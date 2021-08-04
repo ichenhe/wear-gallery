@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground">
 
-    <me.panpf.sketch.SketchImageView
+    <ImageView
         android:id="@+id/itemImage"
         android:layout_width="60dp"
         android:layout_height="60dp"

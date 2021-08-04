@@ -20,13 +20,17 @@ package cc.chenhe.weargallery
 import android.app.Application
 import cc.chenhe.weargallery.common.util.UncaughtExceptionHandler
 import cc.chenhe.weargallery.common.util.XlogTree
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import com.tencent.mars.xlog.Xlog
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
-class MyApplication : Application() {
+class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
 
@@ -44,4 +48,15 @@ class MyApplication : Application() {
             modules(appModule)
         }
     }
+
+    override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this)
+        .componentRegistry {
+            // https://coil-kt.github.io/coil/gifs/#gifs
+            if (android.os.Build.VERSION.SDK_INT >= 28) {
+                add(ImageDecoderDecoder(this@MyApplication))
+            } else {
+                add(GifDecoder())
+            }
+        }
+        .build()
 }

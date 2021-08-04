@@ -28,17 +28,23 @@ import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
 import cc.chenhe.weargallery.databinding.RvItemMobileFolderBinding
 import cc.chenhe.weargallery.repository.RemoteImageRepository
-import cc.chenhe.weargallery.uilts.displayContentImage
+import coil.load
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MobileImageAdapter(
-        private val fragment: Fragment,
-        private val repository: RemoteImageRepository
+    private val fragment: Fragment,
+    private val repository: RemoteImageRepository
 ) : BaseListAdapter<RemoteImageFolder, MobileImageAdapter.FolderViewHolder>(MobileImageDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderViewHolder {
-        return FolderViewHolder(RvItemMobileFolderBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return FolderViewHolder(
+            RvItemMobileFolderBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
@@ -49,17 +55,21 @@ class MobileImageAdapter(
 
     fun getItemData(position: Int) = getItem(position)!!
 
-    inner class FolderViewHolder(val binding: RvItemMobileFolderBinding) : BaseViewHolder(binding.root) {
+    inner class FolderViewHolder(val binding: RvItemMobileFolderBinding) :
+        BaseViewHolder(binding.root) {
         fun bind(data: RemoteImageFolder) {
             binding.folderName.text = data.bucketName
             binding.itemImageCount.text = data.imageCount.toString()
 
             fragment.viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                repository.loadImagePreview(fragment.requireContext(), data.previewUri)?.let { cacheUri ->
-                    if (binding.itemImage.getTag(R.id.tag_image_position) as Int == adapterPosition) {
-                        binding.itemImage.displayContentImage(cacheUri)
+                repository.loadImagePreview(fragment.requireContext(), data.previewUri)
+                    ?.let { cacheUri ->
+                        if (binding.itemImage.getTag(R.id.tag_image_position) as Int == bindingAdapterPosition) {
+                            binding.itemImage.load(cacheUri) {
+                                crossfade(true)
+                            }
+                        }
                     }
-                }
             }
         }
     }
@@ -67,7 +77,8 @@ class MobileImageAdapter(
 
 private class MobileImageDiffCallback : DiffUtil.ItemCallback<RemoteImageFolder>() {
     override fun areItemsTheSame(oldItem: RemoteImageFolder, newItem: RemoteImageFolder) =
-            oldItem.bucketId == newItem.bucketId
+        oldItem.bucketId == newItem.bucketId
 
-    override fun areContentsTheSame(oldItem: RemoteImageFolder, newItem: RemoteImageFolder) = oldItem == newItem
+    override fun areContentsTheSame(oldItem: RemoteImageFolder, newItem: RemoteImageFolder) =
+        oldItem == newItem
 }

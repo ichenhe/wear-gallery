@@ -35,7 +35,7 @@ import cc.chenhe.weargallery.common.ui.BaseViewHolder
 import cc.chenhe.weargallery.common.util.fileName
 import cc.chenhe.weargallery.databinding.RvItemLocalFolderBinding
 import cc.chenhe.weargallery.databinding.RvItemLocalImageBinding
-import cc.chenhe.weargallery.uilts.displayContentImage
+import coil.load
 
 private const val TYPE_IMAGE = 1
 private const val TYPE_FOLDER = 2
@@ -365,6 +365,8 @@ class LocalImagesAdapter(context: Context) :
         }
     }
 
+    private var gridImageSize = 0
+
     private inner class ImageVH(private val binding: RvItemLocalImageBinding) :
         SelectableVH(binding.root) {
         override val scaleRoot: View
@@ -374,7 +376,15 @@ class LocalImagesAdapter(context: Context) :
             get() = binding.checkbox
 
         fun bind(image: Image) {
-            binding.itemImage.displayContentImage(image.uri)
+            if (gridImageSize == 0 && binding.itemImage.width > 0) {
+                gridImageSize = binding.itemImage.width
+            }
+            binding.itemImage.load(image.uri) {
+                crossfade(true)
+                if (gridImageSize > 0) {
+                    size(gridImageSize, gridImageSize)
+                }
+            }
         }
 
         override fun setChecked(checked: Boolean) {
@@ -395,7 +405,9 @@ class LocalImagesAdapter(context: Context) :
         fun bind(folder: ImageFolder) {
             binding.itemImageCount.text = folder.imgNum.toString()
             binding.folderName.text = folder.name.fileName
-            binding.itemImage.displayContentImage(folder.preview.uri)
+            binding.itemImage.load(folder.preview.uri) {
+                crossfade(true)
+            }
         }
 
         override fun setChecked(checked: Boolean) {
