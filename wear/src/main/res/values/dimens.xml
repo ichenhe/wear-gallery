@@ -9,4 +9,8 @@
     <dimen name="wf_time_text_color_dark_stroke_width">0.75dp</dimen>
 
     <dimen name="dialog_image_margin">20dp</dimen>
+
+    <!-- The radius of the page indicator dot -->
+    <dimen name="pager_indicator_dot_size">4dp</dimen>
+    <dimen name="pager_indicator_margin">20dp</dimen>
 </resources>

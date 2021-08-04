@@ -64,6 +64,28 @@
         <item name="android:background">@drawable/shape_btn_contained</item>
     </style>
 
+    <style name="Widget.IndicatorView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="vpi_slider_radius">@dimen/pager_indicator_dot_size</item>
+        <item name="vpi_slide_mode">worm</item>
+        <item name="vpi_style">circle</item>
+        <item name="vpi_slider_checked_color">@color/white</item>
+        <item name="vpi_slider_normal_color">@android:color/darker_gray</item>
+    </style>
+
+    <style name="Widget.IndicatorView.Horizontal">
+        <item name="android:layout_marginBottom">@dimen/pager_indicator_margin</item>
+        <item name="android:layout_gravity">bottom|center_horizontal</item>
+        <item name="vpi_orientation">horizontal</item>
+    </style>
+
+    <style name="Widget.IndicatorView.Vertical">
+        <item name="android:layout_marginEnd">@dimen/pager_indicator_margin</item>
+        <item name="android:layout_gravity">end|center_vertical</item>
+        <item name="vpi_orientation">vertical</item>
+    </style>
+
     <style name="TextAppearance.Title" parent="TextAppearance.WearVision.Subhead">
         <item name="android:textSize">@dimen/wv_text_size_medium_1</item>
     </style>

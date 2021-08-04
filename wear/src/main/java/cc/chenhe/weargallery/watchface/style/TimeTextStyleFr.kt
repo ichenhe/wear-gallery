@@ -21,11 +21,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import androidx.viewpager2.widget.ViewPager2
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
 import cc.chenhe.weargallery.databinding.WfFrTimeTextStyleBinding
+import cc.chenhe.weargallery.ui.common.PagerIndicatorCounter
 import cc.chenhe.weargallery.ui.common.SwipeDismissFr
 import cc.chenhe.weargallery.uilts.setWatchFaceTextSize
 import cc.chenhe.weargallery.uilts.setWatchFaceTimePosition
@@ -49,6 +52,8 @@ class TimeTextStyleFr : SwipeDismissFr() {
     }
 
     private lateinit var binding: WfFrTimeTextStyleBinding
+    private lateinit var indicatorCounter: PagerIndicatorCounter
+
 
     override fun createView(
         inflater: LayoutInflater,
@@ -63,8 +68,23 @@ class TimeTextStyleFr : SwipeDismissFr() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        indicatorCounter = PagerIndicatorCounter(requireContext(), lifecycleScope) { visible ->
+            if (visible) indicatorCounter.fadeIn(binding.indicator)
+            else indicatorCounter.fadeOut(binding.indicator)
+        }
+        binding.operationPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrollStateChanged(state: Int) {
+                if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                    indicatorCounter.resetVisibilityCountdown()
+                } else {
+                    indicatorCounter.pin()
+                }
+            }
+        })
         binding.operationPager.adapter = PageAdapter()
+        indicatorCounter.resetVisibilityCountdown(1500L)
+        binding.indicator.setupWithViewPager(binding.operationPager)
     }
 
     fun move(direction: Int, continuous: Boolean) {

@@ -21,7 +21,6 @@ import android.app.Application
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.map
-import androidx.recyclerview.widget.RecyclerView
 import cc.chenhe.weargallery.ui.explore.ExploreFr
 import cc.chenhe.weargallery.ui.local.LocalImagesFr
 import cc.chenhe.weargallery.ui.mobile.MobileImagesFr
@@ -52,13 +51,5 @@ class PageViewModel(application: Application) : AndroidViewModel(application) {
             Item.Explore -> ExploreFr()
             null -> null
         }
-    }
-
-    fun getId(position: Int): Long {
-        return items.value?.getOrNull(position)?.id?.toLong() ?: RecyclerView.NO_ID
-    }
-
-    fun contains(id: Long): Boolean {
-        return items.value?.find { it.id.toLong() == id } != null
     }
 }

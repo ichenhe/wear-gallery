@@ -17,18 +17,17 @@
 
 package cc.chenhe.weargallery.ui.main
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import cc.chenhe.weargallery.databinding.FrPagerBinding
-import cc.chenhe.weargallery.uilts.ACTION_APPLICATION_UPGRADE_COMPLETE
+import cc.chenhe.weargallery.ui.common.PagerIndicatorCounter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PagerFr : Fragment() {
@@ -36,9 +35,9 @@ class PagerFr : Fragment() {
     private lateinit var binding: FrPagerBinding
     private val model: PageViewModel by viewModel()
 
-    private var upgradeReceiver: UpgradeReceiver? = null
-
     private lateinit var adapter: PagerAdapter
+    private lateinit var indicatorCounter: PagerIndicatorCounter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,41 +50,44 @@ class PagerFr : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        indicatorCounter = PagerIndicatorCounter(requireContext(), lifecycleScope) { visible ->
+            if (visible) indicatorCounter.fadeIn(binding.indicator)
+            else indicatorCounter.fadeOut(binding.indicator)
+        }
+
+        binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrollStateChanged(state: Int) {
+                if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                    indicatorCounter.resetVisibilityCountdown()
+                } else {
+                    indicatorCounter.pin()
+                }
+            }
+        })
+
         loadFragments()
+
+        indicatorCounter.resetVisibilityCountdown(1500L)
+
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        upgradeReceiver?.let {
-            LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(it)
-        }
-        upgradeReceiver = null
-    }
 
     private fun loadFragments() {
-        model.items.observe(viewLifecycleOwner) {
+        model.items.observe(viewLifecycleOwner) { items ->
             if (binding.pager.adapter == null) {
-                adapter = PagerAdapter()
+                adapter = PagerAdapter().apply { setItems(items) }
                 binding.pager.adapter = adapter
             } else {
-                adapter.notifyDataSetChanged()
+                adapter.setItems(items)
             }
-        }
-    }
-
-    private inner class UpgradeReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == ACTION_APPLICATION_UPGRADE_COMPLETE) {
-                this@PagerFr.context?.let { ctx ->
-                    LocalBroadcastManager.getInstance(ctx).unregisterReceiver(this)
-                }
-                loadFragments()
-            }
+            binding.indicator.setupWithViewPager(binding.pager)
         }
     }
 
     private inner class PagerAdapter : FragmentStateAdapter(this) {
-        override fun getItemCount(): Int = model.size
+        private val items: ArrayList<PageViewModel.Item> = arrayListOf()
+
+        override fun getItemCount(): Int = items.size
 
         override fun createFragment(position: Int): Fragment {
             return model.createFragment(position)
@@ -93,11 +95,35 @@ class PagerFr : Fragment() {
         }
 
         override fun getItemId(position: Int): Long {
-            return model.getId(position)
+            return items[position].id.toLong()
         }
 
         override fun containsItem(itemId: Long): Boolean {
-            return model.contains(itemId)
+            return items.any { it.id.toLong() == itemId }
+        }
+
+        fun setItems(newItems: List<PageViewModel.Item>) {
+            val diff = DiffUtil.calculateDiff(PagerDiffUtilCallback(items, newItems))
+            items.clear()
+            items.addAll(newItems)
+            diff.dispatchUpdatesTo(this)
+        }
+    }
+
+    private class PagerDiffUtilCallback(
+        private val oldList: List<PageViewModel.Item>,
+        private val newList: List<PageViewModel.Item>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
         }
     }
 }
