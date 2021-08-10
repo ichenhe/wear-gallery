@@ -28,6 +28,11 @@
     <string name="intro_os_title">开放源代码</string>
     <string name="intro_os_content">已在GitHub开源：wear-gallery\n同样请在 GitHub 提交 issues 或获取最新版本。</string>
 
+    <string name="card_intro">提示</string>
+    <string name="card_intro_msg">手机端现仅为手表端服务，不再提供图片浏览。\n您可以从其他应用中选中图片点击分享，然后选择「发送到手表」来激活原先的批量发送功能。</string>
+    <string name="card_tic">注意</string>
+    <string name="card_tic_msg">腕间图库已经不再支持 Ticwear 手表。若您没有 Wear OS 设备建议卸载手机端应用，改用局域网传输功能。</string>
+
     <string name="images_menu_check_all">选择全部</string>
     <string name="images_selected_none">选择项目</string>
     <string name="images_selected_num">已选择 %1$d</string>

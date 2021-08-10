@@ -29,6 +29,11 @@
     <string name="intro_os_title" translatable="false">Open Source</string>
     <string name="intro_os_content">Find on GitHub: wear-gallery</string>
 
+    <string name="card_intro">Tips</string>
+    <string name="card_intro_msg">The mobile client serves watch side only, and no longer offers picture viewing.\nYou can activate batch transmission by selecting pictures from another app and sharing to "Send to Watch".</string>
+    <string name="card_tic">Attention</string>
+    <string name="card_tic_msg">Ticwear is no longer supported. You should probably uninstall this app from your phone and use LAN transmission if you don\'t have a Wear OS watch.</string>
+
     <string name="images_menu_check_all">Select ALL</string>
     <string name="images_selected_none">Select items</string>
     <string name="images_selected_num">%1$d selected</string>

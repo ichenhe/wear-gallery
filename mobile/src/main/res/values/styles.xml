@@ -64,10 +64,10 @@
     <style name="Widget" />
 
     <style name="Widget.ListItem">
-        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
+        <item name="android:minHeight">?attr/listPreferredItemHeight</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingStart">?android:attr/listPreferredItemPaddingStart</item>
-        <item name="android:paddingEnd">?android:attr/listPreferredItemPaddingEnd</item>
+        <item name="android:paddingStart">?attr/listPreferredItemPaddingStart</item>
+        <item name="android:paddingEnd">?attr/listPreferredItemPaddingEnd</item>
         <item name="android:background">?android:selectableItemBackground</item>
         <item name="android:clipToPadding">false</item>
     </style>
