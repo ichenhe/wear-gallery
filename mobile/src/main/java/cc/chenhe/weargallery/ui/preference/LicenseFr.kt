@@ -51,6 +51,7 @@ class LicenseFr : Fragment() {
                 MIT,
                 "https://github.com/heinrichreimer/material-intro"
             ),
+            License("Mars-xlog", "Tencent", "Custom", "https://github.com/Tencent/mars"),
             License("Moshi", "square", APACHE_2, "https://github.com/square/moshi"),
             License(
                 "subsampling-scale-image-view",
@@ -58,6 +59,7 @@ class LicenseFr : Fragment() {
                 APACHE_2,
                 "https://github.com/davemorrissey/subsampling-scale-image-view"
             ),
+            License("Timber", "JakeWharton", APACHE_2, "https://github.com/JakeWharton/timber"),
             License("Wear-Msger", "Chenhe", MIT, "https://github.com/ichenhe/Wear-Msger"),
         )
         binding.list.adapter = Adapter(licenses)

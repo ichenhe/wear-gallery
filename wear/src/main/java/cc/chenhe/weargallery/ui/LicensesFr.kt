@@ -38,7 +38,11 @@ class LicensesFr : SwipeDismissFr() {
 
     private lateinit var binding: FrLicensesBinding
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    )
             : ViewBinding {
         return FrLicensesBinding.inflate(inflater, container, false).also {
             binding = it
@@ -48,27 +52,60 @@ class LicensesFr : SwipeDismissFr() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val licenses = mutableListOf<License>().apply {
-            add(License("Wear-Msger", "Chenhe", MIT, "https://github.com/liangchenhe55/Wear-Msger"))
-            add(License("WatchFaceHelper", "Chenhe", APACHE_2, "https://github.com/liangchenhe55/WatchFaceHelper"))
-            add(License("TicDesign", "Mobvoi", APACHE_2, "https://github.com/mobvoi/ticdesign"))
-            add(License("DiskLruCache", "JakeWharton", APACHE_2, "https://github.com/JakeWharton/DiskLruCache"))
-            add(License("NanoHTTPD", "NanoHTTPD", "BSD 3-Clause", "https://github.com/NanoHttpd/nanohttpd"))
-            add(License("Sketch", "panpf", APACHE_2, "https://github.com/panpf/sketch"))
-            add(License("material-intro", "heinrichreimer", MIT, "https://github.com/heinrichreimer/material-intro"))
-            add(License("Moshi", "square", APACHE_2, "https://github.com/square/moshi"))
-            add(License("Koin", "Koin", APACHE_2, "https://github.com/InsertKoinIO/koin"))
-            add(License("Android Open Source Project", "AOSP", APACHE_2, "https://source.android.com/"))
-        }
+        val licenses = listOf(
+            License("Android Open Source Project", "AOSP", APACHE_2, "https://source.android.com/"),
+            License("Coil", "coil-kt", APACHE_2, "https://github.com/coil-kt/coil"),
+            License(
+                "DiskLruCache",
+                "JakeWharton",
+                APACHE_2,
+                "https://github.com/JakeWharton/DiskLruCache"
+            ),
+            License("Koin", "Koin", APACHE_2, "https://github.com/InsertKoinIO/koin"),
+            License("Kotlin", "kotlinlang", APACHE_2, "https://github.com/Kotlin/"),
+            License(
+                "material-intro",
+                "heinrichreimer",
+                MIT,
+                "https://github.com/heinrichreimer/material-intro"
+            ),
+            License("Mars-xlog", "Tencent", "Custom", "https://github.com/Tencent/mars"),
+            License("Moshi", "square", APACHE_2, "https://github.com/square/moshi"),
+            License(
+                "NanoHTTPD",
+                "NanoHTTPD",
+                "BSD 3-Clause",
+                "https://github.com/NanoHttpd/nanohttpd"
+            ),
+            License("Sketch", "panpf", APACHE_2, "https://github.com/panpf/sketch"),
+            License(
+                "ViewPagerIndicator",
+                "zhpanvip",
+                APACHE_2,
+                "https://github.com/zhpanvip/viewpagerindicator"
+            ),
+            License(
+                "WatchFaceHelper",
+                "Chenhe",
+                APACHE_2,
+                "https://github.com/ichenhe/WatchFaceHelper"
+            ),
+            License("Wear-Msger", "Chenhe", MIT, "https://github.com/ichenhe/Wear-Msger"),
+            License("Wear-Vision", "Chenhe", APACHE_2, "https://github.com/ichenhe/Wear-Vision"),
+        )
 
         binding.list.adapter = Adapter(licenses)
     }
 
-    private inner class Adapter(private val list: List<License>) : RecyclerView.Adapter<BaseViewHolder>() {
+    private inner class Adapter(private val list: List<License>) :
+        RecyclerView.Adapter<BaseViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-            return BaseViewHolder(RvItemLicenseBinding.inflate(LayoutInflater.from(parent.context)
-                    , parent, false).root)
+            return BaseViewHolder(
+                RvItemLicenseBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                ).root
+            )
         }
 
         override fun getItemCount(): Int = list.size
@@ -93,9 +130,9 @@ class LicensesFr : SwipeDismissFr() {
     }
 
     private data class License(
-            val name: String,
-            val author: String,
-            val type: String,
-            val url: String
+        val name: String,
+        val author: String,
+        val type: String,
+        val url: String
     )
 }
