@@ -24,8 +24,8 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 data class ImagesReq(
-        /**
-         * Images' bucket id on the phone.
-         */
-        val bucketId: Int
+    /** Images' bucket id on the phone. */
+    val bucketId: Int,
+    val offset: Int,
+    val pageSize: Int,
 )

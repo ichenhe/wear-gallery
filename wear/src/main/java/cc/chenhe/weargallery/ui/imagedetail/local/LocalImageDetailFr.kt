@@ -20,8 +20,11 @@ package cc.chenhe.weargallery.ui.imagedetail.local
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.Keep
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
+import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseAdapter
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseFr
@@ -29,8 +32,9 @@ import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
 import cc.chenhe.weargallery.ui.main.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
-class LocalImageDetailFr : ImageDetailBaseFr() {
+class LocalImageDetailFr : ImageDetailBaseFr<Image>() {
 
     companion object {
         /**
@@ -45,51 +49,65 @@ class LocalImageDetailFr : ImageDetailBaseFr() {
         FOLDER
     }
 
-    private val sharedModel: SharedViewModel by sharedViewModel()
-    private val model: LocalImageDetailViewModel by viewModel()
-
     private val args: LocalImageDetailFrArgs by navArgs()
+    private val sharedModel: SharedViewModel by sharedViewModel()
+    private val model: LocalImageDetailViewModel by viewModel {
+        parametersOf(args.sourceType, args.bucketId)
+    }
+
 
     private lateinit var adapter: LocalImageDetailAdapter
 
-    private var shouldInitCurrentPosition = true
+    // used to jump to the initial position
+    private var loadStateListener: ((CombinedLoadStates) -> Unit)? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.imageDetailPager.adapter = adapter
-
         if (args.sourceType as Source == Source.IMAGES) {
-            model.currentItem.value = sharedModel.currentPosition
-            model.addImageDataSource(sharedModel.localImages)
+            model.setCurrentItem(
+                sharedModel.currentPosition,
+                adapter.getItemData(sharedModel.currentPosition)
+            )
             model.currentItem.observe(viewLifecycleOwner) { currentItem ->
                 sharedModel.currentPosition = currentItem
             }
-        } else if (args.sourceType as Source == Source.FOLDER) {
-            val args = LocalImageDetailFrArgs.fromBundle(requireArguments())
-            model.addFolderDataSource(args.bucketId)
-        }
 
-        model.images.observe(viewLifecycleOwner) { images ->
-            if (images is Success && (images.data?.isEmpty() == true)) {
-                findNavController().navigateUp()
-            } else {
-                adapter.submitList(images.data) {
-                    if (args.sourceType as Source == Source.IMAGES && shouldInitCurrentPosition) {
-                        // Jump to the clicked position
-                        binding.imageDetailPager.setCurrentItem(sharedModel.currentPosition, false)
-                        shouldInitCurrentPosition = false
-                    }
+            loadStateListener = { states: CombinedLoadStates ->
+                if (states.refresh is LoadState.NotLoading) {
+                    loadStateListener?.also { adapter.removeLoadStateListener(it) }
+                    loadStateListener = null
+                    // Jump to the clicked position
+                    binding.imageDetailPager.setCurrentItem(sharedModel.currentPosition, false)
                 }
             }
+            adapter.addLoadStateListener(requireNotNull(loadStateListener))
         }
+
+        // Refresh UI when image list changed.
+        sharedModel.localImages.observe(
+            viewLifecycleOwner,
+            object : Observer<Success<List<Image>>> {
+                private var init = false
+                override fun onChanged(t: Success<List<Image>>?) {
+                    // workaround: ignore the init callback
+                    if (!init) {
+                        init = true
+                    } else {
+                        adapter.retry()
+                    }
+                }
+            })
+
     }
 
-    override fun createAdapter(): ImageDetailBaseAdapter<*, *> {
+    override fun createAdapter(): ImageDetailBaseAdapter<Image, *> {
         return LocalImageDetailAdapter().also { adapter = it }
     }
 
-    override fun getViewModel(): ImageDetailBaseViewModel<*> = model
+    override fun getViewModel(): ImageDetailBaseViewModel<Image> = model
+
+    override fun getCachedTotalCount(): Int = args.totalCount
 
     override fun onLoadHd() {
         throw NotImplementedError() // should never called in local list
@@ -98,6 +116,7 @@ class LocalImageDetailFr : ImageDetailBaseFr() {
     override fun onDelete() {
         model.currentItemData.value?.let { currentImage ->
             sharedModel.deleteLocalImage(currentImage.uri)
+            // We don't know whether the deletion is success. So don't refresh UI here.
         }
     }
 

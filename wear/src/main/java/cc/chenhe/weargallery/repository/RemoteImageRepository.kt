@@ -30,14 +30,16 @@ import cc.chenhe.weargallery.common.comm.*
 import cc.chenhe.weargallery.common.comm.bean.ImageHdReq
 import cc.chenhe.weargallery.common.comm.bean.ImagePreviewReq
 import cc.chenhe.weargallery.common.comm.bean.ImagesReq
+import cc.chenhe.weargallery.common.comm.bean.ImagesResp
 import cc.chenhe.weargallery.common.util.ControlledRunner
-import cc.chenhe.weargallery.common.util.fromJsonQ
 import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.db.RemoteImageFolderDao
-import cc.chenhe.weargallery.uilts.*
+import cc.chenhe.weargallery.uilts.REQUEST_IMAGE_HD_TIMEOUT
+import cc.chenhe.weargallery.uilts.REQUEST_IMAGE_PREVIEW_TIMEOUT
 import cc.chenhe.weargallery.uilts.diskcache.MobilePreviewCacheManager
 import com.google.android.gms.wearable.DataMap
 import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
@@ -49,8 +51,6 @@ import me.chenhe.lib.wearmsger.bean.DataCallback
 import timber.log.Timber
 import java.io.InputStream
 
-private const val TAG = "ImageFolderRepo"
-
 /**
  * Repository that handles [RemoteImageFolder] and [RemoteImage] objects.
  */
@@ -60,6 +60,10 @@ class RemoteImageRepository(
     imageDao: RemoteImageDao,
     private val previewCacheManager: MobilePreviewCacheManager
 ) : ImageRepository(imageDao) {
+
+    companion object {
+        private const val TAG = "ImageFolderRepo"
+    }
 
     private val previewReqRunner by lazy { ControlledRunner<DataCallback>() }
     private val hdReqRunner by lazy { ControlledRunner<DataCallback>() }
@@ -153,47 +157,47 @@ class RemoteImageRepository(
     }
 
     /**
-     * Load the image list for a specific folder.
+     * Request paging picture list in the given bucket. This method do nothing about local cache.
+     *
+     * @throws RemoteException Failed to get response.
      */
-    fun loadImages(context: Context, bucketId: Int): LiveData<Resource<List<RemoteImage>>> {
-        return object : RemoteBoundResource<List<RemoteImage>, String>() {
-            override fun loadFromCache(): Flow<List<RemoteImage>?> {
-                return remoteImageDao.fetchAll(bucketId)
-            }
+    suspend fun requestImageList(
+        context: Context,
+        bucketId: Int,
+        offset: Int,
+        pageSize: Int
+    ): ImagesResp = withContext(Dispatchers.IO) {
+        val req = moshi.adapter(ImagesReq::class.java).toJson(ImagesReq(bucketId, offset, pageSize))
+        val resp = BothWayHub.requestForMessage(context, null, PATH_REQ_IMAGES, req)
+        val data = resp.check(true)!!
+        try {
+            @Suppress("BlockingMethodInNonBlockingContext")
+            moshi.adapter(ImagesResp::class.java).nonNull().fromJson(data)!!
+        } catch (e: JsonDataException) {
+            throw RemoteException(RemoteException.Type.EMPTY, e)
+        }
+    }
 
-            override fun shouldFetch(data: List<RemoteImage>?): Boolean = true
+    /**
+     * Delete all cache records and insert the new data.
+     *
+     * This method does not delete the cache file.
+     */
+    suspend fun refreshImagesCache(bucketId: Int, images: List<RemoteImage>) {
+        // FIXME: Will uri change if pictures are moved from one folder to another?
+        //  If not, there may be something wrong with the cache.
+        //  Use case:
+        //      Picture (uri=a, bucket=1) was moved to bucket=2. When requesting a list of bucket2,
+        //      the original cache record was not cleared and the new insert will be ignored. The
+        //      picture still in bucket1 in our cache.
+        remoteImageDao.clearAll(bucketId)
+        remoteImageDao.insertOrIgnore(images)
+        // Cached files are not deleted here because they may still be needed for the next page of data.
+        // Cache files are managed by LRU itself
+    }
 
-            override suspend fun fetchFromRemote(): ApiResponse<String> {
-                val req = moshi.adapter(ImagesReq::class.java).toJson(ImagesReq(bucketId))
-                return BothWayHub.requestForMessage(context, null, PATH_REQ_IMAGES, req).toApiResp {
-                    it.getStringData()!!
-                }
-            }
-
-            override suspend fun saveRemoteResult(
-                cached: List<RemoteImage>?,
-                data: String
-            ) = withContext(Dispatchers.IO) {
-                val type = Types.newParameterizedType(List::class.java, RemoteImage::class.java)
-                val adapter: JsonAdapter<List<RemoteImage>> = moshi.adapter(type)
-                val images = adapter.fromJsonQ(data) ?: return@withContext
-                cached?.subtract(images)?.let { subtract ->
-                    if (subtract.isNotEmpty()) {
-                        Timber.tag(TAG)
-                            .d("Subtract ${subtract.size} remote pictures in bucket <$bucketId>.")
-                        // The picture has been deleted, let's delete the record and preview cache.
-                        remoteImageDao.delete(subtract)
-                        previewCacheManager.deleteCacheImage(subtract)
-                    }
-                }
-                // We don't use `update` here because we assume that picture of the same uri should be constant.
-                // Otherwise things get messy since we have to judge whether the cache is invalid which means we should
-                // query the database before try to update them and will cause serious performance issues.
-                Timber.tag(TAG)
-                    .d("Try to insert ${images.size} remote pictures in bucket <${bucketId}>.")
-                remoteImageDao.insert(images)
-            }
-        }.asLiveData()
+    suspend fun appendImagesCache(images: List<RemoteImage>) {
+        remoteImageDao.insertOrIgnore(images)
     }
 
     suspend fun loadImageHd(context: Context, remoteImage: RemoteImage): Uri? {

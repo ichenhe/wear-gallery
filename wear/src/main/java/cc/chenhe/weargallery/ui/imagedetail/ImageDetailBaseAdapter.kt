@@ -19,9 +19,9 @@ package cc.chenhe.weargallery.ui.imagedetail
 
 import android.view.View
 import androidx.annotation.CallSuper
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
 import cc.chenhe.weargallery.databinding.PagerItemImageDetailBinding
 import cc.chenhe.weargallery.uilts.IMAGE_ZOOM_CONSECUTIVE_SCALE
@@ -34,9 +34,9 @@ import kotlin.math.min
 
 private const val TAG = "ImageDetailBaseAdapter"
 
-abstract class ImageDetailBaseAdapter<T, VH : ImageDetailBaseAdapter.ImageDetailBaseViewHolder>(
+abstract class ImageDetailBaseAdapter<T : Any, VH : ImageDetailBaseAdapter.ImageDetailBaseViewHolder>(
     diffCallback: DiffUtil.ItemCallback<T>
-) : BaseListAdapter<T, VH>(diffCallback) {
+) : PagingDataAdapter<T, VH>(diffCallback) {
 
     private val imageViews = WeakHashMap<Int, SketchImageView>()  // <position, view>
     private val itemImageViewOnClickListener =
@@ -59,9 +59,9 @@ abstract class ImageDetailBaseAdapter<T, VH : ImageDetailBaseAdapter.ImageDetail
             }
         }
 
+
     @CallSuper
     override fun onBindViewHolder(holder: VH, position: Int) {
-        super.onBindViewHolder(holder, position)
         holder.binding.pagerSketchImage.onClickListener = itemImageViewOnClickListener
         imageViews[position] = holder.binding.pagerSketchImage
         holder.binding.pagerSketchImage.apply {
@@ -111,5 +111,13 @@ abstract class ImageDetailBaseAdapter<T, VH : ImageDetailBaseAdapter.ImageDetail
         }
     }
 
-    fun getItemData(position: Int): T? = currentList.getOrNull(position)
+    /**
+     * @return The data correspond to the given position. Return `null` if the position is illegal
+     * or the data itself is null.
+     */
+    fun getItemData(position: Int): T? {
+        if (position < 0 || position > itemCount - 1)
+            return null
+        return getItem(position)
+    }
 }

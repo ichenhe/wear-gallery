@@ -19,44 +19,36 @@ package cc.chenhe.weargallery.ui.imagedetail.mobile
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.paging.*
 import cc.chenhe.weargallery.bean.RemoteImage
-import cc.chenhe.weargallery.common.bean.Loading
-import cc.chenhe.weargallery.common.bean.Resource
+import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.repository.ImageRepository
+import cc.chenhe.weargallery.repository.RemoteImageMediator
 import cc.chenhe.weargallery.repository.RemoteImageRepository
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class MobileImageDetailViewModel(
     application: Application,
+    private val bucketId: Int,
+    private val dao: RemoteImageDao,
     private val repo: RemoteImageRepository
 ) : ImageDetailBaseViewModel<RemoteImage>(application) {
 
-
-    private val _bucketId = MutableLiveData(-1)
-    override val images: LiveData<Resource<List<RemoteImage>>> = _bucketId.switchMap { bucketId ->
-        if (bucketId != -1) {
-            repo.loadImages(getApplication(), bucketId)
-        } else {
-            MutableLiveData(Loading())
-        }
-    }
+    @ExperimentalPagingApi
+    override val pagingImages: Flow<PagingData<RemoteImage>> = Pager(
+        config = PagingConfig(pageSize = 15, initialLoadSize = 15),
+        remoteMediator = RemoteImageMediator(application, bucketId, repo)
+    ) {
+        dao.fetchPaging(bucketId)
+    }.flow.cachedIn(viewModelScope)
 
     private val _deleteRequestEvent = MutableLiveData<ImageRepository.Pending?>()
     val deleteRequestEvent: LiveData<ImageRepository.Pending?> = _deleteRequestEvent
 
     init {
         init()
-    }
-
-    fun setBucketId(bucketId: Int) {
-        _bucketId.value = bucketId
-    }
-
-    fun retry() {
-        if (_bucketId.value ?: -1 != -1) {
-            _bucketId.value = _bucketId.value
-        }
     }
 
     fun loadHd(image: RemoteImage) {

@@ -11,7 +11,7 @@
 
         <!-- A workaround that data binding does not support generics -->
         <variable
-            name="images"
+            name="res"
             type="Resource" />
 
         <variable
@@ -147,7 +147,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout="@layout/view_loading"
-            app:resource="@{images}" />
+            app:resource="@{res}" />
 
         <ViewStub
             android:id="@id/retryLayout"
@@ -155,14 +155,14 @@
             android:layout_height="match_parent"
             android:layout="@layout/view_retry"
             app:callback="@{retryCallback}"
-            app:resource="@{images}" />
+            app:resource="@{res}" />
 
         <ViewStub
             android:id="@id/emptyLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout="@layout/view_empty"
-            app:resource="@{images}" />
+            app:resource="@{res}" />
 
     </me.chenhe.wearvision.widget.VisionCoordinatorLayout>
 </layout>

@@ -39,6 +39,9 @@ import kotlin.contracts.contract
 const val REQUEST_IMAGE_PREVIEW_TIMEOUT = 8000L
 const val REQUEST_IMAGE_HD_TIMEOUT = 20000L
 
+/** TTL of remote picture list cache (s) */
+const val REMOTE_IMAGE_LIST_CACHE_TIMEOUT = 60L
+
 const val NOTIFY_CHANNEL_ID_PERMISSION = "wg.permission"
 const val NOTIFY_ID_PERMISSION = 1
 

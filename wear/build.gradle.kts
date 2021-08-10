@@ -1,5 +1,5 @@
 import java.io.FileInputStream
-import java.util.Properties
+import java.util.*
 
 plugins {
     id("com.android.application")
@@ -69,7 +69,6 @@ android {
 
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
-//    implementation(file("libs/core-3.3.3.jar"))
     implementation(project(":common"))
 
     implementation("androidx.core:core-ktx:${Ver.ktx}")
@@ -91,6 +90,7 @@ dependencies {
     implementation("androidx.exifinterface:exifinterface:${Ver.exifinterface}")
     implementation("androidx.room:room-ktx:${Ver.room}")
     kapt("androidx.room:room-compiler:${Ver.room}")
+    implementation("androidx.paging:paging-runtime-ktx:3.0.1")
 
     implementation("io.insert-koin:koin-android:${Ver.koin}")
     implementation("com.google.android.gms:play-services-wearable:17.1.0")
@@ -104,7 +104,6 @@ dependencies {
     val sketch = "2.7.1"
     implementation("me.panpf:sketch:$sketch")
     implementation("me.panpf:sketch-gif:$sketch")
-    implementation("me.chenhe:wearmsger:${Ver.wearMsger}")
     implementation("me.chenhe:wearvision:0.1.1")
     implementation("io.coil-kt:coil:1.3.1")
     implementation("io.coil-kt:coil-gif:1.3.1")

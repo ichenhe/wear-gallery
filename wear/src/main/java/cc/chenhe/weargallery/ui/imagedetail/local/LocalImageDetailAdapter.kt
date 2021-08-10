@@ -26,14 +26,30 @@ import cc.chenhe.weargallery.databinding.PagerItemImageDetailBinding
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseAdapter
 
 class LocalImageDetailAdapter
-    : ImageDetailBaseAdapter<Image, ImageDetailBaseAdapter.ImageDetailBaseViewHolder>(DiffCallback()) {
+    :
+    ImageDetailBaseAdapter<Image, ImageDetailBaseAdapter.ImageDetailBaseViewHolder>(DiffCallback()) {
+
+    companion object {
+        private class DiffCallback : DiffUtil.ItemCallback<Image>() {
+            override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean =
+                oldItem.uri == newItem.uri
+
+            override fun areContentsTheSame(oldItem: Image, newItem: Image): Boolean =
+                oldItem == newItem
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageDetailBaseViewHolder {
-        val binding = PagerItemImageDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            PagerItemImageDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ImageDetailBaseViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ImageDetailBaseViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        holder: ImageDetailBaseViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
         if (payloads.isNullOrEmpty()) {
             onBindViewHolder(holder, position)
         } else {
@@ -55,15 +71,13 @@ class LocalImageDetailAdapter
             return
         }
         val data = getItem(position)
+        if (data == null) {
+            holder.binding.pagerSketchImage.setImageBitmap(null)
+            return
+        }
         holder.binding.pagerSketchImage.apply {
             setTag(R.id.tag_image_detail_pending, false)
             displayContentImage(data.uri.toString())
         }
     }
-}
-
-private class DiffCallback : DiffUtil.ItemCallback<Image>() {
-    override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem.uri == newItem.uri
-
-    override fun areContentsTheSame(oldItem: Image, newItem: Image): Boolean = oldItem == newItem
 }

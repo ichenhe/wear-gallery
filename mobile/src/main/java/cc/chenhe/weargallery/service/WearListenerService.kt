@@ -20,6 +20,7 @@ package cc.chenhe.weargallery.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -32,11 +33,11 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImageFolder
-import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.comm.*
 import cc.chenhe.weargallery.common.comm.bean.ImageHdReq
 import cc.chenhe.weargallery.common.comm.bean.ImagePreviewReq
 import cc.chenhe.weargallery.common.comm.bean.ImagesReq
+import cc.chenhe.weargallery.common.comm.bean.ImagesResp
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.ImageUtil
 import cc.chenhe.weargallery.common.util.checkHuaWei
@@ -64,6 +65,7 @@ private const val TAG = "WearListenerService"
 class WearListenerService : WMListenerService() {
 
     private val moshi: Moshi by inject()
+    private val context: Context get() = this
 
     // -------------------------------------------------------------------------------------------------
     // Check and Notify
@@ -213,14 +215,17 @@ class WearListenerService : WMListenerService() {
     }
 
     private fun processRequestImages(request: MessageEvent) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             toastIfEnabled(R.string.watch_operation_get_pics_list_ing)
             val data = moshi.adapter(ImagesReq::class.java).fromJsonQ(String(request.data))
-                ?: return@launch
-            val images = ImageUtil.queryBucketImages(this@WearListenerService, data.bucketId)
-            val type = Types.newParameterizedType(List::class.java, Image::class.java)
-            val adapter: JsonAdapter<List<Image>> = moshi.adapter(type)
-            BothWayHub.response(this@WearListenerService, request, adapter.toJson(images))
+            if (data == null) {
+                Timber.tag(TAG).w("Failed to parse json:\n%s", String(request.data))
+                return@launch
+            }
+            val pagingImages =
+                ImageUtil.queryPagingImages(context, data.bucketId, data.offset, data.pageSize)
+            val adapter = moshi.adapter(ImagesResp::class.java)
+            BothWayHub.response(context, request, adapter.toJson(pagingImages))
         }
     }
 

@@ -25,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.db.RemoteImageDao
@@ -36,15 +37,17 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import timber.log.Timber
 import java.util.*
 
-class MobileImageDetailFr : ImageDetailBaseFr() {
+class MobileImageDetailFr : ImageDetailBaseFr<RemoteImage>() {
     companion object {
         private const val TAG = "MobileImageDetailFr"
     }
 
-    private val model: MobileImageDetailViewModel by viewModel()
+    private val args: MobileImageDetailFrArgs by navArgs()
+    private val model: MobileImageDetailViewModel by viewModel { parametersOf(args.bucketId) }
     private val remoteImageDao: RemoteImageDao by inject()
 
     private var pendingUris: Collection<Uri>? = null
@@ -65,15 +68,6 @@ class MobileImageDetailFr : ImageDetailBaseFr() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val args = MobileImageDetailFrArgs.fromBundle(requireArguments())
-        model.setBucketId(args.bucketId)
-
-        binding.imageDetailPager.adapter = adapter
-
-        model.images.observe(viewLifecycleOwner) { images ->
-            adapter.submitList(images.data)
-        }
 
         model.deleteRequestEvent.observe(viewLifecycleOwner) { pending ->
             pending?.let {
@@ -102,14 +96,16 @@ class MobileImageDetailFr : ImageDetailBaseFr() {
         }
     }
 
-    override fun createAdapter(): ImageDetailBaseAdapter<*, *> {
+    override fun createAdapter(): ImageDetailBaseAdapter<RemoteImage, *> {
         return MobileImageDetailAdapter(this, get()).also {
             it.itemImageViewClickListener = { _ -> model.toggleWidgetsVisibility() }
             adapter = it
         }
     }
 
-    override fun getViewModel(): ImageDetailBaseViewModel<*> = model
+    override fun getViewModel(): ImageDetailBaseViewModel<RemoteImage> = model
+
+    override fun getCachedTotalCount(): Int = args.totalCount
 
     override fun onLoadHd() {
         adapter.getItemData(binding.imageDetailPager.currentItem)?.let {
@@ -127,6 +123,6 @@ class MobileImageDetailFr : ImageDetailBaseFr() {
     }
 
     override fun retry() {
-        model.retry()
+        adapter.refresh()
     }
 }

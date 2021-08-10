@@ -21,6 +21,7 @@ import cc.chenhe.weargallery.common.jsonadapter.UriAdapter
 import cc.chenhe.weargallery.db.MainDb
 import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.repository.RemoteImageRepository
+import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailFr
 import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailViewModel
 import cc.chenhe.weargallery.ui.imagedetail.mobile.MobileImageDetailViewModel
 import cc.chenhe.weargallery.ui.local.LocalImagesViewModel
@@ -43,8 +44,12 @@ val appModule = module {
     viewModel { SharedViewModel(androidApplication(), get()) }
     viewModel { PageViewModel(androidApplication()) }
     viewModel { LocalImagesViewModel(androidApplication()) }
-    viewModel { MobileImageDetailViewModel(androidApplication(), get()) }
-    viewModel { LocalImageDetailViewModel(androidApplication()) }
+    viewModel { (bucketId: Int) ->
+        MobileImageDetailViewModel(androidApplication(), bucketId, get(), get())
+    }
+    viewModel { (source: LocalImageDetailFr.Source, bucketId: Int) ->
+        LocalImageDetailViewModel(androidApplication(), source, bucketId)
+    }
     viewModel { WebServerViewModel(androidApplication(), get()) }
     viewModel { PickImageViewModel(androidApplication()) }
     viewModel { PreferenceViewModel(androidApplication()) }

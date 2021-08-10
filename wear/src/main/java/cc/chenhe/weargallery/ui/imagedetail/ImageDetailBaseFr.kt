@@ -27,20 +27,23 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.widget.ViewPager2
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.common.bean.Error
+import cc.chenhe.weargallery.common.bean.Loading
+import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.databinding.FrImageDetailBinding
 import cc.chenhe.weargallery.ui.common.RetryCallback
 import cc.chenhe.weargallery.ui.common.SwipeDismissFr
-import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
-import cc.chenhe.weargallery.uilts.shouldShowLoadingLayout
-import cc.chenhe.weargallery.uilts.shouldShowRetryLayout
 import cc.chenhe.weargallery.view.LongPressImageView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 /**
  * A fragment with basic UI components and responding to basic operations to display image details. This class has
@@ -48,18 +51,21 @@ import kotlinx.coroutines.launch
  * [ImageDetailBaseViewModel] and [ImageDetailBaseAdapter] together to provides the necessary data sources and
  * operational implementations.
  */
-abstract class ImageDetailBaseFr : SwipeDismissFr(), View.OnClickListener, LongPressImageView.OnLongPressListener,
-        RetryCallback {
+abstract class ImageDetailBaseFr<T : Any> : SwipeDismissFr(), View.OnClickListener,
+    LongPressImageView.OnLongPressListener, RetryCallback {
 
     protected lateinit var binding: FrImageDetailBinding
-    private lateinit var adapter: ImageDetailBaseAdapter<*, *>
+    private lateinit var adapter: ImageDetailBaseAdapter<T, *>
     private lateinit var menuBehavior: ImageDetailOperationBehavior
 
     private var fadeAnimationDuration: Int = 0
 
     @CallSuper
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-            : ViewBinding {
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): ViewBinding {
         return FrImageDetailBinding.inflate(inflater, container, false).also {
             binding = it
             it.lifecycleOwner = viewLifecycleOwner
@@ -75,7 +81,7 @@ abstract class ImageDetailBaseFr : SwipeDismissFr(), View.OnClickListener, LongP
         super.onViewCreated(view, savedInstanceState)
         fadeAnimationDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
         menuBehavior = ((binding.operationMenu.root.layoutParams as CoordinatorLayout.LayoutParams)
-                .behavior) as ImageDetailOperationBehavior
+            .behavior) as ImageDetailOperationBehavior
 
         binding.imageDetailPager.apply {
             registerOnPageChangeCallback(onPageChangeCallback)
@@ -110,26 +116,60 @@ abstract class ImageDetailBaseFr : SwipeDismissFr(), View.OnClickListener, LongP
             }
         }
 
-        model.images.observe(viewLifecycleOwner) { images ->
-            binding.images = images // A workaround that data binding does not support generics
-            when {
-                shouldShowRetryLayout(images) -> {
-                    binding.retryLayout.viewStub?.inflate()
-                }
-                shouldShowEmptyLayout(images) -> {
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.pagingImages.collectLatest { pagingData ->
+                adapter.submitData(pagingData)
+            }
+        }
+
+        adapter.addLoadStateListener { combinedLoadStates ->
+            if (combinedLoadStates.refresh != model.initialLoadingState.value) {
+                model.initialLoadingState.value = combinedLoadStates.refresh
+            }
+
+            // Refresh the visibility of fragment-level state indicator
+            val isEmpty = adapter.itemCount == 0
+            if (combinedLoadStates.refresh is LoadState.NotLoading) {
+                // A workaround that is compatible with legacy layout structure.
+                binding.res = Success(emptyList<Unit>())
+                if (isEmpty) {
                     binding.emptyLayout.viewStub?.inflate()
                 }
-                shouldShowLoadingLayout(images) -> {
+            } else if (combinedLoadStates.refresh is LoadState.Loading) {
+                binding.res = Loading(if (isEmpty) null else listOf(Unit))
+                // only show the loading layout if there are no cache data
+                if (isEmpty) {
                     binding.loadingLayout.viewStub?.inflate()
                 }
+            } else {
+                binding.res = Error(0, "", if (isEmpty) null else listOf(Unit))
+                if (isEmpty) {
+                    binding.retryLayout.viewStub?.inflate()
+                }
             }
-            if (adapter.currentList.size != (images.data?.size ?: 0)) {
-                // Show the page indicator if size is changed.
-                model.resetWidgetsVisibilityCountdown(true)
+
+            // update current data
+            if (combinedLoadStates.refresh !is LoadState.Loading
+                && combinedLoadStates.append !is LoadState.Loading
+                && combinedLoadStates.prepend !is LoadState.Loading
+            ) {
+                model.setCurrentItem(data = adapter.getItemData(model.currentItem.value!!))
+            }
+
+
+            // refresh total count
+            if (combinedLoadStates.append.endOfPaginationReached) {
+                model.setTotalCount(adapter.itemCount)
+            } else {
+                model.setTotalCount(max(adapter.itemCount, getCachedTotalCount()))
             }
         }
 
         model.resetWidgetsVisibilityCountdown(true)
+
+        binding.imageDetailPager.adapter = adapter.withLoadStateFooter(ImageDetailLoadStateAdapter {
+            adapter.retry()
+        })
     }
 
     private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
@@ -144,7 +184,7 @@ abstract class ImageDetailBaseFr : SwipeDismissFr(), View.OnClickListener, LongP
         }
 
         override fun onPageSelected(position: Int) {
-            getViewModel().currentItem.value = position
+            getViewModel().setCurrentItem(position, adapter.getItemData(position))
             val t = SystemClock.uptimeMillis()
             if (t - lastSelectTime <= 700) {
                 setPending()
@@ -162,12 +202,14 @@ abstract class ImageDetailBaseFr : SwipeDismissFr(), View.OnClickListener, LongP
         }
     }
 
-    abstract fun getViewModel(): ImageDetailBaseViewModel<*>
+    abstract fun getCachedTotalCount(): Int
+
+    abstract fun getViewModel(): ImageDetailBaseViewModel<T>
 
     /**
      * Called in [onViewCreated].
      */
-    abstract fun createAdapter(): ImageDetailBaseAdapter<*, *>
+    abstract fun createAdapter(): ImageDetailBaseAdapter<T, *>
 
     /**
      * Called when the load HD button is clicked.
@@ -200,11 +242,19 @@ abstract class ImageDetailBaseFr : SwipeDismissFr(), View.OnClickListener, LongP
             }
             R.id.imageDetailZoomIn -> {
                 getViewModel().resetWidgetsVisibilityCountdown(false)
-                adapter.zoom(binding.imageDetailPager.currentItem, zoomIn = true, consecutive = false)
+                adapter.zoom(
+                    binding.imageDetailPager.currentItem,
+                    zoomIn = true,
+                    consecutive = false
+                )
             }
             R.id.imageDetailZoomOut -> {
                 getViewModel().resetWidgetsVisibilityCountdown(false)
-                adapter.zoom(binding.imageDetailPager.currentItem, zoomIn = false, consecutive = false)
+                adapter.zoom(
+                    binding.imageDetailPager.currentItem,
+                    zoomIn = false,
+                    consecutive = false
+                )
             }
         }
     }
@@ -214,10 +264,18 @@ abstract class ImageDetailBaseFr : SwipeDismissFr(), View.OnClickListener, LongP
         getViewModel().stopWidgetsVisibilityCountdown()
         when (view.id) {
             R.id.imageDetailZoomIn -> {
-                adapter.zoom(binding.imageDetailPager.currentItem, zoomIn = true, consecutive = true)
+                adapter.zoom(
+                    binding.imageDetailPager.currentItem,
+                    zoomIn = true,
+                    consecutive = true
+                )
             }
             R.id.imageDetailZoomOut -> {
-                adapter.zoom(binding.imageDetailPager.currentItem, zoomIn = false, consecutive = true)
+                adapter.zoom(
+                    binding.imageDetailPager.currentItem,
+                    zoomIn = false,
+                    consecutive = true
+                )
             }
         }
     }
@@ -229,22 +287,22 @@ abstract class ImageDetailBaseFr : SwipeDismissFr(), View.OnClickListener, LongP
 
     private fun View.fadeIn() {
         animate()
-                .alpha(1f)
-                .setDuration(fadeAnimationDuration.toLong())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationStart(animation: Animator?) {
-                        visibility = View.VISIBLE
-                    }
-                })
+            .alpha(1f)
+            .setDuration(fadeAnimationDuration.toLong())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator?) {
+                    visibility = View.VISIBLE
+                }
+            })
     }
 
     private fun View.fadeOut() {
         val view = this
         animate()
-                .alpha(0f)
-                .setDuration(fadeAnimationDuration.toLong())
-                .withEndAction {
-                    view.visibility = View.GONE
-                }
+            .alpha(0f)
+            .setDuration(fadeAnimationDuration.toLong())
+            .withEndAction {
+                view.visibility = View.GONE
+            }
     }
 }

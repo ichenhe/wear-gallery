@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.loader.app.LoaderManager
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -49,6 +50,7 @@ class FolderImagesFr : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        LoaderManager.getInstance(this)
         binding = FrFolderImagesBinding.inflate(inflater, container, false)
         // toolbar
         setupToolbar(binding.header.toolbar)

@@ -18,54 +18,68 @@
 package cc.chenhe.weargallery.ui.imagedetail.local
 
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import cc.chenhe.weargallery.common.bean.Image
-import cc.chenhe.weargallery.common.bean.Loading
-import cc.chenhe.weargallery.common.bean.Resource
-import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.common.util.ImageUtil
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
-import timber.log.Timber
+import kotlinx.coroutines.flow.Flow
 
-private const val TAG = "LocalImageDetailVM"
+class LocalImageDetailViewModel(
+    application: Application,
+    source: LocalImageDetailFr.Source,
+    bucketId: Int,
+) : ImageDetailBaseViewModel<Image>(application) {
 
-class LocalImageDetailViewModel(application: Application) :
-    ImageDetailBaseViewModel<Image>(application) {
-
-    private val _images = MediatorLiveData<Resource<List<Image>>>().apply { value = Loading() }
-    override val images: LiveData<Resource<List<Image>>> = _images
-
-    private var dataSourceAdded = false
+    override val pagingImages: Flow<PagingData<Image>>
 
     init {
+        pagingImages = Pager(
+            config = PagingConfig(pageSize = Int.MAX_VALUE, initialLoadSize = Int.MAX_VALUE)
+        ) {
+            when (source) {
+                LocalImageDetailFr.Source.IMAGES -> {
+                    ImageSource()
+                }
+                LocalImageDetailFr.Source.FOLDER -> {
+                    if (bucketId == LocalImageDetailFr.BUCKET_ID_NA) {
+                        throw IllegalArgumentException("Unexpected bucket id, do you miss the parameters?")
+                    }
+                    FolderSource(bucketId)
+                }
+            }
+        }.flow.cachedIn(viewModelScope)
+
         init()
     }
 
-    fun addImageDataSource(ds: LiveData<Success<List<Image>>>) {
-        if (dataSourceAdded) {
-            Timber.tag(TAG).w("Data source has been added, drop this request.")
-            return
+    private inner class FolderSource(private val bucketId: Int) : PagingSource<Int, Image>() {
+        override fun getRefreshKey(state: PagingState<Int, Image>): Int? {
+            return state.anchorPosition
         }
-        dataSourceAdded = true
-        _images.addSource(ds) { newData ->
-            _images.value = newData
+
+        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Image> {
+            // We load all local data directly for now.
+            return LoadResult.Page(
+                ImageUtil.queryBucketImages(getApplication(), bucketId),
+                null,
+                null
+            )
         }
     }
 
-    fun addFolderDataSource(bucketId: Int) {
-        if (bucketId == LocalImageDetailFr.BUCKET_ID_NA) {
-            Timber.tag(TAG).e("Unexpected bucket id, do you miss the parameters?")
-            return
+    private inner class ImageSource : PagingSource<Int, Image>() {
+        override fun getRefreshKey(state: PagingState<Int, Image>): Int? {
+            return state.anchorPosition
         }
-        if (dataSourceAdded) {
-            Timber.tag(TAG).w("Data source has been added, drop this request.")
-            return
-        }
-        dataSourceAdded = true
-        _images.addSource(ImageUtil.imagesFlow(getApplication(), bucketId).asLiveData()) { imgs ->
-            if (imgs == null) _images.postValue(Loading()) else _images.postValue(Success(imgs))
+
+        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Image> {
+            // We load all local data directly for now.
+            return LoadResult.Page(
+                ImageUtil.queryImages(getApplication()),
+                null,
+                null
+            )
         }
     }
 

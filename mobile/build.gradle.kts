@@ -1,5 +1,5 @@
 import java.io.FileInputStream
-import java.util.Properties
+import java.util.*
 
 plugins {
     id("com.android.application")
@@ -91,7 +91,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-wearable:17.1.0")
     implementation("id.zelory:compressor:3.0.1")
     implementation("com.heinrichreimersoftware:material-intro:${Ver.materialIntro}")
-    implementation("me.chenhe:wearmsger:${Ver.wearMsger}")
 
     // pictures
     implementation("com.github.bumptech.glide:glide:4.12.0")

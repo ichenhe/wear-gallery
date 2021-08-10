@@ -65,8 +65,10 @@ class MobileImagesFr : Fragment(), RetryCallback {
 
         adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
             override fun onItemClick(view: View, position: Int) {
+                val itemData = adapter.getItemData(position)
                 val action = PagerFrDirections.actionPagerFrToMobileImageDetailFr(
-                    adapter.getItemData(position).bucketId
+                    itemData.bucketId,
+                    itemData.imageCount,
                 )
                 findNavController().navigate(action)
             }

@@ -18,16 +18,16 @@
 package cc.chenhe.weargallery.ui.imagedetail
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.*
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.bean.Loading
-import cc.chenhe.weargallery.common.bean.Resource
+import cc.chenhe.weargallery.uilts.context
 import cc.chenhe.weargallery.uilts.fetchKeepScreenOn
-import cc.chenhe.weargallery.uilts.isNullOrEmpty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 private const val HIDE_TITLE_VIEW_DELAY = 2000L
@@ -41,16 +41,18 @@ private const val HIDE_TITLE_VIEW_DELAY = 2000L
  *
  * @param T Type of picture entity.
  */
-abstract class ImageDetailBaseViewModel<T>(application: Application) : AndroidViewModel(application) {
+abstract class ImageDetailBaseViewModel<T : Any>(application: Application) :
+    AndroidViewModel(application) {
 
     val keepScreenOn = fetchKeepScreenOn(application)
 
-    abstract val images: LiveData<Resource<List<T>>>
+    abstract val pagingImages: Flow<PagingData<T>>
 
     private val _title: MediatorLiveData<String?> = MediatorLiveData()
     val title: LiveData<String?> = _title
 
-    val currentItem = MutableLiveData(0)
+    private val _currentItem = MutableLiveData(0)
+    val currentItem: LiveData<Int> = _currentItem
 
     private val _currentItemData: MediatorLiveData<T?> = MediatorLiveData()
     val currentItemData: LiveData<T?> = _currentItemData
@@ -62,31 +64,49 @@ abstract class ImageDetailBaseViewModel<T>(application: Application) : AndroidVi
     private val _zoomButtonVisibility = MutableLiveData(false)
     val zoomButtonVisibility: LiveData<Boolean> = _zoomButtonVisibility
 
+    /**
+     * The value of this field is maintained by [ImageDetailBaseFr].
+     * For other classes, it is read-only.
+     */
+    val initialLoadingState = MutableLiveData<LoadState>(LoadState.Loading)
 
+    /**
+     * The value of this field is maintained by [ImageDetailBaseFr].
+     * For other classes, it is read-only.
+     */
+    private val _totalCount = MutableLiveData(0)
+
+    /**
+     * Subclass must call this method in constructor.
+     */
     protected fun init() {
-        _currentItemData.addSource(images) {
-            _currentItemData.value = images.value?.data?.getOrNull(currentItem.value!!)
-        }
-        _currentItemData.addSource(currentItem) {
-            _currentItemData.value = images.value?.data?.getOrNull(currentItem.value!!)
-        }
-
-        _title.addSource(images) {
-            val data = it.data
-            if (data.isNullOrEmpty()) {
-                if (it is Loading) {
-                    _title.value = (getApplication() as Context).getString(R.string.image_detail_load_ing)
-                } else {
-                    _title.value = ""
-                }
+        _title.addSource(initialLoadingState) { loadState ->
+            _title.value = if (loadState is LoadState.Loading) {
+                context.getString(R.string.image_detail_load_ing)
             } else {
-                _title.value = (getApplication() as Context).getString(R.string.image_detail_count,
-                        (currentItem.value ?: 0) + 1, data.size)
+                context.getString(
+                    R.string.image_detail_count,
+                    (currentItem.value ?: 0) + 1,
+                    _totalCount.value!!
+                )
             }
         }
         _title.addSource(currentItem) { current ->
-            images.value?.data?.let { data ->
-                _title.value = (getApplication() as Context).getString(R.string.image_detail_count, current + 1, data.size)
+            if (initialLoadingState.value !is LoadState.Loading) {
+                _title.value = context.getString(
+                    R.string.image_detail_count,
+                    current + 1,
+                    _totalCount.value!!
+                )
+            }
+        }
+        _title.addSource(_totalCount) { totalCount ->
+            if (initialLoadingState.value !is LoadState.Loading) {
+                _title.value = context.getString(
+                    R.string.image_detail_count,
+                    (currentItem.value ?: 0) + 1,
+                    totalCount
+                )
             }
         }
     }
@@ -131,6 +151,22 @@ abstract class ImageDetailBaseViewModel<T>(application: Application) : AndroidVi
             _titleVisibility.setIfNot(false)
             _zoomButtonVisibility.setIfNot(false)
         }
+    }
+
+    /**
+     * Should only be called from [ImageDetailBaseFr].
+     */
+    internal fun setTotalCount(totalCount: Int) {
+        if (totalCount != _totalCount.value) {
+            _totalCount.value = totalCount
+        }
+    }
+
+    internal fun setCurrentItem(position: Int = -1, data: T? = null) {
+        if (position != -1 && position != _currentItem.value)
+            _currentItem.value = position
+        if (data != _currentItemData.value)
+            _currentItemData.value = data
     }
 
     private fun MutableLiveData<Boolean>.setIfNot(newValue: Boolean) {

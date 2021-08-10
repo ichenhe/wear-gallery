@@ -18,15 +18,16 @@
 package cc.chenhe.weargallery.db
 
 import android.net.Uri
+import androidx.paging.PagingSource
 import androidx.room.*
 import cc.chenhe.weargallery.bean.RemoteImage
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class RemoteImageDao {
 
-    @Query("SELECT * FROM cache_mobile_image WHERE bucket_id = :bucketId ORDER BY taken_time DESC, ROWID ASC")
-    abstract fun fetchAll(bucketId: Int): Flow<List<RemoteImage>>
+    // There is no additional sorting here, because it must match the paging load.
+    @Query("SELECT * FROM cache_mobile_image WHERE bucket_id = :bucketId ORDER BY ROWID ASC")
+    abstract fun fetchPaging(bucketId: Int): PagingSource<Int, RemoteImage>
 
     @Delete
     abstract suspend fun delete(items: Collection<RemoteImage>)
@@ -37,8 +38,13 @@ abstract class RemoteImageDao {
     @Query("DELETE FROM cache_mobile_image WHERE uri = :uri")
     abstract suspend fun delete(uri: Uri)
 
+    @Query("DELETE FROM cache_mobile_image WHERE bucket_id = :bucketId")
+    abstract suspend fun clearAll(bucketId: Int)
+
+    // We assume that the picture content will not change, so ignore here.
+    // REPLACE will clear local_uri field and affect the efficiency of caching.
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun insert(items: List<RemoteImage>): List<Long>
+    abstract suspend fun insertOrIgnore(items: List<RemoteImage>)
 
     @Query("UPDATE cache_mobile_image SET local_uri = :localUri WHERE uri = :remoteUri")
     abstract suspend fun setLocalUri(remoteUri: Uri, localUri: Uri)

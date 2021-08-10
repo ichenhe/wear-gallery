@@ -31,6 +31,12 @@ interface IImage {
 
     /** The date & time that the image was taken in unix timestamp (ms). */
     val takenTime: Long
+
+    /** The date & time that the file was last modified in unix timestamp (ms). */
+    val modifiedTime: Long
+
+    /** The time the media item was first added. */
+    val addedTime: Long
     val size: Long
     val width: Int
     val height: Int
@@ -52,15 +58,17 @@ interface IImage {
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class Image(
-        override val uri: Uri,
-        override val name: String,
-        override val takenTime: Long,
-        override val size: Long,
-        override val width: Int,
-        override val height: Int,
-        override val mime: String?,
-        override val bucketName: String,
-        override val bucketId: Int,
-        /** This field can only be used for display purposes because it is deprecated. */
-        @Transient val file: String? = null
+    override val uri: Uri,
+    override val name: String,
+    override val takenTime: Long,
+    override val modifiedTime: Long,
+    override val addedTime: Long,
+    override val size: Long,
+    override val width: Int,
+    override val height: Int,
+    override val mime: String?,
+    override val bucketName: String,
+    override val bucketId: Int,
+    /** This field can only be used for display purposes because it is deprecated. */
+    @Transient val file: String? = null
 ) : IImage, Parcelable

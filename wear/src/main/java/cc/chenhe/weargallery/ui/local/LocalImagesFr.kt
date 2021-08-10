@@ -235,9 +235,11 @@ class LocalImagesFr : Fragment() {
                 itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
                     override fun onItemClick(view: View, position: Int) {
                         sharedViewModel.currentPosition = position
+                        val itemData = requireNotNull(getItemData(position))
                         val action = PagerFrDirections.actionPagerFrToLocalImageDetailFr(
                             LocalImageDetailFr.Source.FOLDER,
-                            getItemData(position)!!.id
+                            itemData.id,
+                            itemData.imgNum
                         )
                         findNavController().navigate(action)
                     }
@@ -250,7 +252,8 @@ class LocalImagesFr : Fragment() {
                         sharedViewModel.currentPosition = position
                         val action = PagerFrDirections.actionPagerFrToLocalImageDetailFr(
                             LocalImageDetailFr.Source.IMAGES,
-                            LocalImageDetailFr.BUCKET_ID_NA
+                            LocalImageDetailFr.BUCKET_ID_NA,
+                            itemCount,
                         )
                         findNavController().navigate(action)
                     }

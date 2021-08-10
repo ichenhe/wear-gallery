@@ -50,6 +50,7 @@ dependencies {
     compileOnly("me.chenhe:wearmsger:${Ver.wearMsger}")
     api("com.jakewharton.timber:timber:${Ver.timber}")
     api("me.chenhe:mars-xlog:0.1.0")
+    api("me.chenhe:wearmsger:${Ver.wearMsger}")
 
 
     testImplementation("junit:junit:${Ver.junit}")

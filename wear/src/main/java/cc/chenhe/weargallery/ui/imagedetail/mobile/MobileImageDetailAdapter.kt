@@ -44,9 +44,17 @@ private const val TAG = "ImageDetailAdapter"
 class MobileImageDetailAdapter(
     private val fragment: MobileImageDetailFr,
     private val resp: RemoteImageRepository
-) : ImageDetailBaseAdapter<RemoteImage, MobileImageDetailAdapter.DetailViewHolder>(
-    MobileImageDetailDiffCallback()
-) {
+) : ImageDetailBaseAdapter<RemoteImage, MobileImageDetailAdapter.DetailViewHolder>(DiffCallback()) {
+    companion object {
+        private class DiffCallback : DiffUtil.ItemCallback<RemoteImage>() {
+            override fun areItemsTheSame(oldItem: RemoteImage, newItem: RemoteImage): Boolean =
+                oldItem.uri == newItem.uri
+
+            override fun areContentsTheSame(oldItem: RemoteImage, newItem: RemoteImage): Boolean {
+                return oldItem == newItem && oldItem.localUri == newItem.localUri
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailViewHolder {
         return DetailViewHolder(
@@ -79,7 +87,7 @@ class MobileImageDetailAdapter(
             binding.pagerSketchImage.isZoomEnabled = true
         }
 
-        fun bind(data: RemoteImage, pendingChanged: Boolean) {
+        fun bind(data: RemoteImage?, pendingChanged: Boolean) {
             if (pending) {
                 binding.pagerSketchImage.setTag(R.id.tag_image_detail_pending, true)
                 binding.pagerSketchImage.setImageResource(R.drawable.bg_pic_default)
@@ -93,6 +101,10 @@ class MobileImageDetailAdapter(
             }
 
             binding.pagerSketchImage.setTag(R.id.tag_image_detail_pending, false)
+            if (data == null) {
+                binding.pagerSketchImage.setImageBitmap(null)
+                return
+            }
             if (data.localUri != null) {
                 loadCachedHdImage(data)
             } else {
@@ -153,16 +165,6 @@ class MobileImageDetailAdapter(
             imageAttrs: ImageAttrs
         ) {
         }
-    }
-
-}
-
-private class MobileImageDetailDiffCallback : DiffUtil.ItemCallback<RemoteImage>() {
-    override fun areItemsTheSame(oldItem: RemoteImage, newItem: RemoteImage): Boolean =
-        oldItem.uri == newItem.uri
-
-    override fun areContentsTheSame(oldItem: RemoteImage, newItem: RemoteImage): Boolean {
-        return oldItem == newItem && oldItem.localUri == newItem.localUri
     }
 
 }

@@ -49,7 +49,8 @@ const val PATH_REQ_IMAGE_PREVIEW = "/request/image-preview"
 /**
  * Both way message request with a [cc.chenhe.weargallery.common.comm.bean.ImagesReq] object.
  *
- * The receiver should respond to a [cc.chenhe.weargallery.common.bean.Image] list in the form of a Message.
+ * The receiver should respond to a [cc.chenhe.weargallery.common.comm.bean.ImagesResp] in the
+ * form of a Message.
  */
 const val PATH_REQ_IMAGES = "/request/images"
 
