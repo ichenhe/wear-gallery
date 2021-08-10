@@ -91,6 +91,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-wearable:17.1.0")
     implementation("id.zelory:compressor:3.0.1")
     implementation("com.heinrichreimersoftware:material-intro:${Ver.materialIntro}")
+    implementation("com.microsoft.appcenter:appcenter-analytics:${Ver.appCenter}")
+    implementation("com.microsoft.appcenter:appcenter-crashes:${Ver.appCenter}")
 
     // pictures
     implementation("com.github.bumptech.glide:glide:4.12.0")

@@ -101,6 +101,8 @@ dependencies {
     implementation("org.nanohttpd:nanohttpd:2.3.1")
     implementation("com.squareup.moshi:moshi:${Ver.moshi}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Ver.moshi}")
+    implementation("com.microsoft.appcenter:appcenter-analytics:${Ver.appCenter}")
+    implementation("com.microsoft.appcenter:appcenter-crashes:${Ver.appCenter}")
     val sketch = "2.7.1"
     implementation("me.panpf:sketch:$sketch")
     implementation("me.panpf:sketch-gif:$sketch")

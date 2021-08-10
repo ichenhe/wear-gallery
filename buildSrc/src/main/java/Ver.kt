@@ -20,6 +20,8 @@ object Ver {
     const val subsamplingImageView = "3.10.0"
     const val palette = "1.0.0"
     const val exifinterface = "1.3.2"
+    const val appCenter = "4.1.0"
+
 
     // test
     const val test = "1.4.0"

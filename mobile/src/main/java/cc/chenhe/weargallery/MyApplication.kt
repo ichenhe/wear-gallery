@@ -18,8 +18,15 @@
 package cc.chenhe.weargallery
 
 import android.app.Application
-import cc.chenhe.weargallery.common.util.UncaughtExceptionHandler
 import cc.chenhe.weargallery.common.util.XlogTree
+import cc.chenhe.weargallery.common.util.getLogDir
+import cc.chenhe.weargallery.common.util.xlogAppenderCloseSafely
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.AbstractCrashesListener
+import com.microsoft.appcenter.crashes.Crashes
+import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog
+import com.microsoft.appcenter.crashes.model.ErrorReport
 import com.tencent.mars.xlog.Xlog
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -35,9 +42,29 @@ class MyApplication : Application() {
             Timber.plant(Timber.DebugTree())
         } else {
             Timber.plant(XlogTree(this, Xlog.LEVEL_DEBUG))
+            val crashesListener = object : AbstractCrashesListener() {
+                override fun getErrorAttachments(report: ErrorReport?): MutableIterable<ErrorAttachmentLog>? {
+                    // worker thread
+                    xlogAppenderCloseSafely()
+                    val logs = getLogDir(this@MyApplication).listFiles()
+                    if (logs.isNullOrEmpty())
+                        return null
+                    logs.sortByDescending { it.lastModified() }
+                    return mutableListOf(
+                        ErrorAttachmentLog.attachmentWithBinary(
+                            logs.first().readBytes(),
+                            logs.first().name,
+                            "application/x-xlog"
+                        )
+                    )
+                }
+            }
+            Crashes.setListener(crashesListener)
+            AppCenter.start(
+                this, "2f32a09c-321e-403a-b6c9-4388bad50b90",
+                Analytics::class.java, Crashes::class.java
+            )
         }
-
-        Thread.setDefaultUncaughtExceptionHandler(UncaughtExceptionHandler)
 
         startKoin {
             androidLogger()
