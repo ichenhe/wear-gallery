@@ -12,19 +12,24 @@
         tools:layout="@layout/fr_pager">
         <action
             android:id="@+id/action_pagerFr_to_mobileImageDetailFr"
-            app:destination="@id/mobileImageDetailFr" />
+            app:destination="@id/mobileImageDetailFr"
+            app:enterAnim="@anim/slide_in" />
         <action
             android:id="@+id/action_pagerFr_to_displayPreferenceFr"
-            app:destination="@id/displayPreferenceFr" />
+            app:destination="@id/displayPreferenceFr"
+            app:enterAnim="@anim/slide_in" />
         <action
             android:id="@+id/action_pagerFr_to_frAbout"
-            app:destination="@id/aboutFr" />
+            app:destination="@id/aboutFr"
+            app:enterAnim="@anim/slide_in" />
         <action
             android:id="@+id/action_pagerFr_to_localImageDetailFr"
-            app:destination="@id/localImageDetailFr" />
+            app:destination="@id/localImageDetailFr"
+            app:enterAnim="@anim/slide_in" />
         <action
             android:id="@+id/action_pagerFr_to_transferPreferenceFr"
-            app:destination="@id/transferPreferenceFr" />
+            app:destination="@id/transferPreferenceFr"
+            app:enterAnim="@anim/slide_in" />
     </fragment>
 
     <fragment
@@ -50,7 +55,8 @@
         tools:layout="@layout/fr_about">
         <action
             android:id="@+id/action_aboutFr_to_licensesFr"
-            app:destination="@id/licensesFr" />
+            app:destination="@id/licensesFr"
+            app:enterAnim="@anim/slide_in" />
     </fragment>
     <fragment
         android:id="@+id/localImageDetailFr"
@@ -73,7 +79,8 @@
         android:label="TransferPreferenceFr">
         <action
             android:id="@+id/action_transferPreferenceFr_to_webServerFr"
-            app:destination="@id/webServerFr" />
+            app:destination="@id/webServerFr"
+            app:enterAnim="@anim/slide_in" />
     </fragment>
     <fragment
         android:id="@+id/webServerFr"

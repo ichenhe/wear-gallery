@@ -114,13 +114,13 @@ class PreferenceFr : PreferenceFragmentCompat() {
                 selectBgImageLauncher.launch(Unit)
             }
             "preference_watchface_text_position" -> {
-                findNavController().navigate(R.id.timeTextStyleFr)
+                findNavController().navigate(PreferenceFrDirections.actionPreferenceFrToTimeTextStyleFr())
             }
             "preference_watchface_text" -> {
-                findNavController().navigate(R.id.timeTextFr)
+                findNavController().navigate(PreferenceFrDirections.actionPreferenceFrToTimeTextFr())
             }
             "preference_watchface_text_color" -> {
-                findNavController().navigate(R.id.timeTextColorFr)
+                findNavController().navigate(PreferenceFrDirections.actionPreferenceFrToTimeTextColorFr())
             }
             "preference_cot" -> {
                 val uri = Uri.parse(if (isTicwear()) URI_APP_TW else URI_APP_AW)

@@ -22,6 +22,7 @@ import android.os.Bundle
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.ui.main.PagerFrDirections
 import cc.chenhe.weargallery.watchface.PreferenceAty
 import me.chenhe.wearvision.preference.PreferenceFragmentCompat
 
@@ -33,10 +34,14 @@ class ExploreFr : PreferenceFragmentCompat() {
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         when (preference?.key) {
-            "preference_display" -> findNavController().navigate(R.id.displayPreferenceFr)
-            "preference_transfer" -> findNavController().navigate(R.id.transferPreferenceFr)
-            "preference_watchface" -> startActivity(Intent(requireContext(), PreferenceAty::class.java))
-            "preference_about" -> findNavController().navigate(R.id.aboutFr)
+            "preference_display" ->
+                findNavController().navigate(PagerFrDirections.actionPagerFrToDisplayPreferenceFr())
+            "preference_transfer" ->
+                findNavController().navigate(PagerFrDirections.actionPagerFrToTransferPreferenceFr())
+            "preference_watchface" ->
+                startActivity(Intent(requireContext(), PreferenceAty::class.java))
+            "preference_about" ->
+                findNavController().navigate(PagerFrDirections.actionPagerFrToFrAbout())
             else -> return super.onPreferenceTreeClick(preference)
         }
         return true

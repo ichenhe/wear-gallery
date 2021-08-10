@@ -11,13 +11,16 @@
         android:label="PreferenceFr">
         <action
             android:id="@+id/action_preferenceFr_to_timeTextStyleFr"
-            app:destination="@id/timeTextStyleFr" />
+            app:destination="@id/timeTextStyleFr"
+            app:enterAnim="@anim/slide_in" />
         <action
             android:id="@+id/action_preferenceFr_to_timeTextFr"
-            app:destination="@id/timeTextFr" />
+            app:destination="@id/timeTextFr"
+            app:enterAnim="@anim/slide_in" />
         <action
             android:id="@+id/action_preferenceFr_to_timeTextColorFr"
-            app:destination="@id/timeTextColorFr" />
+            app:destination="@id/timeTextColorFr"
+            app:enterAnim="@anim/slide_in" />
     </fragment>
     <fragment
         android:id="@+id/timeTextStyleFr"

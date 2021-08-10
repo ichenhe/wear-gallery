@@ -32,7 +32,8 @@ class TransferPreferenceFr : PreferenceSwipeDismissFragmentCompat() {
 
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         when (preference?.key) {
-            "preference_transfer_lan" -> findNavController().navigate(R.id.webServerFr)
+            "preference_transfer_lan" ->
+                findNavController().navigate(TransferPreferenceFrDirections.actionTransferPreferenceFrToWebServerFr())
             "preference_transfer_disclaimer" -> AlertDialog(requireContext()).apply {
                 setTitle(R.string.preference_transfer_disclaimer)
                 setMessage(R.string.preference_transfer_disclaimer_content)

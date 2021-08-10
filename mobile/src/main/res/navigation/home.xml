@@ -12,7 +12,11 @@
         tools:layout="@layout/fr_main">
         <action
             android:id="@+id/action_mainFr_to_preferenceFr"
-            app:destination="@id/preferenceFr" />
+            app:destination="@id/preferenceFr"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/preferenceFr"
@@ -20,7 +24,11 @@
         android:label="PreferenceFr">
         <action
             android:id="@+id/action_preferenceFr_to_aboutFr"
-            app:destination="@id/aboutFr" />
+            app:destination="@id/aboutFr"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/aboutFr"
@@ -29,7 +37,11 @@
         tools:layout="@layout/fr_about">
         <action
             android:id="@+id/action_aboutFr_to_licenseFr"
-            app:destination="@id/licenseFr" />
+            app:destination="@id/licenseFr"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/licenseFr"

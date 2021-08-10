@@ -36,7 +36,11 @@ class AboutFr : SwipeDismissFr() {
 
     private lateinit var binding: FrAboutBinding
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    )
             : ViewBinding {
         return FrAboutBinding.inflate(inflater, container, false).also { binding = it }
     }
@@ -45,7 +49,7 @@ class AboutFr : SwipeDismissFr() {
         binding.tvVersion.text = getVersionName(requireContext())
 
         binding.licenses.setOnClickListener {
-            findNavController().navigate(R.id.licensesFr)
+            findNavController().navigate(AboutFrDirections.actionAboutFrToLicensesFr())
         }
 
         binding.thanks.setOnClickListener {
