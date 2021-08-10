@@ -24,6 +24,8 @@
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
 
+-dontobfuscate
+
 -keepattributes *Annotation*
 -keep public class * extends java.lang.Exception
 # For faster builds with ProGuard
