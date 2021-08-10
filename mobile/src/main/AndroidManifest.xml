@@ -31,6 +31,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".ui.main.MainAty"
+            android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,6 +48,7 @@
             android:theme="@style/Theme.Intro" />
         <activity
             android:name=".ui.sendimages.SendImagesAty"
+            android:exported="true"
             android:label="@string/share_image_label">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -70,7 +72,9 @@
 
         <service android:name=".service.AppUpgradeService" />
 
-        <receiver android:name=".AppUpgradeReceiver">
+        <receiver
+            android:name=".AppUpgradeReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
@@ -86,7 +90,9 @@
             </intent-filter>
         </service>
 
-        <service android:name="me.chenhe.lib.wearmsger.service.GmsListenerAgentService">
+        <service
+            android:name="me.chenhe.lib.wearmsger.service.GmsListenerAgentService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
