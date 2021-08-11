@@ -19,6 +19,7 @@ package cc.chenhe.weargallery.common.util
 
 import android.content.Context
 import androidx.core.content.pm.PackageInfoCompat
+import cc.chenhe.weargallery.common.log.MLog
 import cc.chenhe.weargallery.common.log.Mmap
 import com.squareup.moshi.JsonAdapter
 import java.io.File
@@ -31,11 +32,15 @@ const val GITHUB_RELEASE = GITHUB + "releases"
 const val TELEGRAM = "https://t.me/weargallery_news"
 
 fun xlogAppenderCloseSafely() {
-    Mmap.flush()
+    if (MLog.isInitialized()) {
+        Mmap.flush()
+    }
 }
 
 fun xlogAppenderFlushSafely() {
-    Mmap.flush()
+    if (MLog.isInitialized()) {
+        Mmap.flush()
+    }
 }
 
 fun checkHuaWei(): Boolean {

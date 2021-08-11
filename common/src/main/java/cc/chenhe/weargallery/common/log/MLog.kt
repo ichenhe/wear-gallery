@@ -21,6 +21,10 @@ object MLog {
         this.logLevel = logLevel
     }
 
+    fun isInitialized(): Boolean {
+        return Mmap.isInitialized
+    }
+
     fun v(tag: String?, message: String, t: Throwable? = null) {
         if (Log.DEBUG >= logLevel) {
             Mmap.write(buildLog('V', tag, message, t))

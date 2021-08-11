@@ -21,6 +21,8 @@ internal object Mmap {
     private const val CACHE_FILE_NAME = "cache"
     private const val HEADER_SIZE = 4
 
+    val isInitialized get() = ::logDir.isInitialized
+
     private lateinit var cacheDir: String
     private lateinit var logDir: String
     private var maxSize = 5 * MB
