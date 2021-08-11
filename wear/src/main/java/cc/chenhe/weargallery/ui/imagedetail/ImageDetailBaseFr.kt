@@ -131,7 +131,7 @@ abstract class ImageDetailBaseFr<T : Any> : SwipeDismissFr(), View.OnClickListen
             val isEmpty = adapter.itemCount == 0
             if (combinedLoadStates.refresh is LoadState.NotLoading) {
                 // A workaround that is compatible with legacy layout structure.
-                binding.res = Success(emptyList<Unit>())
+                binding.res = Success(if (isEmpty) emptyList() else listOf(Unit))
                 if (isEmpty) {
                     binding.emptyLayout.viewStub?.inflate()
                 }
