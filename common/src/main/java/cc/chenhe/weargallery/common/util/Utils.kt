@@ -19,8 +19,8 @@ package cc.chenhe.weargallery.common.util
 
 import android.content.Context
 import androidx.core.content.pm.PackageInfoCompat
+import cc.chenhe.weargallery.common.log.Mmap
 import com.squareup.moshi.JsonAdapter
-import com.tencent.mars.xlog.Log
 import java.io.File
 import java.util.*
 import kotlin.math.abs
@@ -31,15 +31,11 @@ const val GITHUB_RELEASE = GITHUB + "releases"
 const val TELEGRAM = "https://t.me/weargallery_news"
 
 fun xlogAppenderCloseSafely() {
-    if (Log.getImpl() != null) {
-        Log.appenderClose()
-    }
+    Mmap.flush()
 }
 
 fun xlogAppenderFlushSafely() {
-    if (Log.getImpl() != null) {
-        Log.appenderFlush()
-    }
+    Mmap.flush()
 }
 
 fun checkHuaWei(): Boolean {
@@ -65,7 +61,7 @@ fun getVersionName(context: Context): String {
     }
 }
 
-fun getLogDir(context: Context): File = File(context.externalCacheDir ?: context.cacheDir, "xlog")
+fun getLogDir(context: Context): File = File(context.externalCacheDir ?: context.cacheDir, "log")
 
 private const val MILLIS_IN_DAY = 24 * 3600 * 1000L
 

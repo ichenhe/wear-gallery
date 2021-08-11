@@ -69,7 +69,6 @@ class LicensesFr : SwipeDismissFr() {
                 MIT,
                 "https://github.com/heinrichreimer/material-intro"
             ),
-            License("Mars-xlog", "Tencent", "Custom", "https://github.com/Tencent/mars"),
             License("Moshi", "square", APACHE_2, "https://github.com/square/moshi"),
             License(
                 "NanoHTTPD",

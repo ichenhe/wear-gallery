@@ -18,7 +18,8 @@
 package cc.chenhe.weargallery
 
 import android.app.Application
-import cc.chenhe.weargallery.common.util.XlogTree
+import android.util.Log
+import cc.chenhe.weargallery.common.log.MmapLogTree
 import cc.chenhe.weargallery.common.util.getLogDir
 import cc.chenhe.weargallery.common.util.xlogAppenderCloseSafely
 import coil.ImageLoader
@@ -31,7 +32,6 @@ import com.microsoft.appcenter.crashes.AbstractCrashesListener
 import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog
 import com.microsoft.appcenter.crashes.model.ErrorReport
-import com.tencent.mars.xlog.Xlog
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -44,7 +44,7 @@ class MyApplication : Application(), ImageLoaderFactory {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {
-            Timber.plant(XlogTree(this, Xlog.LEVEL_DEBUG))
+            Timber.plant(MmapLogTree(this, Log.DEBUG))
             val crashesListener = object : AbstractCrashesListener() {
                 override fun getErrorAttachments(report: ErrorReport?): MutableIterable<ErrorAttachmentLog>? {
                     // worker thread
