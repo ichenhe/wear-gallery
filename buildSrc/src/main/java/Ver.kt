@@ -8,7 +8,7 @@ object Ver {
     const val room = "2.3.0"
     const val moshi = "1.12.0"
     const val wearMsger = "2.0.2"
-    const val timber = "4.7.1"
+    const val timber = "5.0.0"
     const val appcompat = "1.3.1"
     const val nav = "2.3.5"
     const val viewpager2 = "1.0.0"

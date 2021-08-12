@@ -71,7 +71,7 @@ class UpgradingAty : AppCompatActivity() {
                 launcher.launch(upgradeServiceRunning)
                 true
             } else {
-                Timber.tag(TAG).d("No need to perform data migration.")
+                Timber.tag(TAG).d("No need to start upgrade.")
                 false
             }
         }

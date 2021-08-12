@@ -103,7 +103,7 @@ class DiskLruCache private constructor(
                     return cache
                 } catch (e: Exception) {
                     // Rebuild the cache if any errors are encountered
-                    Timber.tag(TAG).e(e, "DiskLruCache $directory is corrupt, removing")
+                    Timber.tag(TAG).w(e, "DiskLruCache $directory is corrupt, removing")
                     cache.delete()
                 }
             }

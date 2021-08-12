@@ -1,5 +1,7 @@
 package cc.chenhe.weargallery.common.log
 
+import android.annotation.SuppressLint
+import android.util.Log
 import cc.chenhe.weargallery.common.util.isSameDay
 import java.io.File
 import java.io.FileWriter
@@ -11,6 +13,7 @@ import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.min
 
 internal object Mmap {
     const val KB = 1024
@@ -27,6 +30,8 @@ internal object Mmap {
     private lateinit var logDir: String
     private var maxSize = 5 * MB
     private var cacheSize = 2 * KB
+
+    private val cacheContentSize get() = cacheSize - HEADER_SIZE
 
     /** The expiration time of the log files. (days) */
     private var expiration: Int = 0
@@ -165,9 +170,13 @@ internal object Mmap {
 
     private var lastOpTime: Long = 0L
 
+    @SuppressLint("LogNotTimber") // intent behavior
     fun write(data: ByteArray) {
-        if (data.size > cacheSize) {
-            throw IllegalArgumentException("data size cannot be larger than cacheSize.")
+        if (data.size > cacheContentSize) {
+            Log.e(
+                "MMAP",
+                "data size cannot be larger than cacheSize. Excess data will be discarded.",
+            )
         }
         val currentTime = System.currentTimeMillis()
         if (!isSameDay(lastOpTime, currentTime)) {
@@ -176,30 +185,39 @@ internal object Mmap {
         }
         lastOpTime = currentTime
         try {
-            getMappedByteBuffer()?.writeData(data)
+            getMappedByteBuffer()?.writeData(data, length = min(data.size, cacheContentSize))
         } catch (e: BufferOverflowException) {
             // flush and clear the cache
             flush(currentTime)
             // retry
-            getMappedByteBuffer()?.writeData(data)
+            getMappedByteBuffer()?.writeData(data, length = min(data.size, cacheContentSize))
         }
     }
 
     /**
      * Write data to buffer and update the header.
      *
+     * @param offset The offset within the [data] of the first byte to be read; must be non-negative
+     * and no larger than data.size.
+     * @param length The number of bytes to be read from the given array; must be non-negative and
+     * no larger than data.size - offset.
+     *
      * @throws BufferUnderflowException
      * @throws IllegalArgumentException
      */
-    private fun MappedByteBuffer.writeData(data: ByteArray) {
+    private fun MappedByteBuffer.writeData(
+        data: ByteArray,
+        offset: Int = 0,
+        length: Int = data.size
+    ) {
         // read file header
         val len = readContentLength()
         // must write data first, otherwise if the write fails (such as out of bounds),
         // the data length will be changed incorrectly
         position(len)
-        put(data)
+        put(data, offset, length)
         position(0)
-        put((len + data.size).toBytes())
+        put((len + length).toBytes())
     }
 
     private fun deleteExpiredFiles() {
