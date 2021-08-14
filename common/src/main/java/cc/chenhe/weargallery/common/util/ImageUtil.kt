@@ -14,7 +14,6 @@ import cc.chenhe.weargallery.common.comm.bean.ImagesResp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.math.min
 
 @SuppressLint("InlinedApi") // See https://stackoverflow.com/a/68515869/9150068
@@ -23,14 +22,6 @@ object ImageUtil {
 
     private const val IMAGE_SORT_ORDER =
         "${MediaStore.Images.Media.DATE_TAKEN} DESC, ${MediaStore.Images.Media.DATE_MODIFIED} DESC, ${MediaStore.Images.Media.DATE_ADDED} DESC"
-
-    private fun parentDirName(file: String?): String? {
-        if (file == null) return null
-        val sp = file.split(File.separator)
-        if (sp.isEmpty()) return file
-        if (sp.size == 1) return sp[0]
-        return sp[sp.size - 2]
-    }
 
     suspend fun groupImagesByDate(images: List<Image>): List<ImageDateGroup> =
         withContext(Dispatchers.Default) {
@@ -55,6 +46,25 @@ object ImageUtil {
             }
             groups
         }
+
+    // --------------------------------------------------------------------------------
+    // Safely get value from cursor.
+    // Because whether 'get*()' method throws an exception is implementation-defined.
+    // --------------------------------------------------------------------------------
+
+    private fun Cursor.getStringSafely(column: Int) = try {
+        if (isNull(column)) null else getString(column)
+    } catch (e: Exception) {
+        null
+    }
+
+    private fun Cursor.getIntOrZero(column: Int) = if (isNull(column)) 0 else getInt(column)
+
+    private fun Cursor.getLongOrZero(column: Int) = if (isNull(column)) 0L else getLong(column)
+
+    // ~Safely get value from cursor
+    // --------------------------------------------------------------------------------
+
 
     /**
      * Query image folders (buckets) along with the first image as preview directly from local
@@ -107,19 +117,20 @@ object ImageUtil {
                 }
 
                 bucketImgNum[bucketId] = 1
+                val data = cursor.getStringSafely(dataIndex)
                 val preview = ImageFolder.Preview(
                     ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imgId),
-                    cursor.getLong(sizeIndex),
-                    cursor.getLong(takeTimeIndex),
-                    cursor.getLong(addedTimeIndex),
-                    cursor.getLong(modifyTimeIndex),
+                    cursor.getLongOrZero(sizeIndex),
+                    cursor.getLongOrZero(takeTimeIndex),
+                    cursor.getLongOrZero(addedTimeIndex),
+                    cursor.getLongOrZero(modifyTimeIndex),
                 )
                 result += ImageFolder(
-                    cursor.getString(bucketNameIndex),
+                    cursor.getStringSafely(bucketNameIndex) ?: data?.filePath?.fileName ?: "",
                     cursor.getInt(bucketIndex),
-                    -1,
+                    -1, // collecting
                     preview,
-                    cursor.getString(dataIndex).filePath ?: File.separator,
+                    data?.filePath ?: "",
                 )
             }
             result.map { folder ->
@@ -197,15 +208,16 @@ object ImageUtil {
 
             return Image(
                 uri = uri,
-                name = cursor.getString(nameIndex),
-                takenTime = cursor.getLong(dateTakenIndex),
-                modifiedTime = cursor.getLong(dateModifiedIndex),
-                addedTime = cursor.getLong(dateAddedIndex),
-                size = cursor.getLong(sizeIndex),
-                width = cursor.getInt(widthIndex),
-                height = cursor.getInt(heightIndex),
-                mime = cursor.getString(mimeIndex),
-                bucketName = cursor.getString(bucketNameIndex) ?: parentDirName(file) ?: "",
+                name = cursor.getStringSafely(nameIndex) ?: file?.fileName ?: "",
+                takenTime = cursor.getLongOrZero(dateTakenIndex),
+                modifiedTime = cursor.getLongOrZero(dateModifiedIndex),
+                addedTime = cursor.getLongOrZero(dateAddedIndex),
+                size = cursor.getLongOrZero(sizeIndex),
+                width = cursor.getIntOrZero(widthIndex),
+                height = cursor.getIntOrZero(heightIndex),
+                mime = cursor.getStringSafely(mimeIndex),
+                bucketName = cursor.getStringSafely(bucketNameIndex) ?: file?.filePath?.fileName
+                ?: "",
                 bucketId = cursor.getInt(bucketIndex),
                 file = file
             )

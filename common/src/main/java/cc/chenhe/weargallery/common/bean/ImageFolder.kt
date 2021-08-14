@@ -10,7 +10,7 @@ data class ImageFolder(
     val id: Int,
     val imgNum: Int,
     val preview: Preview,
-    /** For display only */
+    /** For display only, may be empty */
     val path: String,
 ) : Parcelable {
 
