@@ -202,8 +202,7 @@ object ImageUtil {
         fun parserRow(cursor: Cursor): Image {
             assert(idIndex >= 0) { "Must call <getIndex> method first." }
             val id = cursor.getLong(idIndex)
-            val uri =
-                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
             val file: String? = cursor.getString(dataIndex)
 
             return Image(
@@ -325,7 +324,7 @@ object ImageUtil {
 
         if (bucketId >= 0) {
             selection += " AND ${MediaStore.Images.Media.BUCKET_ID} = ?"
-            selectionArgs.add(bucketId.toString())
+            selectionArgs += bucketId.toString()
         }
         if (ids != null) {
             val idStr = ids.joinToString(separator = ",", prefix = "(", postfix = ")")

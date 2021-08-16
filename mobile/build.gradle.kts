@@ -82,6 +82,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:${Ver.fragment}")
     implementation("androidx.preference:preference-ktx:${Ver.preference}")
     implementation("androidx.core:core-ktx:${Ver.ktx}")
+    implementation("androidx.exifinterface:exifinterface:${Ver.exifinterface}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Ver.coroutinesAndroid}")
 
     implementation("io.insert-koin:koin-android:${Ver.koin}")
