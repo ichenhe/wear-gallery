@@ -314,7 +314,7 @@ object ImageUtil {
      */
     suspend fun queryImages(
         context: Context,
-        bucketId: Int = -1,
+        bucketId: Int? = null, // bucketId can be negative
         ids: List<Long>? = null,
     ): List<Image> = withContext(Dispatchers.IO) {
         var selection =
@@ -322,7 +322,7 @@ object ImageUtil {
 
         val selectionArgs = mutableListOf("0", "0")
 
-        if (bucketId >= 0) {
+        if (bucketId != null) {
             selection += " AND ${MediaStore.Images.Media.BUCKET_ID} = ?"
             selectionArgs += bucketId.toString()
         }
