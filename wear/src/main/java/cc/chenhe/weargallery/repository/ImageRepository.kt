@@ -28,6 +28,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import androidx.core.database.getStringOrNull
 import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.uilts.*
 import kotlinx.coroutines.Dispatchers
@@ -252,9 +253,26 @@ open class ImageRepository(
         true
     }
 
+    @Suppress("DEPRECATION") // for legacy
     private suspend fun deleteLocalImagesLegacy(context: Context, uris: Collection<Uri>) =
         withContext(Dispatchers.IO) {
             for (uri in uris) {
+                // try to delete file
+                try {
+                    context.applicationContext.contentResolver.query(
+                        uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null
+                    )?.use { cursor ->
+                        if (cursor.moveToFirst()) {
+                            cursor.getStringOrNull(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
+                                ?.also {
+                                    File(it).delete()
+                                }
+                        }
+                    }
+                } catch (e: Exception) {
+                    // ignore
+                }
+
                 try {
                     context.applicationContext.contentResolver.delete(uri, null, null)
                 } catch (e: Exception) {
