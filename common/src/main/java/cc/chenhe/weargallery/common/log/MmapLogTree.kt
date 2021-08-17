@@ -62,7 +62,9 @@ class MmapLogTree(context: Context, logLevel: Int) : Timber.Tree() {
             }
             log(priority, tag, "", t)
         } else {
-            if (args.isNotEmpty()) {
+            if (args.isEmpty()) {
+                log(priority, tag, message, t)
+            } else {
                 log(priority, tag, formatMessage(message, args), t)
             }
         }
@@ -75,12 +77,12 @@ class MmapLogTree(context: Context, logLevel: Int) : Timber.Tree() {
 
     override fun v(message: String?, vararg args: Any?) {
         super.v(message, *args)
-        prepareLog(tag, Log.VERBOSE, null, message, args)
+        prepareLog(tag, Log.VERBOSE, null, message, *args)
     }
 
     override fun v(t: Throwable?, message: String?, vararg args: Any?) {
         super.v(t, message, *args)
-        prepareLog(tag, Log.VERBOSE, t, message, args)
+        prepareLog(tag, Log.VERBOSE, t, message, *args)
     }
 
     override fun d(t: Throwable?) {
@@ -90,12 +92,12 @@ class MmapLogTree(context: Context, logLevel: Int) : Timber.Tree() {
 
     override fun d(message: String?, vararg args: Any?) {
         super.d(message, *args)
-        prepareLog(tag, Log.DEBUG, null, message, args)
+        prepareLog(tag, Log.DEBUG, null, message, *args)
     }
 
     override fun d(t: Throwable?, message: String?, vararg args: Any?) {
         super.d(t, message, *args)
-        prepareLog(tag, Log.DEBUG, t, message, args)
+        prepareLog(tag, Log.DEBUG, t, message, *args)
     }
 
     override fun i(t: Throwable?) {
@@ -105,12 +107,12 @@ class MmapLogTree(context: Context, logLevel: Int) : Timber.Tree() {
 
     override fun i(message: String?, vararg args: Any?) {
         super.i(message, *args)
-        prepareLog(tag, Log.INFO, null, message, args)
+        prepareLog(tag, Log.INFO, null, message, *args)
     }
 
     override fun i(t: Throwable?, message: String?, vararg args: Any?) {
         super.i(t, message, *args)
-        prepareLog(tag, Log.INFO, t, message, args)
+        prepareLog(tag, Log.INFO, t, message, *args)
     }
 
     override fun w(t: Throwable?) {
@@ -120,12 +122,12 @@ class MmapLogTree(context: Context, logLevel: Int) : Timber.Tree() {
 
     override fun w(message: String?, vararg args: Any?) {
         super.w(message, *args)
-        prepareLog(tag, Log.WARN, null, message, args)
+        prepareLog(tag, Log.WARN, null, message, *args)
     }
 
     override fun w(t: Throwable?, message: String?, vararg args: Any?) {
         super.w(t, message, *args)
-        prepareLog(tag, Log.WARN, t, message, args)
+        prepareLog(tag, Log.WARN, t, message, *args)
     }
 
     override fun e(t: Throwable?) {
@@ -135,12 +137,12 @@ class MmapLogTree(context: Context, logLevel: Int) : Timber.Tree() {
 
     override fun e(message: String?, vararg args: Any?) {
         super.e(message, *args)
-        prepareLog(tag, Log.ERROR, null, message, args)
+        prepareLog(tag, Log.ERROR, null, message, *args)
     }
 
     override fun e(t: Throwable?, message: String?, vararg args: Any?) {
         super.e(t, message, *args)
-        prepareLog(tag, Log.ERROR, t, message, args)
+        prepareLog(tag, Log.ERROR, t, message, *args)
     }
 
     override fun wtf(t: Throwable?) {
@@ -150,12 +152,12 @@ class MmapLogTree(context: Context, logLevel: Int) : Timber.Tree() {
 
     override fun wtf(message: String?, vararg args: Any?) {
         super.wtf(message, *args)
-        prepareLog(tag, Log.ASSERT, null, message, args)
+        prepareLog(tag, Log.ASSERT, null, message, *args)
     }
 
     override fun wtf(t: Throwable?, message: String?, vararg args: Any?) {
         super.wtf(t, message, *args)
-        prepareLog(tag, Log.ASSERT, t, message, args)
+        prepareLog(tag, Log.ASSERT, t, message, *args)
     }
 
     override fun log(priority: Int, t: Throwable?) {
@@ -165,12 +167,12 @@ class MmapLogTree(context: Context, logLevel: Int) : Timber.Tree() {
 
     override fun log(priority: Int, message: String?, vararg args: Any?) {
         super.log(priority, message, *args)
-        prepareLog(tag, priority, null, message, args)
+        prepareLog(tag, priority, null, message, *args)
     }
 
     override fun log(priority: Int, t: Throwable?, message: String?, vararg args: Any?) {
         super.log(priority, t, message, *args)
-        prepareLog(tag, priority, t, message, args)
+        prepareLog(tag, priority, t, message, *args)
     }
 
 }
