@@ -1,3 +1,5 @@
+<img  src="https://github.com/ichenhe/wear-gallery/actions/workflows/gh-pages.yml/badge.svg?branch=website" align='left'/>
+
 [EN](#website-branch)
 
 ## 网页分支
