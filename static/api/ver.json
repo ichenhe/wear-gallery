@@ -1,8 +1,14 @@
 {
     "wear": {
-        "latest": 0
+        "latest": {
+            "code": 220601000,
+            "name": "v6.1.0-preview"
+        }
     },
     "mobile": {
-        "latest": 0
+        "latest": {
+            "code": 220601001,
+            "name": "v6.1.0-preview"
+        }
     }
 }
