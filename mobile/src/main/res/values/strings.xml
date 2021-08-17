@@ -33,6 +33,9 @@
     <string name="card_intro_msg">The mobile client serves watch side only, and no longer offers picture viewing.\nYou can activate batch transmission by selecting pictures from another app and sharing to "Send to Watch".</string>
     <string name="card_tic">Attention</string>
     <string name="card_tic_msg">Ticwear is no longer supported. You should probably uninstall this app from your phone and use LAN transmission if you don\'t have a Wear OS watch.</string>
+    <string name="card_update">New</string>
+    <string name="card_update_msg">A new version has been released. (%1$s)</string>
+    <string name="card_update_positive">Learn more</string>
 
     <string name="images_menu_check_all">Select ALL</string>
     <string name="images_selected_none">Select items</string>
@@ -100,8 +103,6 @@
     <string name="about_tg" translatable="false"><u>t.me/weargallery_news</u></string>
     <string name="about_qq" translatable="false">549321774</string>
     <string name="about_licence"><u>Open Source Licenses</u></string>
-
-    <string name="update_no_web_view">Please install a web browser first.</string>
 
     <string name="notify_channel_permission_name">Permissions</string>
     <string name="notify_channel_permission_description">Tips for requesting permissions.</string>

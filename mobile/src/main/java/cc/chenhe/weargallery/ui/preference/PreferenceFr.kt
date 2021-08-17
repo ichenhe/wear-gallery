@@ -17,7 +17,6 @@
 
 package cc.chenhe.weargallery.ui.preference
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -27,11 +26,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import cc.chenhe.weargallery.BuildConfig
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.util.getVersionCode
-import cc.chenhe.weargallery.common.util.getVersionName
+import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
-import cc.chenhe.weargallery.utils.UPDATE_URL
 import cc.chenhe.weargallery.utils.requireCompatAty
 import cc.chenhe.weargallery.utils.setupToolbar
 
@@ -53,6 +51,9 @@ class PreferenceFr : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
+        // donate
+        findPreference<Preference>("donate")?.isVisible = !BuildConfig.IS_GP
+
         // version
         findPreference<Preference>("check_update")?.summary = getString(
             R.string.pref_version,
@@ -63,7 +64,13 @@ class PreferenceFr : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         when (preference?.key) {
             "check_update" -> {
-                openMarket()
+                if (BuildConfig.IS_GP) {
+                    openMarket(requireContext()) {
+                        openWithBrowser(requireContext(), GITHUB)
+                    }
+                } else {
+                    openWithBrowser(requireContext(), GITHUB)
+                }
             }
             "about" -> {
                 findNavController().navigate(PreferenceFrDirections.actionPreferenceFrToAboutFr())
@@ -74,30 +81,6 @@ class PreferenceFr : PreferenceFragmentCompat() {
             else -> return super.onPreferenceTreeClick(preference)
         }
         return true
-    }
-
-    private fun openMarket() {
-        try {
-            val uri = Uri.parse("market://details?id=" + requireContext().packageName)
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            requireContext().startActivity(intent)
-        } catch (e: Exception) {
-            openWithBrowser(UPDATE_URL)
-        }
-    }
-
-    private fun openWithBrowser(@Suppress("SameParameterValue") url: String) {
-        try {
-            requireContext().startActivity(
-                Intent.createChooser(
-                    Intent(Intent.ACTION_VIEW, Uri.parse(url)),
-                    requireContext().getString(R.string.links_chooser_browser)
-                )
-            )
-        } catch (ignored: ActivityNotFoundException) {
-            Toast.makeText(context, R.string.update_no_web_view, Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun startAliPay() {

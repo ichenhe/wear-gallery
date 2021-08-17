@@ -23,26 +23,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import cc.chenhe.weargallery.BuildConfig
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.GITHUB
 import cc.chenhe.weargallery.common.util.TELEGRAM
 import cc.chenhe.weargallery.common.util.getVersionName
+import cc.chenhe.weargallery.common.util.openMarket
 import cc.chenhe.weargallery.databinding.FrAboutBinding
 import cc.chenhe.weargallery.ui.common.SwipeDismissFr
 import cc.chenhe.weargallery.uilts.addQrCode
 import me.chenhe.wearvision.dialog.AlertDialog
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AboutFr : SwipeDismissFr() {
 
     private lateinit var binding: FrAboutBinding
+    private val model: AboutViewModel by viewModel()
+
+    private var newVersion: Int = 0
 
     override fun createView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    )
-            : ViewBinding {
-        return FrAboutBinding.inflate(inflater, container, false).also { binding = it }
+    ): ViewBinding {
+        return FrAboutBinding.inflate(inflater, container, false).also {
+            binding = it
+            it.lifecycleOwner = viewLifecycleOwner
+            it.model = model
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,6 +83,33 @@ class AboutFr : SwipeDismissFr() {
                 title = "Telegram"
                 setMessage(R.string.dialog_scan_to_visit)
                 addQrCode(TELEGRAM)
+                setPositiveButtonIcon(R.drawable.ic_dialog_confirm, null)
+            }.show()
+        }
+
+        model.newVersion.observe(viewLifecycleOwner) {
+            this.newVersion = it
+        }
+
+        binding.update.setOnClickListener {
+            when (newVersion) {
+                1 -> if (BuildConfig.IS_GP) {
+                    openMarket(requireContext()) { showUrl(model.url) }
+                } else {
+                    showUrl(model.url)
+                }
+                2, 3 -> model.checkUpdate()
+            }
+        }
+        model.checkUpdate()
+    }
+
+    private fun showUrl(url: String) {
+        context?.let {
+            AlertDialog(it).apply {
+                title = ""
+                setMessage(R.string.dialog_scan_to_visit)
+                addQrCode(url)
                 setPositiveButtonIcon(R.drawable.ic_dialog_confirm, null)
             }.show()
         }

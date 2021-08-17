@@ -26,9 +26,9 @@ import kotlin.math.roundToInt
 
 private const val PREFERENCE_LAST_START_VERSION = "last_start_version"
 private const val PREFERENCE_IMAGE_COLUMN_WIDTH = "image_column_width" // int
-private const val IMAGE_COLUMN_COUNT_D = 4
 
 private const val PREFERENCE_TIP_WITH_WATCH = "tip_with_watch" // boolean
+private const val PREFERENCE_CHECK_UPDATE_TIME = "check_update_time" // long unix second
 
 
 private fun getSp(context: Context) = PreferenceManager.getDefaultSharedPreferences(context)
@@ -39,9 +39,20 @@ fun setLastStartVersion(context: Context, version: Long) {
     }
 }
 
-fun getLastStartVersion(context: Context): Long = getSp(context).getLong(PREFERENCE_LAST_START_VERSION, 0)
+fun lastCheckUpdateTime(context: Context): Long =
+    getSp(context).getLong(PREFERENCE_CHECK_UPDATE_TIME, 0L)
 
-fun isTipWithWatch(context: Context): Boolean = getSp(context).getBoolean(PREFERENCE_TIP_WITH_WATCH, true)
+fun lastCheckUpdateTime(context: Context, timeInSecond: Long) {
+    getSp(context).edit {
+        putLong(PREFERENCE_CHECK_UPDATE_TIME, timeInSecond)
+    }
+}
+
+fun getLastStartVersion(context: Context): Long =
+    getSp(context).getLong(PREFERENCE_LAST_START_VERSION, 0)
+
+fun isTipWithWatch(context: Context): Boolean =
+    getSp(context).getBoolean(PREFERENCE_TIP_WITH_WATCH, true)
 
 fun getImageColumnWidth(context: Context): Int {
     val m = context.resources.displayMetrics

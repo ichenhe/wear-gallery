@@ -21,6 +21,7 @@ import cc.chenhe.weargallery.common.jsonadapter.UriAdapter
 import cc.chenhe.weargallery.db.MainDb
 import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.repository.RemoteImageRepository
+import cc.chenhe.weargallery.ui.explore.AboutViewModel
 import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailFr
 import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailViewModel
 import cc.chenhe.weargallery.ui.imagedetail.mobile.MobileImageDetailViewModel
@@ -55,6 +56,7 @@ val appModule = module {
     viewModel { PreferenceViewModel(androidApplication()) }
     viewModel { TimeTextFormatViewModel(androidApplication()) }
     viewModel { TimeTextColorViewModel(androidApplication()) }
+    viewModel { AboutViewModel(androidApplication(), get()) }
 
     factory { Moshi.Builder().add(UriAdapter()).build() }
 

@@ -60,6 +60,9 @@
     <string name="about_github" translatable="false">GitHub: wear-gallery</string>
     <string name="about_telegram" translatable="false">Telegram: Wear Gallery News</string>
     <string name="about_licence">Licenses</string>
+    <string name="about_find_new_version">New Version</string>
+    <string name="about_no_new_version">OK</string>
+    <string name="about_recheck_new_version">Failed to check</string>
     <string name="about_thank">Thanks</string>
     <string name="about_thank_content">Equipment: @TicWatch\nPM: @果冻\nIcon: @五音律吕 @一佳一 @Lance.Moe @碱式碳酸铜\nTranslate: @海棠花未眠 @碱式碳酸铜</string>
 

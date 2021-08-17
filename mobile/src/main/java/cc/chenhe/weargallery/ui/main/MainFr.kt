@@ -13,19 +13,27 @@ import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cc.chenhe.weargallery.BuildConfig
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.databinding.FrMainBinding
 import cc.chenhe.weargallery.databinding.ItemCardBinding
 import cc.chenhe.weargallery.ui.legacy.LegacyAty
+import cc.chenhe.weargallery.utils.lastCheckUpdateTime
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 import timber.log.Timber
 
 class MainFr : Fragment() {
 
     private lateinit var binding: FrMainBinding
+    private lateinit var adapter: CardAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,13 +53,12 @@ class MainFr : Fragment() {
             findNavController().navigate(MainFrDirections.actionMainFrToPreferenceFr())
         }
 
-        val adapter = CardAdapter(requireContext())
+        adapter = CardAdapter(requireContext())
         binding.cardList.adapter = adapter
         val cards = mutableListOf(
             Card(
                 getString(R.string.card_intro), getString(R.string.card_intro_msg),
                 R.drawable.ic_card_tip, R.color.card_bg_info, R.color.card_accent_info,
-                null, null
             )
         )
         if (isTicHelperInstalled(requireContext())) {
@@ -59,13 +66,11 @@ class MainFr : Fragment() {
                 0, Card(
                     getString(R.string.card_tic), getString(R.string.card_tic_msg),
                     R.drawable.ic_card_warn, R.color.card_bg_warn, R.color.card_accent_warn,
-                    null, null
                 )
             )
         }
-        adapter.submitList(
-            cards
-        )
+        adapter.submitList(cards)
+        checkUpdate()
     }
 
     private fun isTicHelperInstalled(context: Context): Boolean {
@@ -85,9 +90,39 @@ class MainFr : Fragment() {
         return false
     }
 
+    private fun checkUpdate() {
+        if (System.currentTimeMillis() / 1000 - lastCheckUpdateTime(requireContext()) < CHECK_UPDATE_INTERVAL) {
+            return
+        }
+        lifecycleScope.launch(Dispatchers.IO) {
+            val resp = NetUtil.checkUpdate(get()) ?: return@launch
+            if (resp.mobile?.latest?.code ?: 0 > getVersionCode(requireContext())) {
+                // new version
+                val card = Card(
+                    getString(R.string.card_update),
+                    getString(R.string.card_update_msg, resp.mobile!!.latest!!.name ?: ""),
+                    R.drawable.ic_card_update,
+                    R.color.card_bg_success,
+                    R.color.card_accent_success,
+                    positive = getString(R.string.card_update_positive),
+                    tag = "UPDATE",
+                    obj = resp.mobile!!.url
+                )
+                adapter.getCurrentData().toMutableList().also {
+                    it.add(0, card)
+                    adapter.submitList(it)
+                }
+            } else {
+                lastCheckUpdateTime(requireContext(), System.currentTimeMillis() / 1000)
+            }
+        }
+    }
 
     private class CardAdapter(private val context: Context) :
         ListAdapter<Card, CardAdapter.CardVH>(DiffCallback()) {
+
+        fun getCurrentData(): List<Card> = currentList
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardVH {
             val b = ItemCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return CardVH(b)
@@ -107,6 +142,17 @@ class MainFr : Fragment() {
             }
             holder.binding.root.backgroundTintList =
                 ColorStateList.valueOf(context.getColor(card.bgColor))
+            if (card.tag == "UPDATE") {
+                holder.binding.positiveBtn.setOnClickListener {
+                    if (BuildConfig.IS_GP) {
+                        openMarket(context) {
+                            openWithBrowser(context, card.obj as? String ?: GITHUB)
+                        }
+                    } else {
+                        openWithBrowser(context, card.obj as? String ?: GITHUB)
+                    }
+                }
+            }
         }
 
         private inner class CardVH(val binding: ItemCardBinding) :
@@ -145,7 +191,9 @@ class MainFr : Fragment() {
         @DrawableRes val icon: Int,
         @ColorRes val bgColor: Int,
         @ColorRes val accentColor: Int,
-        val positive: String?,
-        val negative: String?,
+        val positive: String? = null,
+        val negative: String? = null,
+        val tag: String? = null,
+        val obj: Any? = null
     )
 }

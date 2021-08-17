@@ -23,6 +23,8 @@
 
     <color name="card_bg_info">@color/icon_circle_0</color>
     <color name="card_accent_info">@color/icon_inside_0</color>
+    <color name="card_bg_success">@color/icon_circle_3</color>
+    <color name="card_accent_success">@color/icon_inside_3</color>
     <color name="card_bg_warn">@color/icon_circle_2</color>
     <color name="card_accent_warn">@color/icon_inside_2</color>
 

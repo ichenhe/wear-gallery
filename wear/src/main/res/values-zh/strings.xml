@@ -56,6 +56,9 @@
     <string name="preference_about">关于</string>
 
     <string name="about_licence">开源许可证</string>
+    <string name="about_find_new_version">发现新版本</string>
+    <string name="about_no_new_version">已是最新版</string>
+    <string name="about_recheck_new_version">检查失败</string>
     <string name="about_thank">特别感谢</string>
     <string name="about_thank_content">设备：@TicWatch\n产品：@果冻\n图标：@五音律吕 @一佳一 @Lance.Moe @碱式碳酸铜\n翻译：@海棠花未眠 @碱式碳酸铜</string>
 
