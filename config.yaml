@@ -33,6 +33,7 @@ menu:
       weight: 10
 
 params:
+  editURL: "https://github.com/ichenhe/wear-gallery/edit/website/content/"
   disableLandingPageButton: true
   disableLanguageSwitchingButton: false
   disableNextPrev: false
