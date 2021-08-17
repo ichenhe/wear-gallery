@@ -1,0 +1,40 @@
+baseURL: "https://wg.chenhe.me/"
+defaultContentLanguage: en
+title: "Wear Gallery"
+description: "这也许是最好的开源手表图库。This is probably the best open source gallery on your watch."
+
+theme: learn
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+outputs:
+  home: [ "HTML", "RSS", "JSON"]
+
+languages:
+  en:
+    languageCode: en
+    title: Wear Gallery
+    weight: 1
+    languageName: Englilsh
+  zh:
+    languageCode: zh
+    title: 腕间图库
+    weight: 2
+    languageName: 简体中文
+
+menu:
+  shortcuts:
+    - name: "<i class='fab fa-github'></i> Github repo"
+      identifier: "d"
+      url: "https://github.com/ichenhe/wear-gallery"
+      weight: 10
+
+params:
+  disableLandingPageButton: true
+  disableLanguageSwitchingButton: false
+  disableNextPrev: false
+  themeVariant: blue
+  titleSeparator: "-"
