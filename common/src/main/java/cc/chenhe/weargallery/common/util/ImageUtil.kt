@@ -14,11 +14,13 @@ import cc.chenhe.weargallery.common.comm.bean.ImagesResp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import kotlin.math.min
 
 @SuppressLint("InlinedApi") // See https://stackoverflow.com/a/68515869/9150068
 @Suppress("DEPRECATION") // We use `DATA` field to show file path information.
 object ImageUtil {
+    private const val TAG = "ImageUtil"
 
     private const val IMAGE_SORT_ORDER =
         "${MediaStore.Images.Media.DATE_TAKEN} DESC, ${MediaStore.Images.Media.DATE_MODIFIED} DESC, ${MediaStore.Images.Media.DATE_ADDED} DESC"
@@ -70,8 +72,7 @@ object ImageUtil {
      * Query image folders (buckets) along with the first image as preview directly from local
      * media store.
      */
-    suspend fun queryImageFolders(ctx: Context)
-            : List<ImageFolder> = withContext(Dispatchers.IO) {
+    suspend fun queryImageFolders(ctx: Context): List<ImageFolder> = withContext(Dispatchers.IO) {
 
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
@@ -107,6 +108,7 @@ object ImageUtil {
 
             val result = mutableListOf<ImageFolder>()
 
+            Timber.tag(TAG).v("queryFolders: find %d pictures", cursor.count)
             val bucketImgNum = mutableMapOf<Int, Int>() // bucketId -> img num
             while (cursor.moveToNext() && isActive) {
                 val imgId = cursor.getLong(idIndex)
@@ -133,10 +135,14 @@ object ImageUtil {
                     data?.filePath ?: "",
                 )
             }
+            Timber.tag(TAG).v("queryFolders: aggregate into %d folders", result.size)
             result.map { folder ->
                 folder.copy(imgNum = bucketImgNum[folder.id]!!)
             }
-        } ?: emptyList()
+        } ?: kotlin.run {
+            Timber.tag(TAG).w("queryFolders: cursor is null")
+            emptyList()
+        }
     }
 
     suspend fun queryBucketImages(context: Context, bucketId: Int): List<Image> {

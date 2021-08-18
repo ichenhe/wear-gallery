@@ -175,10 +175,18 @@ class WearListenerService : WMListenerService() {
     private fun processRequestImageFolders(request: MessageEvent) {
         lifecycleScope.launch {
             toastIfEnabled(R.string.watch_operation_search_gallery_ing)
-            val folders = queryImageFolders(this@WearListenerService)
-            val type = Types.newParameterizedType(List::class.java, RemoteImageFolder::class.java)
-            val adapter: JsonAdapter<List<RemoteImageFolder>> = moshi.adapter(type)
-            BothWayHub.response(this@WearListenerService, request, adapter.toJson(folders))
+            try {
+                val folders = queryImageFolders(this@WearListenerService)
+                val type =
+                    Types.newParameterizedType(List::class.java, RemoteImageFolder::class.java)
+                val adapter: JsonAdapter<List<RemoteImageFolder>> = moshi.adapter(type)
+                Timber.tag(TAG).v("folder req: Find %d folders", folders.size)
+                val str = adapter.toJson(folders)
+                val result = BothWayHub.response(this@WearListenerService, request, str)
+                Timber.tag(TAG).v("folder req: Response complete, result=%s", result.toString())
+            } catch (e: Exception) {
+                Timber.tag(TAG).e(e, "result: Failed to query image folders.")
+            }
         }
     }
 
@@ -219,13 +227,15 @@ class WearListenerService : WMListenerService() {
             toastIfEnabled(R.string.watch_operation_get_pics_list_ing)
             val data = moshi.adapter(ImagesReq::class.java).fromJsonQ(String(request.data))
             if (data == null) {
-                Timber.tag(TAG).w("Failed to parse json:\n%s", String(request.data))
+                Timber.tag(TAG).w("imgList req: Failed to parse json:\n%s", String(request.data))
                 return@launch
             }
+            Timber.tag(TAG).v("imgList req: %s", data.toString())
             val pagingImages =
                 ImageUtil.queryPagingImages(context, data.bucketId, data.offset, data.pageSize)
             val adapter = moshi.adapter(ImagesResp::class.java)
-            BothWayHub.response(context, request, adapter.toJson(pagingImages))
+            val result = BothWayHub.response(context, request, adapter.toJson(pagingImages))
+            Timber.tag(TAG).v("imgList req: Response complete, result=%s", result.toString())
         }
     }
 
