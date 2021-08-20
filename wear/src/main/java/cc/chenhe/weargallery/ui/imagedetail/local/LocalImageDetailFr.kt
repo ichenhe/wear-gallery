@@ -20,12 +20,11 @@ package cc.chenhe.weargallery.ui.imagedetail.local
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.Keep
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import cc.chenhe.weargallery.common.bean.Image
-import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseAdapter
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseFr
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
@@ -33,10 +32,13 @@ import cc.chenhe.weargallery.ui.main.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 
 class LocalImageDetailFr : ImageDetailBaseFr<Image>() {
 
     companion object {
+        private const val TAG = "LocalImageDetailFr"
+
         /**
          * Used as a placeholder in grid mode.
          */
@@ -84,21 +86,12 @@ class LocalImageDetailFr : ImageDetailBaseFr<Image>() {
             adapter.addLoadStateListener(requireNotNull(loadStateListener))
         }
 
-        // Refresh UI when image list changed.
-        sharedModel.localImages.observe(
-            viewLifecycleOwner,
-            object : Observer<Success<List<Image>>> {
-                private var init = false
-                override fun onChanged(t: Success<List<Image>>?) {
-                    // workaround: ignore the init callback
-                    if (!init) {
-                        init = true
-                    } else {
-                        adapter.retry()
-                    }
-                }
-            })
-
+        adapter.addLoadStateListener { states: CombinedLoadStates ->
+            if (states.refresh is LoadState.NotLoading && adapter.itemCount == 0) {
+                Timber.tag(TAG).i("No picture, close detail fragment.")
+                findNavController().navigateUp()
+            }
+        }
     }
 
     override fun createAdapter(): ImageDetailBaseAdapter<Image, *> {

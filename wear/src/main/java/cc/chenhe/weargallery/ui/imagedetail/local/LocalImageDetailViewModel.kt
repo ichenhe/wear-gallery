@@ -18,11 +18,15 @@
 package cc.chenhe.weargallery.ui.imagedetail.local
 
 import android.app.Application
+import android.database.ContentObserver
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.util.ImageUtil
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailBaseViewModel
+import cc.chenhe.weargallery.uilts.context
 import kotlinx.coroutines.flow.Flow
 
 class LocalImageDetailViewModel(
@@ -33,27 +37,55 @@ class LocalImageDetailViewModel(
 
     override val pagingImages: Flow<PagingData<Image>>
 
+    private var invalidateCallback: InvalidateCallback? = null
+
+    /** Refresh UI when image list changed. */
+    private val observer: ContentObserver = object : ContentObserver(null) {
+        override fun onChange(selfChange: Boolean) {
+            onChange(selfChange, null)
+        }
+
+        override fun onChange(selfChange: Boolean, uri: Uri?) {
+            invalidateCallback?.onInvalidate()
+        }
+    }
+
     init {
         pagingImages = Pager(
             config = PagingConfig(pageSize = Int.MAX_VALUE, initialLoadSize = Int.MAX_VALUE)
         ) {
             when (source) {
                 LocalImageDetailFr.Source.IMAGES -> {
-                    ImageSource()
+                    ImageSource().also { invalidateCallback = it }
                 }
                 LocalImageDetailFr.Source.FOLDER -> {
                     if (bucketId == LocalImageDetailFr.BUCKET_ID_NA) {
                         throw IllegalArgumentException("Unexpected bucket id, do you miss the parameters?")
                     }
-                    FolderSource(bucketId)
+                    FolderSource(bucketId).also { invalidateCallback = it }
                 }
             }
         }.flow.cachedIn(viewModelScope)
 
         init()
+        context.contentResolver.registerContentObserver(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            true,
+            observer
+        )
     }
 
-    private inner class FolderSource(private val bucketId: Int) : PagingSource<Int, Image>() {
+    override fun onCleared() {
+        context.contentResolver.unregisterContentObserver(observer)
+    }
+
+    private inner class FolderSource(
+        private val bucketId: Int
+    ) : PagingSource<Int, Image>(), InvalidateCallback {
+        override fun onInvalidate() {
+            invalidate()
+        }
+
         override fun getRefreshKey(state: PagingState<Int, Image>): Int? {
             return state.anchorPosition
         }
@@ -68,7 +100,11 @@ class LocalImageDetailViewModel(
         }
     }
 
-    private inner class ImageSource : PagingSource<Int, Image>() {
+    private inner class ImageSource : PagingSource<Int, Image>(), InvalidateCallback {
+        override fun onInvalidate() {
+            invalidate()
+        }
+
         override fun getRefreshKey(state: PagingState<Int, Image>): Int? {
             return state.anchorPosition
         }
@@ -81,6 +117,10 @@ class LocalImageDetailViewModel(
                 null
             )
         }
+    }
+
+    private fun interface InvalidateCallback {
+        fun onInvalidate()
     }
 
 }
