@@ -19,7 +19,6 @@ package cc.chenhe.weargallery.common.ui
 
 import android.content.Context
 import android.graphics.Rect
-import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import android.widget.TextView
@@ -32,6 +31,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cc.chenhe.weargallery.common.ui.BaseListAdapter.SimpleItemClickListener
+import timber.log.Timber
 import kotlin.math.abs
 
 /**
@@ -40,7 +40,7 @@ import kotlin.math.abs
  * Usage: set [itemClickListener] with [SimpleItemClickListener] to get item click callback.
  */
 abstract class BaseListAdapter<T, VH : RecyclerView.ViewHolder>(
-        diffCallback: DiffUtil.ItemCallback<T>
+    diffCallback: DiffUtil.ItemCallback<T>
 ) : ListAdapter<T, VH>(diffCallback) {
 
     var itemClickListener: ItemClickListener? = null
@@ -48,12 +48,14 @@ abstract class BaseListAdapter<T, VH : RecyclerView.ViewHolder>(
     @CallSuper
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.itemView.setOnClickListener { v: View ->
-            if (!onItemClick(v, position)) {
-                itemClickListener?.onItemClick(v, position)
+            val pos = holder.absoluteAdapterPosition
+            if (!onItemClick(v, pos)) {
+                itemClickListener?.onItemClick(v, pos)
             }
         }
         holder.itemView.setOnLongClickListener { v: View ->
-            onItemLongClick(v, position) || itemClickListener?.onItemLongClick(v, position) ?: false
+            val pos = holder.absoluteAdapterPosition
+            onItemLongClick(v, pos) || itemClickListener?.onItemLongClick(v, pos) ?: false
         }
     }
 
@@ -123,19 +125,28 @@ open class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
  */
 class SimpleItemDecoration(space: Int) : RecyclerView.ItemDecoration() {
 
-    constructor(context: Context, @DimenRes dimenRes: Int) : this(context.resources.getDimensionPixelSize(dimenRes))
+    constructor(
+        context: Context,
+        @DimenRes dimenRes: Int
+    ) : this(context.resources.getDimensionPixelSize(dimenRes))
 
     init {
         if (abs(space) > 10000) {
             // This fucking problem wasted me two hours. （╯‵□′）╯︵┴─┴
-            Log.e("SimpleItemDecoration",
-                    "Abnormal space: $space. You may have missed a Context parameter to use dimen resource.")
+            Timber.tag("SimpleItemDecoration").e(
+                "Abnormal space: $space. You may have missed a Context parameter to use dimen resource."
+            )
         }
     }
 
     private val halfSpace = space / 2
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         super.getItemOffsets(outRect, view, parent, state)
         outRect.top = halfSpace
         outRect.bottom = halfSpace
