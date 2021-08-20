@@ -50,30 +50,38 @@ class SendImagesAty : AppCompatActivity() {
 
         if (checkHuaWei()) {
             MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.app_hw_title)
-                    .setMessage(R.string.app_hw_message)
-                    .setPositiveButton(R.string.app_hw_view) { _, _ ->
-                        val intent = Intent().apply {
-                            action = Intent.ACTION_VIEW
-                            data = Uri.parse(HUA_WEI)
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        }
-                        startActivity(intent)
-                        finish()
+                .setTitle(R.string.app_hw_title)
+                .setMessage(R.string.app_hw_message)
+                .setPositiveButton(R.string.app_hw_view) { _, _ ->
+                    val intent = Intent().apply {
+                        action = Intent.ACTION_VIEW
+                        data = Uri.parse(HUA_WEI)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
-                    .setNegativeButton(R.string.app_hw_exit) { _, _ ->
-                        finish()
-                    }
-                    .setCancelable(false)
-                    .show()
+                    startActivity(intent)
+                    finish()
+                }
+                .setNegativeButton(R.string.app_hw_exit) { _, _ ->
+                    finish()
+                }
+                .setCancelable(false)
+                .show()
             return
         }
 
         binding = AtySendImagesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupToolBar()
-        binding.targetFolder.apply {
+        binding.targetDevice.apply {
             // make edit text do not intercept its parent's onClick event
+            movementMethod = null
+            keyListener = null
+        }
+        binding.targetDeviceLayout.setOnClickListener {
+            showTargetDeviceEditDialog()
+        }
+
+        binding.targetFolder.apply {
             movementMethod = null
             keyListener = null
         }
@@ -91,8 +99,17 @@ class SendImagesAty : AppCompatActivity() {
         }
 
         binding.send.setOnClickListener {
+            val targetNode = model.targetNode.value
+            if (targetNode == null) {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.tip)
+                    .setMessage(R.string.send_images_select_device)
+                    .setPositiveButton(R.string.confirm, null)
+                    .show()
+                return@setOnClickListener
+            }
             model.images.value?.also { images ->
-                SendPicturesService.add(this, images, model.targetFolder.value)
+                SendPicturesService.add(this, images, targetNode, model.targetFolder.value)
             }
             finish()
         }
@@ -106,7 +123,8 @@ class SendImagesAty : AppCompatActivity() {
         model.images.observe(this) { images ->
             adapter.submitList(images)
             val num = images?.size ?: 0
-            binding.header.subtitleTextView.text = resources.getQuantityString(R.plurals.send_images_subtitle, num, num)
+            binding.header.subtitleTextView.text =
+                resources.getQuantityString(R.plurals.send_images_subtitle, num, num)
         }
 
         model.targetFolder.observe(this) { targetFolder ->
@@ -115,6 +133,10 @@ class SendImagesAty : AppCompatActivity() {
             } else {
                 binding.targetFolder.setText(targetFolder)
             }
+        }
+
+        model.targetNode.observe(this) { targetNode ->
+            binding.targetDevice.setText(targetNode?.displayName)
         }
     }
 
@@ -141,10 +163,35 @@ class SendImagesAty : AppCompatActivity() {
         binding.header.root.setTitle(R.string.share_image_label)
     }
 
+    private fun showTargetDeviceEditDialog() {
+        val nodes = model.nodes.toList()
+        val names = nodes.map { it.displayName }.toTypedArray()
+        val checked = if (model.targetNode.value == null) {
+            -1
+        } else {
+            var r = -1
+            for (i in nodes.indices) {
+                if (nodes[i] == model.targetNode.value) {
+                    r = i
+                    break
+                }
+            }
+            r
+        }
+        MaterialAlertDialogBuilder(this)
+            .setSingleChoiceItems(names, checked) { dialog, i ->
+                model.setTargetNode(nodes[i])
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     private fun showTargetFolderEditDialog() {
         val margin = resources.getDimensionPixelOffset(R.dimen.dialog_view_margin)
-        val params = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+        val params = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ).apply {
             setMargins(margin, 0, margin, 0)
         }
         val et = EditText(this).apply {
@@ -156,17 +203,21 @@ class SendImagesAty : AppCompatActivity() {
             addView(et)
         }
         MaterialAlertDialogBuilder(this)
-                .setView(container)
-                .setTitle(R.string.send_images_directory)
-                .setMessage(R.string.send_images_directory_description)
-                .setPositiveButton(R.string.confirm) { _, _ ->
-                    if (!model.setTargetFolder(et.text?.toString())) {
-                        Toast.makeText(this@SendImagesAty, R.string.send_images_directory_invalid, Toast.LENGTH_SHORT)
-                                .show()
-                    }
+            .setView(container)
+            .setTitle(R.string.send_images_directory)
+            .setMessage(R.string.send_images_directory_description)
+            .setPositiveButton(R.string.confirm) { _, _ ->
+                if (!model.setTargetFolder(et.text?.toString())) {
+                    Toast.makeText(
+                        this@SendImagesAty,
+                        R.string.send_images_directory_invalid,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
 }

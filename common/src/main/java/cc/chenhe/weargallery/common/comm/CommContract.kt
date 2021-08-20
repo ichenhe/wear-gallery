@@ -24,6 +24,15 @@ package cc.chenhe.weargallery.common.comm
  */
 
 
+/**
+ * The capabilities that the wear client has.
+ *
+ * This value must be the same as that in wear's wear.xml.
+ */
+const val CAP_WEAR = "wg_watch"
+
+const val PATH_CHANNEL_BATCH_SEND = "/batch-send"
+
 // --------------------------------------------------------------------------------------------------
 // Message
 // --------------------------------------------------------------------------------------------------

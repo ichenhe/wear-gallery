@@ -58,10 +58,6 @@
 
     <string name="menu_send">Send to watch</string>
 
-    <string name="send_dialog_title">Send to watch</string>
-    <string name="send_dialog_content">Send the selected %1$d pictures to the watch?</string>
-    <string name="send_dialog_advanced">Advanced</string>
-
     <string name="pref_category_general">General</string>
     <string name="pref_category_information">Information</string>
 
@@ -86,11 +82,17 @@
     <string name="send_images_directory_default">Default</string>
     <string name="send_images_directory_description">The relative directory based on the picture media library on the watch. Leave blank to save in the default directory.</string>
     <string name="send_images_directory_invalid">invalid path</string>
-    <string name="send_images_send_data_time_out">Watch Communication timeout.</string>
-    <string name="send_images_receive_error">Fail to save on watch.</string>
+    <string name="send_images_device">Target device</string>
+    <string name="send_images_select_device">Please select the target device. If the list is empty, please confirm:\n1. The watch has been connected via Bluetooth.\n2. Only Wear OS is supported.\n3. The app version must be consistent.</string>
+    <string name="send_images_fail_cancel">Canceled.</string>
+    <string name="send_images_fail_ack_failed">Watch ACK failed.</string>
+    <string name="send_images_fail_file_not_found">Picture file not found.</string>
+    <string name="send_images_fail_io">Communication channel is broken.</string>
+    <string name="send_images_fail_size_mismatch">File size mismatch.</string>
+    <string name="send_images_fail_no_response">No response.</string>
+    <string name="send_images_fail_unknown">Unknown error.</string>
 
-    <string name="notify_send_images_title">Sending pictures to watch</string>
-    <string name="notify_send_images_content">%1$d/%2$d Sending:%3$s</string>
+    <string name="notify_send_images_title">Sending pictures… %1$d/%2$d</string>
     <string name="notify_send_images_success_title">Pictures have been sent.</string>
     <string name="notify_send_images_success_content">%1$d pictures have been sent.</string>
     <string name="notify_send_images_failed_title">Sending failed</string>

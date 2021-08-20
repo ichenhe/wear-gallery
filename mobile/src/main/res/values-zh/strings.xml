@@ -52,10 +52,6 @@
 
     <string name="menu_send">发送到手表</string>
 
-    <string name="send_dialog_title">发送到手表</string>
-    <string name="send_dialog_content">确定把选中的%1$d张图片发送到手表？</string>
-    <string name="send_dialog_advanced">高级配置</string>
-
     <string name="pref_category_general">常规</string>
     <string name="pref_category_information">信息</string>
 
@@ -79,11 +75,17 @@
     <string name="send_images_directory_default">默认位置</string>
     <string name="send_images_directory_description">手表设备上基于图片媒体库的相对目录，留空保存在默认目录中。</string>
     <string name="send_images_directory_invalid">目录无效</string>
-    <string name="send_images_send_data_time_out">手表响应超时。</string>
-    <string name="send_images_receive_error">手表接收失败。</string>
+    <string name="send_images_device">目标设备</string>
+    <string name="send_images_select_device">请选择目标设备。若列表为空请确认：\n1. 手表是否通过蓝牙连接。\n2. 仅支持 Wear OS 设备。\n3. 应用版本是否一致。</string>
+    <string name="send_images_fail_cancel">发送取消。</string>
+    <string name="send_images_fail_ack_failed">手表确认失败。</string>
+    <string name="send_images_fail_file_not_found">图片文件不存在。</string>
+    <string name="send_images_fail_io">通信通道异常。</string>
+    <string name="send_images_fail_size_mismatch">图片大小不匹配。</string>
+    <string name="send_images_fail_no_response">手表无响应。</string>
+    <string name="send_images_fail_unknown">未知异常。</string>
 
-    <string name="notify_send_images_title">正在发送图片</string>
-    <string name="notify_send_images_content">%1$d/%2$d 正在发送:%3$s</string>
+    <string name="notify_send_images_title">正在发送图片 %1$d/%2$d</string>
     <string name="notify_send_images_success_title">图片发送完毕</string>
     <string name="notify_send_images_success_content">已成功发送%1$d张图片。</string>
     <string name="notify_send_images_failed_title">图片发送出错</string>

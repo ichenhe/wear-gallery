@@ -29,16 +29,19 @@ import androidx.core.database.getIntOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import androidx.exifinterface.media.ExifInterface
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import cc.chenhe.weargallery.common.bean.Image
+import cc.chenhe.weargallery.common.comm.CAP_WEAR
 import cc.chenhe.weargallery.common.util.fileName
 import cc.chenhe.weargallery.common.util.filePath
 import cc.chenhe.weargallery.ui.common.getContext
 import cc.chenhe.weargallery.utils.fetchImageColumnWidth
+import com.google.android.gms.wearable.CapabilityClient
+import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
@@ -52,11 +55,47 @@ class SendImagesViewModel(application: Application, intent: Intent) :
 
     val columnWidth = fetchImageColumnWidth(application)
 
+    var nodes: Set<Node> = emptySet()
+        private set(value) {
+            field = value
+            val target = targetNode.value
+            if (target != null) {
+                if (!value.contains(target)) {
+                    // The selected device is disconnected -> set as the first node or null
+                    _targetNode.postValue(if (value.isEmpty()) null else value.first())
+                }
+            } else {
+                // The default setting is the first node
+                if (value.isNotEmpty())
+                    _targetNode.postValue(value.first())
+            }
+        }
+
+    private val _targetNode = MutableLiveData<Node?>(null)
+    val targetNode: LiveData<Node?> = _targetNode
+
     private val _targetFolder = MutableLiveData<String?>(null)
     val targetFolder: LiveData<String?> = _targetFolder
 
     val images: LiveData<List<Image>?> = liveData {
         emit(processIntent(intent))
+    }
+
+    private val capChangedListener = CapabilityClient.OnCapabilityChangedListener {
+        nodes = it.nodes ?: emptySet()
+    }
+    private val capClient = Wearable.getCapabilityClient(getContext())
+
+    init {
+        viewModelScope.launch {
+            loadNodes()
+        }
+        capClient.addListener(capChangedListener, CAP_WEAR)
+    }
+
+    override fun onCleared() {
+        capClient.removeListener(capChangedListener)
+        super.onCleared()
     }
 
     private suspend fun processIntent(intent: Intent): List<Image>? {
@@ -80,6 +119,25 @@ class SendImagesViewModel(application: Application, intent: Intent) :
             }
         }
         return images
+    }
+
+    private suspend fun loadNodes() {
+        nodes = try {
+            // It will throw a exception if cannot connect to wearable client
+            val info = Wearable.getCapabilityClient(getContext())
+                .getCapability(CAP_WEAR, CapabilityClient.FILTER_REACHABLE).await()
+            info?.nodes ?: emptySet()
+        } catch (e: Exception) {
+            emptySet()
+        }
+    }
+
+    fun setTargetNode(node: Node) {
+        if (nodes.contains(node)) {
+            _targetNode.value = node
+        } else {
+            _targetNode.value = null
+        }
     }
 
     /**

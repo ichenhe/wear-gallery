@@ -98,6 +98,7 @@ dependencies {
     implementation("androidx.core:core-ktx:${Ver.ktx}")
     implementation("androidx.exifinterface:exifinterface:${Ver.exifinterface}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Ver.coroutinesAndroid}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.1")
 
     implementation("io.insert-koin:koin-android:${Ver.koin}")
     implementation("com.squareup.moshi:moshi:${Ver.moshi}")

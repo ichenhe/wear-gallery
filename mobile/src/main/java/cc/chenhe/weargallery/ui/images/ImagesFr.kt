@@ -32,7 +32,6 @@ import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.SimpleItemDecoration
 import cc.chenhe.weargallery.databinding.FrImagesBinding
-import cc.chenhe.weargallery.service.SendPicturesService
 import cc.chenhe.weargallery.ui.common.DragSelectProcessor
 import cc.chenhe.weargallery.ui.common.DragSelectTouchListener
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr
@@ -40,7 +39,6 @@ import cc.chenhe.weargallery.ui.legacy.PagerFrDirections
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesAty
 import cc.chenhe.weargallery.utils.calculateImageColumnCount
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.abs
@@ -232,26 +230,16 @@ class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
             }
             R.id.menu_send -> {
                 val selected = adapter.getSelected()
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.send_dialog_title)
-                    .setMessage(getString(R.string.send_dialog_content, selected.size))
-                    .setPositiveButton(R.string.confirm) { _, _ ->
-                        SendPicturesService.add(requireContext(), selected, null)
-                        model.inSelectionMode.value = false
-                    }
-                    .setNeutralButton(R.string.send_dialog_advanced) { _, _ ->
-                        val intent = Intent(requireContext(), SendImagesAty::class.java).apply {
-                            action = Intent.ACTION_SEND_MULTIPLE
-                            putParcelableArrayListExtra(
-                                Intent.EXTRA_STREAM,
-                                ArrayList(selected.map { it.uri })
-                            )
-                        }
-                        startActivity(intent)
-                        model.inSelectionMode.value = false
-                    }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
+
+                val intent = Intent(requireContext(), SendImagesAty::class.java).apply {
+                    action = Intent.ACTION_SEND_MULTIPLE
+                    putParcelableArrayListExtra(
+                        Intent.EXTRA_STREAM,
+                        ArrayList(selected.map { it.uri })
+                    )
+                }
+                startActivity(intent)
+                model.inSelectionMode.value = false
             }
             else -> return false
         }
