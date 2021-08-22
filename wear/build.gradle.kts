@@ -1,24 +1,9 @@
-import java.io.FileInputStream
-import java.util.*
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
-}
-
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("config.properties")
-if (localPropertiesFile.isFile) {
-    localProperties.load(FileInputStream(localPropertiesFile))
-} else {
-    logger.log(
-        LogLevel.ERROR,
-        "Can't find file <config.properties>. Please see <config-tmpl.properties>."
-    )
-    localProperties["ks.file"] = "n/a"
 }
 
 android {
@@ -37,16 +22,18 @@ android {
         }
     }
     signingConfigs {
-        create("release") {
-            storeFile = file(localProperties.getProperty("ks.file"))
-            storePassword = localProperties.getProperty("ks.pwd")
-            keyAlias = localProperties.getProperty("ks.alias")
-            keyPassword = localProperties.getProperty("ks.aliaspwd")
+        Signing(rootDir).readConfig()?.also { config ->
+            create("release") {
+                storeFile = config.storeFile
+                storePassword = config.storePassword
+                keyAlias = config.keyAlias
+                keyPassword = config.keyPassword
+            }
         }
     }
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfigs.findByName("release")?.also { signingConfig = it }
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
