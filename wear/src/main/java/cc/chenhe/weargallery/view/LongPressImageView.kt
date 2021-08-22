@@ -20,13 +20,15 @@ package cc.chenhe.weargallery.view
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 
 /**
  * An [AppCompatImageView] that can trigger events continuously when the user presses and holds.
  */
 class LongPressImageView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
 
     var onLongPressListener: OnLongPressListener? = null
@@ -37,7 +39,9 @@ class LongPressImageView @JvmOverloads constructor(
     init {
         super.setOnLongClickListener {
             longPressJob?.cancel()
-            longPressJob = GlobalScope.launch(Dispatchers.Main) { dispatchLongPressEvent() }
+            longPressJob = ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.Main) {
+                dispatchLongPressEvent()
+            }
             true
         }
     }
@@ -47,8 +51,10 @@ class LongPressImageView @JvmOverloads constructor(
         super.onDetachedFromWindow()
     }
 
-    @Deprecated("Does not support setting long click listener.", replaceWith = ReplaceWith(""),
-            level = DeprecationLevel.ERROR)
+    @Deprecated(
+        "Does not support setting long click listener.", replaceWith = ReplaceWith(""),
+        level = DeprecationLevel.ERROR
+    )
     override fun setOnLongClickListener(l: OnLongClickListener?) {
         throw NotImplementedError("Does not support setting long click listener.")
     }

@@ -21,6 +21,8 @@ import android.content.Context
 import android.database.ContentObserver
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,8 +32,8 @@ import kotlinx.coroutines.launch
  * easily observe the Uri without dealing with trivial life cycles.
  */
 abstract class ContentProviderLiveData<T>(
-        context: Context,
-        private val uri: Uri
+    context: Context,
+    private val uri: Uri
 ) : MutableLiveData<T>() {
     protected val ctx = context.applicationContext!!
     private lateinit var observer: ContentObserver
@@ -70,7 +72,7 @@ abstract class ContentProviderLiveData<T>(
      * The default implement is a simple [GlobalScope] that means may leak jobs.
      */
     open fun getCoroutineScope(): CoroutineScope {
-        return GlobalScope
+        return ProcessLifecycleOwner.get().lifecycleScope
     }
 
     /**

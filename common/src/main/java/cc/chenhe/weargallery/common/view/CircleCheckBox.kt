@@ -26,6 +26,7 @@ import android.view.SoundEffectConstants
 import android.view.View
 import android.widget.Checkable
 import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import cc.chenhe.weargallery.common.R
 import kotlin.math.PI
@@ -38,7 +39,7 @@ class CircleCheckBox : View, Checkable {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val checkPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            .apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT) }
+        .apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT) }
     private lateinit var iconBitmap: Bitmap
 
     private var circleChecked: Boolean = false
@@ -131,13 +132,23 @@ class CircleCheckBox : View, Checkable {
     }
 
     constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.circleCheckBoxStyle)
+    constructor(context: Context, attrs: AttributeSet?) : this(
+        context,
+        attrs,
+        R.attr.circleCheckBoxStyle
+    )
+
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
             : this(context, attrs, defStyleAttr, R.style.DefaultCircleCheckBoxStyle)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int)
             : super(context, attrs, defStyleAttr, defStyleRes) {
-        context.theme.obtainStyledAttributes(attrs, R.styleable.CircleCheckBox, defStyleAttr, defStyleRes).use {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.CircleCheckBox,
+            defStyleAttr,
+            defStyleRes
+        ).use {
             circleChecked = it.getBoolean(R.styleable.CircleCheckBox_android_checked, circleChecked)
             normalColor = it.getColor(R.styleable.CircleCheckBox_normalColor, normalColor)
             checkedColor = it.getColor(R.styleable.CircleCheckBox_checkedColor, checkedColor)
@@ -178,7 +189,7 @@ class CircleCheckBox : View, Checkable {
     }
 
     private fun createCheckBitmap(): Bitmap {
-        val drawable = resources.getDrawable(R.drawable.lib_ic_check, null)
+        val drawable = ContextCompat.getDrawable(context, R.drawable.lib_ic_check)!!
         val size = (backgroundRMax / sin(PI / 4.0)).toInt()
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -201,14 +212,40 @@ class CircleCheckBox : View, Checkable {
     private fun initAnimator() {
         if (checkAnimatorSet == null) {
             checkAnimatorSet = AnimatorSet().apply {
-                play(ObjectAnimator.ofFloat(this@CircleCheckBox, "currentOutlineR", outlineR, animationR))
-                        .with(ObjectAnimator.ofInt(this@CircleCheckBox, "currentBackgroundAlpha", 0, 255))
-                        .with(ObjectAnimator.ofFloat(this@CircleCheckBox, "currentBackgroundR",
-                                outlineR + outlineWidth / 2f, animationR + outlineWidth / 2f))
-                        .before(ObjectAnimator.ofFloat(this@CircleCheckBox, "currentBackgroundR",
-                                animationR + outlineWidth / 2f, backgroundRMax))
-                        .before(ObjectAnimator.ofFloat(this@CircleCheckBox, "iconPercent",
-                                0f, 1f))
+                play(
+                    ObjectAnimator.ofFloat(
+                        this@CircleCheckBox,
+                        "currentOutlineR",
+                        outlineR,
+                        animationR
+                    )
+                )
+                    .with(
+                        ObjectAnimator.ofInt(
+                            this@CircleCheckBox,
+                            "currentBackgroundAlpha",
+                            0,
+                            255
+                        )
+                    )
+                    .with(
+                        ObjectAnimator.ofFloat(
+                            this@CircleCheckBox, "currentBackgroundR",
+                            outlineR + outlineWidth / 2f, animationR + outlineWidth / 2f
+                        )
+                    )
+                    .before(
+                        ObjectAnimator.ofFloat(
+                            this@CircleCheckBox, "currentBackgroundR",
+                            animationR + outlineWidth / 2f, backgroundRMax
+                        )
+                    )
+                    .before(
+                        ObjectAnimator.ofFloat(
+                            this@CircleCheckBox, "iconPercent",
+                            0f, 1f
+                        )
+                    )
                 doOnEnd { currentOutlineR = 0f }
                 duration = ANIM_DURATION
             }
@@ -216,12 +253,34 @@ class CircleCheckBox : View, Checkable {
         if (normalAnimatorSet == null) {
             normalAnimatorSet = AnimatorSet().apply {
                 play(ObjectAnimator.ofFloat(this@CircleCheckBox, "iconPercent", 1f, 0f))
-                        .with(ObjectAnimator.ofFloat(this@CircleCheckBox, "currentBackgroundR",
-                                backgroundRMax, animationR + outlineWidth / 2f))
-                        .before(ObjectAnimator.ofFloat(this@CircleCheckBox, "currentBackgroundR",
-                                animationR + outlineWidth / 2f, outlineR + outlineWidth / 2f))
-                        .before(ObjectAnimator.ofInt(this@CircleCheckBox, "currentBackgroundAlpha", 255, 0))
-                        .before(ObjectAnimator.ofFloat(this@CircleCheckBox, "currentOutlineR", animationR, outlineR))
+                    .with(
+                        ObjectAnimator.ofFloat(
+                            this@CircleCheckBox, "currentBackgroundR",
+                            backgroundRMax, animationR + outlineWidth / 2f
+                        )
+                    )
+                    .before(
+                        ObjectAnimator.ofFloat(
+                            this@CircleCheckBox, "currentBackgroundR",
+                            animationR + outlineWidth / 2f, outlineR + outlineWidth / 2f
+                        )
+                    )
+                    .before(
+                        ObjectAnimator.ofInt(
+                            this@CircleCheckBox,
+                            "currentBackgroundAlpha",
+                            255,
+                            0
+                        )
+                    )
+                    .before(
+                        ObjectAnimator.ofFloat(
+                            this@CircleCheckBox,
+                            "currentOutlineR",
+                            animationR,
+                            outlineR
+                        )
+                    )
 
                 duration = ANIM_DURATION
             }
@@ -286,8 +345,10 @@ class CircleCheckBox : View, Checkable {
             iconRect.right = measuredWidth - iconRect.left
             iconRect.bottom = measuredHeight - iconRect.top
             canvas.clipRect(iconRect)
-            canvas.drawBitmap(iconBitmap, (measuredWidth - iconBitmap.width) / 2f,
-                    (measuredHeight - iconBitmap.height) / 2f, checkPaint)
+            canvas.drawBitmap(
+                iconBitmap, (measuredWidth - iconBitmap.width) / 2f,
+                (measuredHeight - iconBitmap.height) / 2f, checkPaint
+            )
         }
     }
 

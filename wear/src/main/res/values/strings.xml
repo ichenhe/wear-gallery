@@ -33,8 +33,14 @@
     <string name="image_detail_zoom_out">Zoom out</string>
 
     <string name="local_title_selection">%1$d checked</string>
-    <string name="local_delete_images_confirm">Do you really want to delete these %1$d pictures?</string>
-    <string name="local_delete_image_folders_confirm">Do you really want to delete pictures in these %1$d folders?</string>
+    <plurals name="local_delete_images_confirm">
+        <item quantity="one">Do you really want to delete these %1$d picture?</item>
+        <item quantity="other">Do you really want to delete these %1$d pictures?</item>
+    </plurals>
+    <plurals name="local_delete_image_folders_confirm">
+        <item quantity="one">Do you really want to delete pictures in these %1$d folder?</item>
+        <item quantity="other">Do you really want to delete pictures in these %1$d folders?</item>
+    </plurals>
     <string name="local_err_permission_title">Error</string>
     <string name="local_err_permission_content">Read and write sd card permissions are necessary to scan the local image, please grant.</string>
     <string name="mobile_load_gallery_err_tip">Help</string>
@@ -80,7 +86,6 @@
     <string name="server_help_msg">- Make sure the watch is in the same LAN(WiFi) as the phone/pc.\n- Do not close the watch window during transmission.\n- Make sure it is not blocked by the firewall.</string>
 
     <string name="pick_image_title">Pick</string>
-    <string name="pick_image_folder_name" translatable="false">%1$s (%2$d)</string>
     <string name="pick_image_all">All</string>
     <string name="pick_image_folder">Album</string>
 

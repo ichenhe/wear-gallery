@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.widget.Checkable
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.use
 import cc.chenhe.weargallery.common.R
 
@@ -29,11 +30,11 @@ import cc.chenhe.weargallery.common.R
  * An [ImageView] which can show a mask color if it was marked as checked.
  */
 class MaskImageView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.maskImageViewStyle,
-        defStyleRes: Int = R.style.DefaultMaskImageViewStyle
-) : ImageView(context, attrs, defStyleAttr, defStyleRes), Checkable {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.maskImageViewStyle,
+    defStyleRes: Int = R.style.DefaultMaskImageViewStyle
+) : AppCompatImageView(context, attrs, defStyleAttr), Checkable {
 
     var checkedColor: Int = 0
         set(value) {
@@ -54,7 +55,12 @@ class MaskImageView @JvmOverloads constructor(
         }
 
     init {
-        context.theme.obtainStyledAttributes(attrs, R.styleable.MaskImageView, defStyleAttr, defStyleRes).use {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.MaskImageView,
+            defStyleAttr,
+            defStyleRes
+        ).use {
             checkedColor = it.getColor(R.styleable.MaskImageView_checkedColor, 0)
             mChecked = it.getBoolean(R.styleable.MaskImageView_android_checked, false)
         }

@@ -20,7 +20,6 @@ package cc.chenhe.weargallery.common.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.ViewConfiguration
@@ -31,6 +30,7 @@ import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewCompat.TYPE_NON_TOUCH
 import androidx.core.view.ViewCompat.TYPE_TOUCH
+import timber.log.Timber
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -43,7 +43,7 @@ import kotlin.math.min
  * instead.
  */
 open class NestedScrollConstrainLayout @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), NestedScrollingChild2 {
 
     private val helper: NestedScrollingChildHelper = NestedScrollingChildHelper(this)
@@ -68,8 +68,8 @@ open class NestedScrollConstrainLayout @JvmOverloads constructor(
 
     override fun setNestedScrollingEnabled(enabled: Boolean) {
         if (!enabled) {
-            Log.w("NestedScrollCL",
-                    "This layout is designed to dispatch nested scroll events so disable request will be ignored.")
+            Timber.tag("NestedScrollCL")
+                .w("This layout is designed to dispatch nested scroll events so disable request will be ignored.")
             return
         }
         super.setNestedScrollingEnabled(enabled)
@@ -87,14 +87,25 @@ open class NestedScrollConstrainLayout @JvmOverloads constructor(
         return helper.startNestedScroll(axes, type)
     }
 
-    override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?,
-                                         type: Int): Boolean {
+    override fun dispatchNestedPreScroll(
+        dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?,
+        type: Int
+    ): Boolean {
         return helper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type)
     }
 
-    override fun dispatchNestedScroll(dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
-                                      offsetInWindow: IntArray?, type: Int): Boolean {
-        return helper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type)
+    override fun dispatchNestedScroll(
+        dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
+        offsetInWindow: IntArray?, type: Int
+    ): Boolean {
+        return helper.dispatchNestedScroll(
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            offsetInWindow,
+            type
+        )
     }
 
     override fun stopNestedScroll(type: Int) {
@@ -105,7 +116,11 @@ open class NestedScrollConstrainLayout @JvmOverloads constructor(
         return helper.dispatchNestedPreFling(velocityX, velocityY)
     }
 
-    override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
+    override fun dispatchNestedFling(
+        velocityX: Float,
+        velocityY: Float,
+        consumed: Boolean
+    ): Boolean {
         return helper.dispatchNestedFling(velocityX, velocityY, consumed)
     }
 
@@ -159,8 +174,10 @@ open class NestedScrollConstrainLayout @JvmOverloads constructor(
             dispatchNestedFling(vx, vy, true)
 
             startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_NON_TOUCH)
-            doFling(max(-maxFlingVelocity, min(vx, maxFlingVelocity)),
-                    max(-maxFlingVelocity, min(vy, maxFlingVelocity)))
+            doFling(
+                max(-maxFlingVelocity, min(vx, maxFlingVelocity)),
+                max(-maxFlingVelocity, min(vy, maxFlingVelocity))
+            )
             return true
         }
         return false
@@ -170,8 +187,10 @@ open class NestedScrollConstrainLayout @JvmOverloads constructor(
     private var lastFlingY = 0
 
     private fun doFling(velocityX: Float, velocityY: Float) {
-        scroller.fling(0, 0, velocityX.toInt(), velocityY.toInt(), Int.MIN_VALUE, Int.MAX_VALUE, Int.MIN_VALUE,
-                Int.MAX_VALUE)
+        scroller.fling(
+            0, 0, velocityX.toInt(), velocityY.toInt(), Int.MIN_VALUE, Int.MAX_VALUE, Int.MIN_VALUE,
+            Int.MAX_VALUE
+        )
         invalidate()
     }
 

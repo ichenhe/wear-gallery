@@ -56,13 +56,13 @@
             android:contentDescription="@string/image_operation_hd"
             android:enabled="@{currentItem!=null &amp;&amp; !UtilsKt.hasLocalFile(currentItem)}"
             android:onClick="@{onClickListener}"
-            android:tint="@color/image_operation_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageOperationDelete"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageOperationTurnLeft"
-            app:srcCompat="@drawable/ic_operation_hd" />
+            app:srcCompat="@drawable/ic_operation_hd"
+            app:tint="@color/image_operation_button" />
 
         <ImageView
             android:id="@+id/imageOperationDelete"
@@ -70,12 +70,12 @@
             android:contentDescription="@string/image_operation_delete"
             android:enabled="@{currentItem!=null &amp;&amp; UtilsKt.hasLocalFile(currentItem)}"
             android:onClick="@{onClickListener}"
-            android:tint="@color/image_operation_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageOperationHd"
             app:layout_constraintTop_toBottomOf="@+id/imageOperationTurnRight"
-            app:srcCompat="@drawable/ic_operation_del" />
+            app:srcCompat="@drawable/ic_operation_del"
+            app:tint="@color/image_operation_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

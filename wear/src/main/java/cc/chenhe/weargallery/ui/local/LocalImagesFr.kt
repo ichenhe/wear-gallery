@@ -129,7 +129,11 @@ class LocalImagesFr : Fragment() {
                 val data = checked.map { (it as Image).uri }
                 AlertDialog(requireContext()).apply {
                     setTitle(R.string.confirm)
-                    message = getString(R.string.local_delete_images_confirm, data.size)
+                    message = resources.getQuantityString(
+                        R.plurals.local_delete_images_confirm,
+                        data.size,
+                        data.size
+                    )
                     setNegativeButtonIcon(R.drawable.ic_dialog_close, null)
                     setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { _, _ ->
                         sharedViewModel.deleteLocalImages(data)
@@ -142,7 +146,11 @@ class LocalImagesFr : Fragment() {
                 val data = checked.map { it as ImageFolder }
                 AlertDialog(requireContext()).apply {
                     setTitle(R.string.confirm)
-                    message = getString(R.string.local_delete_image_folders_confirm, data.size)
+                    message = resources.getQuantityString(
+                        R.plurals.local_delete_image_folders_confirm,
+                        data.size,
+                        data.size
+                    )
                     setNegativeButtonIcon(R.drawable.ic_dialog_close, null)
                     setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { _, _ ->
                         sharedViewModel.deleteLocalImageFolders(data)
