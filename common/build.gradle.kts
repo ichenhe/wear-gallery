@@ -54,7 +54,5 @@ dependencies {
 
 
     testImplementation("junit:junit:${Ver.junit}")
-    testImplementation("androidx.test:core:${Ver.test}") // Robolectric environment
-    testImplementation("org.mockito:mockito-core:${Ver.mockito}") // Mockito framework
-    testImplementation("org.amshove.kluent:kluent-android:${Ver.kluent}")
+    testImplementation("io.strikt:strikt-core:${Ver.strikt}")
 }

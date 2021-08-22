@@ -17,10 +17,11 @@
 
 package cc.chenhe.weargallery.common.util
 
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
-import org.amshove.kluent.shouldBeTrue
 import org.junit.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isFalse
+import strikt.assertions.isTrue
 import java.io.File
 
 class UtilsTest {
@@ -28,42 +29,42 @@ class UtilsTest {
     @Test
     fun isSameDay_same() {
         // 2020/01/01 00:00:00, 2020/01/01 23:59:59
-        isSameDay(1577808000000, 1577894399000).shouldBeTrue()
+        expectThat(isSameDay(1577808000000, 1577894399000)).isTrue()
     }
 
     @Test
     fun isSameDay_differentDay() {
         // 2020/01/01 23:59:59, 2020/01/02 00:00:00
-        isSameDay(1577894399000, 1577894400000).shouldBeFalse()
+        expectThat(isSameDay(1577894399000, 1577894400000)).isFalse()
     }
 
     @Test
     fun isSameDay_differentYear() {
         // 2020/01/02 00:00:00, 2019/01/02 00:00:00
-        isSameDay(1577894400000, 1546358400000).shouldBeFalse()
+        expectThat(isSameDay(1577894400000, 1546358400000)).isFalse()
     }
 
     @Test
     fun getFileName_normal() {
         val f = File("sdcard/test/123.png")
-        f.path.fileName shouldBeEqualTo f.name
+        expectThat(f.path.fileName).isEqualTo(f.name)
     }
 
     @Test
     fun getFileName_root() {
         val f = File("/123.png")
-        f.path.fileName shouldBeEqualTo "123.png"
+        expectThat(f.path.fileName).isEqualTo("123.png")
     }
 
     @Test
     fun getFilePath_normal() {
         val f = File("sdcard/test/123.png")
-        f.path.filePath shouldBeEqualTo f.parent!!
+        expectThat(f.path.filePath).isEqualTo(f.parent!!)
     }
 
     @Test
     fun getFilePath_root() {
         val f = File("/123.png")
-        f.path.filePath shouldBeEqualTo f.parent
+        expectThat(f.path.filePath).isEqualTo(f.parent)
     }
 }

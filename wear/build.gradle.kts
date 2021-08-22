@@ -125,6 +125,6 @@ dependencies {
     implementation("com.github.zhpanvip:viewpagerindicator:1.2.1")
 
     testImplementation("junit:junit:${Ver.junit}")
-    testImplementation("org.amshove.kluent:kluent-android:${Ver.kluent}")
     testImplementation("io.insert-koin:koin-test:${Ver.koin}")
+    testImplementation("io.strikt:strikt-core:${Ver.strikt}")
 }

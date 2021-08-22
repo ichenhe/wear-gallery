@@ -25,7 +25,6 @@ object Ver {
 
     // test
     const val test = "1.4.0"
-    const val mockito = "2.23.0"
-    const val kluent = "1.68"
+    const val strikt = "0.31.0"
     const val junit = "4.13.2"
 }

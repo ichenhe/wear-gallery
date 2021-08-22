@@ -17,13 +17,17 @@
 
 package cc.chenhe.weargallery.uilts.diskcache
 
-import okio.Okio
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeNull
-import org.amshove.kluent.shouldNotBeNull
+import okio.buffer
+import okio.sink
+import okio.source
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import strikt.api.expect
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
+import strikt.assertions.isNull
 import java.io.File
 
 private const val APP_VERSION = 1L
@@ -53,8 +57,8 @@ class DiskLruCacheTest {
 
     private fun writeCache(key: String, data: String, commit: Boolean = true): DiskLruCache.Editor {
         val editor = cache.edit(key)!!
-        Okio.sink(editor.getTargetFile()).use {
-            Okio.buffer(it).use { bs ->
+        editor.getTargetFile().sink().use {
+            it.buffer().use { bs ->
                 bs.writeUtf8(data)
             }
         }
@@ -66,8 +70,8 @@ class DiskLruCacheTest {
 
     private fun writeCacheBytes(key: String, size: Int) {
         val editor = cache.edit(key)!!
-        Okio.sink(editor.getTargetFile()).use {
-            Okio.buffer(it).use { bs ->
+        editor.getTargetFile().sink().use {
+            it.buffer().use { bs ->
                 bs.write(ByteArray(size))
             }
         }
@@ -76,7 +80,7 @@ class DiskLruCacheTest {
 
     @Test
     fun getFile_noCache_null() {
-        cache.getFile("no").shouldBeNull()
+        expectThat(cache.getFile("no")).isNull()
     }
 
     @Test
@@ -84,10 +88,10 @@ class DiskLruCacheTest {
         writeCache(KEY, DATA)
 
         val cached = cache.getFile(KEY)
-        cached.shouldNotBeNull()
-        Okio.source(cached).use {
-            Okio.buffer(it).use { bs ->
-                bs.readUtf8() shouldBeEqualTo DATA
+        expectThat(cached).isNotNull()
+        cached!!.source().use {
+            it.buffer().use { bs ->
+                expectThat(bs.readUtf8()).isEqualTo(DATA)
             }
         }
     }
@@ -95,20 +99,20 @@ class DiskLruCacheTest {
     @Test
     fun edit_abort() {
         writeCache(KEY, DATA, false).abort()
-        cache.getFile(KEY).shouldBeNull()
+        expectThat(cache.getFile(KEY)).isNull()
     }
 
     @Test
     fun remove_alreadyExist() {
         writeCache(KEY, DATA)
         cache.remove(KEY)
-        cache.getFile(KEY).shouldBeNull()
+        expectThat(cache.getFile(KEY)).isNull()
     }
 
     @Test
     fun remove_notExist() {
         cache.remove(KEY)
-        cache.getFile(KEY).shouldBeNull()
+        expectThat(cache.getFile(KEY)).isNull()
     }
 
     @Test
@@ -131,8 +135,8 @@ class DiskLruCacheTest {
         }
         for (i in 0..4) {
             val cached = cache.getFile(i.toString())
-            cached.shouldNotBeNull()
-            cached.length() shouldBeEqualTo size
+            expectThat(cached).isNotNull()
+            expectThat(cached!!.length()).isEqualTo(size)
         }
 
         cache.getFile("2")
@@ -143,17 +147,19 @@ class DiskLruCacheTest {
         Thread.sleep(50)
         // queue: [0,3,2],4,1,big
         for (i in arrayOf(0, 3, 2)) {
-            cache.getFile(i.toString()).shouldBeNull()
+            expectThat(cache.getFile(i.toString())).isNull()
         }
         for (i in arrayOf(4, 1)) {
             cache.getFile(i.toString()).let {
-                it.shouldNotBeNull()
-                it.length() shouldBeEqualTo size
+                expect {
+                    that(it).isNotNull()
+                    that(it!!.length()).isEqualTo(size)
+                }
             }
         }
         cache.getFile("big").let {
-            it.shouldNotBeNull()
-            it.length() shouldBeEqualTo 800L
+            expectThat(it).isNotNull()
+            expectThat(it!!.length()).isEqualTo(800L)
         }
     }
 }
