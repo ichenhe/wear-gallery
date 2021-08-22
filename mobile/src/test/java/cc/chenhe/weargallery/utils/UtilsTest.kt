@@ -1,6 +1,6 @@
 package cc.chenhe.weargallery.utils
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 

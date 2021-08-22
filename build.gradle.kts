@@ -37,6 +37,10 @@ allprojects {
         mavenCentral()
         google()
     }
+
+    tasks.withType(Test::class.java) {
+        useJUnitPlatform()
+    }
 }
 
 tasks.register<Delete>("clean") {

@@ -53,6 +53,8 @@ dependencies {
     api("me.chenhe:wearmsger:${Ver.wearMsger}")
 
 
-    testImplementation("junit:junit:${Ver.junit}")
+    testImplementation("org.junit.jupiter:junit-jupiter:${Ver.junit}")
     testImplementation("io.strikt:strikt-core:${Ver.strikt}")
 }
+
+

@@ -26,5 +26,5 @@ object Ver {
     // test
     const val test = "1.4.0"
     const val strikt = "0.31.0"
-    const val junit = "4.13.2"
+    const val junit = "5.7.2"
 }

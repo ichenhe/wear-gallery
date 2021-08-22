@@ -115,6 +115,6 @@ dependencies {
     kapt("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.davemorrissey.labs:subsampling-scale-image-view:${Ver.subsamplingImageView}")
 
-    testImplementation("junit:junit:${Ver.junit}")
+    testImplementation("org.junit.jupiter:junit-jupiter:${Ver.junit}")
     testImplementation("io.strikt:strikt-core:${Ver.strikt}")
 }

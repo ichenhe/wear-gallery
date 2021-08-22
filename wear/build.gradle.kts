@@ -124,7 +124,7 @@ dependencies {
     implementation("io.coil-kt:coil-gif:1.3.1")
     implementation("com.github.zhpanvip:viewpagerindicator:1.2.1")
 
-    testImplementation("junit:junit:${Ver.junit}")
+    testImplementation("org.junit.jupiter:junit-jupiter:${Ver.junit}")
     testImplementation("io.insert-koin:koin-test:${Ver.koin}")
     testImplementation("io.strikt:strikt-core:${Ver.strikt}")
 }
