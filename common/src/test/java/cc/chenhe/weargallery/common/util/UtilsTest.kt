@@ -17,6 +17,8 @@
 
 package cc.chenhe.weargallery.common.util
 
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
@@ -24,11 +26,24 @@ import strikt.assertions.isEqualTo
 import strikt.assertions.isFalse
 import strikt.assertions.isTrue
 import java.io.File
+import java.util.*
 
 class UtilsTest {
 
     @Nested
     inner class IsSameDay {
+        private val tz: TimeZone = TimeZone.getDefault()
+
+        @BeforeEach
+        fun init() {
+            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"))
+        }
+
+        @AfterEach
+        fun clear() {
+            TimeZone.setDefault(tz)
+        }
+
         @Test
         fun same() {
             // 2020/01/01 00:00:00, 2020/01/01 23:59:59
