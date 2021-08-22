@@ -28,6 +28,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.bean.toMetadata
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.comm.*
 import cc.chenhe.weargallery.common.comm.bean.SendResp
@@ -137,25 +138,20 @@ class MobileListenerService : WMListenerService() {
             }
 
             val imageRepo: ImageRepository = get()
-            val map = dataMapItem.getDataMap()
+            val map = dataMapItem.dataMap
             val info = map.getString(ITEM_IMAGE_INFO)
                 ?.let { moshi.adapter(Image::class.java).fromJsonQ(it) }
             if (info == null) {
-                // No image info
+                // No image info6
                 val data = moshi.adapter(SendResp::class.java).toJson(SendResp(RESULT_ERROR))
                 BothWayHub.response(context, dataMapItem, data)
                 return@launch
             }
+            val metadata = info.toMetadata()
             map.getAsset(ITEM_IMAGE)?.let { asset ->
                 DataHub.getInputStreamForAsset(context, asset)
             }?.use { ins ->
-                val uri = imageRepo.saveImage(
-                    context,
-                    info.name,
-                    info.takenTime,
-                    ins,
-                    map.getString(ITEM_SAVE_PATH)
-                )
+                val uri = imageRepo.saveImage(context, metadata, ins, map.getString(ITEM_SAVE_PATH))
                 if (uri == null) {
                     // Save error
                     val data = moshi.adapter(SendResp::class.java).toJson(SendResp(RESULT_ERROR))

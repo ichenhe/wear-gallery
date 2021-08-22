@@ -324,9 +324,9 @@ object ImageUtil {
         ids: List<Long>? = null,
     ): List<Image> = withContext(Dispatchers.IO) {
         var selection =
-            "${MediaStore.Images.Media.WIDTH} > ? AND ${MediaStore.Images.Media.HEIGHT} > ?"
+            "0=0"
 
-        val selectionArgs = mutableListOf("0", "0")
+        val selectionArgs = mutableListOf<String>()
 
         if (bucketId != null) {
             selection += " AND ${MediaStore.Images.Media.BUCKET_ID} = ?"

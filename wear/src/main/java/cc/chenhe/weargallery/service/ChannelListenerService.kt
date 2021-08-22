@@ -1,6 +1,7 @@
 package cc.chenhe.weargallery.service
 
 import android.content.Context
+import cc.chenhe.weargallery.bean.toMetadata
 import cc.chenhe.weargallery.common.comm.PATH_CHANNEL_BATCH_SEND
 import cc.chenhe.weargallery.common.comm.bean.SendItem
 import cc.chenhe.weargallery.common.util.toInt
@@ -85,14 +86,9 @@ class ChannelListenerService : WearableListenerService() {
 
         private fun saveToGallery(sendItem: SendItem, tmpFile: File) {
             runBlocking {
+                val metadata = sendItem.image.toMetadata()
                 tmpFile.inputStream().use { ins ->
-                    imageRepo.saveImage(
-                        context,
-                        sendItem.image.name,
-                        takenTime = sendItem.image.takenTime,
-                        ins = ins,
-                        folderName = sendItem.folder
-                    )
+                    imageRepo.saveImage(context, metadata, ins, sendItem.folder)
                 }
             }
         }

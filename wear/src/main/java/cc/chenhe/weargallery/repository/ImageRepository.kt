@@ -21,7 +21,6 @@ import android.app.Activity
 import android.app.PendingIntent
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Binder
 import android.os.Build
@@ -29,6 +28,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.core.database.getStringOrNull
+import cc.chenhe.weargallery.bean.ImageMetadata
 import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.uilts.*
 import kotlinx.coroutines.Dispatchers
@@ -73,23 +73,37 @@ open class ImageRepository(
      */
     suspend fun saveImage(
         context: Context,
-        displayName: String,
-        takenTime: Long,
+        metadata: ImageMetadata,
         ins: InputStream,
         folderName: String? = null
     ): Uri? = withContext(Dispatchers.IO) {
         if (scopeStorageEnabled()) {
-            saveImageScopeStorage(context, displayName, ins, folderName)
+            saveImageScopeStorage(context, metadata, ins, folderName)
         } else {
-            saveImageLegacy(context, displayName, takenTime, ins, folderName)
+            saveImageLegacy(context, metadata, ins, folderName)
         }
+    }
+
+    private fun ImageMetadata.toContentValues(): ContentValues = ContentValues().apply {
+        put(MediaStore.Images.Media.DISPLAY_NAME, name)
+        put(MediaStore.Images.Media.WIDTH, width)
+        put(MediaStore.Images.Media.HEIGHT, height)
+        put(MediaStore.Images.Media.SIZE, size)
+        if (takenTime > 0L)
+            put(MediaStore.Images.Media.DATE_TAKEN, takenTime)
+        if (modifiedTime > 0L)
+            put(MediaStore.Images.Media.DATE_MODIFIED, modifiedTime)
+        if (addedTime > 0L)
+            put(MediaStore.Images.Media.DATE_ADDED, addedTime)
+        if (!mime.isNullOrEmpty())
+            put(MediaStore.Images.Media.MIME_TYPE, mime)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     @Suppress("BlockingMethodInNonBlockingContext") // IO Dispatcher
     private suspend fun saveImageScopeStorage(
         context: Context,
-        displayName: String,
+        metadata: ImageMetadata,
         ins: InputStream,
         folderName: String? = null
     ): Uri? = withContext(Dispatchers.IO) {
@@ -99,9 +113,9 @@ open class ImageRepository(
         } else {
             Environment.DIRECTORY_PICTURES + File.separator + folderName
         }
-        var values = ContentValues().apply {
+
+        var values = metadata.toContentValues().apply {
             put(MediaStore.Images.Media.RELATIVE_PATH, saveFolder)
-            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
             put(MediaStore.Images.Media.IS_PENDING, true)
         }
         val uri =
@@ -123,8 +137,7 @@ open class ImageRepository(
     @Suppress("DEPRECATION", "BlockingMethodInNonBlockingContext") // IO Dispatcher
     private suspend fun saveImageLegacy(
         context: Context,
-        displayName: String,
-        takenTime: Long,
+        metadata: ImageMetadata,
         ins: InputStream,
         folderName: String? = null
     ): Uri? = withContext(Dispatchers.IO) {
@@ -145,7 +158,7 @@ open class ImageRepository(
         }
 
         // write file: override old data
-        val file = File(folder, displayName)
+        val file = File(folder, metadata.name)
         file.outputStream().buffered().use { out ->
             ins.copyTo(out)
             out.flush()
@@ -167,19 +180,10 @@ open class ImageRepository(
             }
         }
 
-        // decode picture information
-        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(file.absolutePath, options)
-
         // insert into or update media store
         @Suppress("InlinedApi")
-        val values = ContentValues().apply {
+        val values = metadata.toContentValues().apply {
             put(MediaStore.Images.Media.DATA, file.absolutePath)
-            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
-            put(MediaStore.Images.Media.WIDTH, options.outWidth)
-            put(MediaStore.Images.Media.HEIGHT, options.outHeight)
-            put(MediaStore.Images.Media.DATE_TAKEN, takenTime)
-            put(MediaStore.Images.Media.MIME_TYPE, options.outMimeType)
         }
         if (existUri != null) {
             context.contentResolver.update(

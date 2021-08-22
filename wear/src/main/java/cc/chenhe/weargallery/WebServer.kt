@@ -18,6 +18,8 @@
 package cc.chenhe.weargallery
 
 import android.content.Context
+import cc.chenhe.weargallery.bean.toMetadata
+import cc.chenhe.weargallery.common.util.ImageExifUtil
 import cc.chenhe.weargallery.repository.ImageRepository
 import fi.iki.elonen.NanoHTTPD
 import kotlinx.coroutines.Dispatchers
@@ -95,14 +97,20 @@ class WebServer(context: Context, private val repository: ImageRepository) : Nan
         val tmpFile = files[fieldName]?.let { File(it) }
         val fileName = session.parameters[fieldName]?.firstOrNull()
         if (tmpFile == null || fileName == null) {
-            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_HTML, "Unknown file or params.")
+            return newFixedLengthResponse(
+                Response.Status.INTERNAL_ERROR,
+                MIME_HTML,
+                "Unknown file or params."
+            )
         }
 
         val localUri = runBlocking(Dispatchers.IO) {
+            val metadata = ImageExifUtil.parseImageFromFile(tmpFile).toMetadata()
             tmpFile.inputStream().use { ins ->
-                repository.saveImage(ctx, fileName, 0, ins)
+                repository.saveImage(ctx, metadata, ins)
             }
         }
+
         tmpFile.delete()
         return if (localUri != null) {
             newFixedLengthResponse(Response.Status.OK, MIME_JSON, "{\"code\":0}")

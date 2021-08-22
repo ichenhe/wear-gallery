@@ -44,6 +44,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:${Ver.recyclerview}")
     implementation("androidx.room:room-ktx:${Ver.room}")
     kapt("androidx.room:room-compiler:${Ver.room}")
+    implementation("androidx.exifinterface:exifinterface:${Ver.exifinterface}")
 
     implementation("com.squareup.moshi:moshi:${Ver.moshi}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Ver.moshi}")

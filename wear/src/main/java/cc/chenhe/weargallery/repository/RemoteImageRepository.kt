@@ -22,6 +22,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.bean.RemoteImageFolder
+import cc.chenhe.weargallery.bean.toMetadata
 import cc.chenhe.weargallery.common.bean.ApiErrorResponse
 import cc.chenhe.weargallery.common.bean.ApiResponse
 import cc.chenhe.weargallery.common.bean.RemoteBoundResource
@@ -230,8 +231,9 @@ class RemoteImageRepository(
             }
 
             override suspend fun saveToCache(ins: InputStream): Uri? {
+                val metadata = remoteImage.toMetadata()
                 ins.use {
-                    val localUri = saveImage(context, remoteImage.name, remoteImage.takenTime, it)
+                    val localUri = saveImage(context, metadata, it)
                     if (localUri != null) {
                         // update cache database
                         remoteImageDao.setLocalUri(remoteImage.uri, localUri)

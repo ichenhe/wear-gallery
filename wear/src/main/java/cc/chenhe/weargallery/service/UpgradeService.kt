@@ -26,6 +26,8 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.bean.toMetadata
+import cc.chenhe.weargallery.common.util.ImageExifUtil
 import cc.chenhe.weargallery.common.util.getVersionCode
 import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.service.UpgradeService.Companion.start
@@ -158,10 +160,10 @@ class UpgradeService : LifecycleService() {
                 hdDir.listFiles()?.forEach { file ->
                     if (!file.isFile)
                         return@forEach
-                    val time = ExifUtils.getOriginalDateTime(file)
-                    Timber.tag(TAG).d("Save ${file.path}, ms time stamp=$time")
+                    val metadata = ImageExifUtil.parseImageFromFile(file).toMetadata()
+                    Timber.tag(TAG).d("Save %s, metadata=%s", file.path, metadata.toString())
                     FileInputStream(file).use { ins ->
-                        repo.saveImage(this@UpgradeService, file.name, time, ins)
+                        repo.saveImage(this@UpgradeService, metadata, ins)
                     }
                     file.delete()
                 }
