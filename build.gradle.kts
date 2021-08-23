@@ -43,6 +43,22 @@ allprojects {
     }
 }
 
+childProjects.forEach { (s, project) ->
+    // copy lint and test reports to /build/reports
+    project.tasks.register<Copy>("copyReports") {
+        val reportDir = File(project.buildDir, "reports")
+        onlyIf {
+            reportDir.isDirectory && !reportDir.list().isNullOrEmpty()
+        }
+        from(reportDir)
+        into(File(rootProject.buildDir, "reports" + File.separator + s))
+    }
+    project.afterEvaluate {
+        project.tasks.findByName("lint")?.finalizedBy("copyReports")
+        project.tasks.findByName("test")?.finalizedBy("copyReports")
+    }
+}
+
 tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 }
