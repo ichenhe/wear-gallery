@@ -43,19 +43,25 @@ allprojects {
     }
 }
 
-childProjects.forEach { (s, project) ->
+subprojects {
     // copy lint and test reports to /build/reports
-    project.tasks.register<Copy>("copyReports") {
+    val projName = name
+    tasks.register<Copy>("copyReports") {
         val reportDir = File(project.buildDir, "reports")
         onlyIf {
             reportDir.isDirectory && !reportDir.list().isNullOrEmpty()
         }
         from(reportDir)
-        into(File(rootProject.buildDir, "reports" + File.separator + s))
+        into(File(rootProject.buildDir, "reports" + File.separator + projName))
     }
-    project.afterEvaluate {
-        project.tasks.findByName("lint")?.finalizedBy("copyReports")
-        project.tasks.findByName("test")?.finalizedBy("copyReports")
+    afterEvaluate {
+        (extensions.findByType(com.android.build.gradle.LibraryExtension::class)
+            ?: extensions.findByType(com.android.build.gradle.AppExtension::class))?.apply {
+            afterEvaluate {
+                tasks.findByName("lint")?.finalizedBy("copyReports")
+                tasks.findByName("test")?.finalizedBy("copyReports")
+            }
+        }
     }
 }
 
