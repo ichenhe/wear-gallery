@@ -85,14 +85,11 @@ object ImageUtil {
             MediaStore.Images.Media.BUCKET_ID,
         )
 
-        val selection =
-            "${MediaStore.Images.Media.WIDTH} > ? AND ${MediaStore.Images.Media.HEIGHT} > ?"
-
         ctx.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             projection,
-            selection,
-            arrayOf("0", "0"),
+            null,
+            null,
             IMAGE_SORT_ORDER,
         )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
@@ -237,9 +234,8 @@ object ImageUtil {
     ): ImagesResp = withContext(Dispatchers.IO) {
         assert(offset >= 0) { "offset must >=0." }
         assert(limit > 0) { "limit must >0." }
-        val selection =
-            "${MediaStore.Images.Media.WIDTH} > ? AND ${MediaStore.Images.Media.HEIGHT} > ? AND ${MediaStore.Images.Media.BUCKET_ID} = ?"
-        val selectionArgs = arrayOf("0", "0", bucketId.toString())
+        val selection = "${MediaStore.Images.Media.BUCKET_ID} = ?"
+        val selectionArgs = arrayOf(bucketId.toString())
 
         MediaStore.Images.Media.MIME_TYPE
 
@@ -323,8 +319,7 @@ object ImageUtil {
         bucketId: Int? = null, // bucketId can be negative
         ids: List<Long>? = null,
     ): List<Image> = withContext(Dispatchers.IO) {
-        var selection =
-            "0=0"
+        var selection = "0=0"
 
         val selectionArgs = mutableListOf<String>()
 
