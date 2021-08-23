@@ -20,6 +20,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew test
 
+      - name: Upload reports
+        uses: actions/upload-artifact@v2.2.4
+        if: ${{ always() }}
+        with:
+          name: Test reports
+          path: build/reports
+          if-no-files-found: warn
+
   lint:
     runs-on: ubuntu-latest
 
@@ -36,4 +44,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew lint
 
- 
+      - name: Upload reports
+        uses: actions/upload-artifact@v2.2.4
+        if: ${{ always() }}
+        with:
+          name: Lint reports
+          path: build/reports
+          if-no-files-found: warn
