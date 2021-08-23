@@ -85,12 +85,12 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Upload Apks
-        use: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v2.2.4
         with:
           name: apks
           path: build/outs
       - name: Create release
-        use: ncipollo/release-action@v1.8.8
+        uses: ncipollo/release-action@v1.8.8
         with:
           allowUpdates: false
           artifactErrorsFailBuild: true
