@@ -75,9 +75,9 @@ jobs:
           distribution: 'adopt'
 
       - name: base64-to-file
-        uses: timheuer/base64-to-file@v1
+        uses: RollyPeres/base64-to-path@v1
         with:
-          fileName: keystore/release.jks
+          filePath: keystore/release.jks
           encodedString: ${{ secrets.SIGNING_KEYSTORE }}
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -95,5 +95,5 @@ jobs:
           allowUpdates: false
           artifactErrorsFailBuild: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "apks/mobile-normal-release.apk,apks/wear-normal-release.apk"
+          artifacts: "build/outs/mobile-normal-release.apk,build/outs/wear-normal-release.apk"
           prerelease: ${{ endsWith(steps.vars.outputs.tag, '-pre') || endsWith(steps.vars.outputs.tag, '-preview') }}
