@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.databinding.RvItemPickImageBinding
-import coil.load
+import cc.chenhe.weargallery.uilts.loadWithoutHW
 
 class PickImageAdapter : BaseListAdapter<Image, PickImageAdapter.PickViewHolder>(DiffCallback()) {
 
@@ -51,7 +51,7 @@ class PickImageAdapter : BaseListAdapter<Image, PickImageAdapter.PickViewHolder>
             if (gridImageSize == 0 && binding.itemImage.width > 0) {
                 gridImageSize = binding.itemImage.width
             }
-            binding.itemImage.load(image.uri) {
+            binding.itemImage.loadWithoutHW(image.uri) {
                 crossfade(true)
                 if (gridImageSize > 0) {
                     size(gridImageSize, gridImageSize)

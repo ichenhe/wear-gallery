@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.databinding.RvItemLocalImageBinding
-import coil.load
+import cc.chenhe.weargallery.uilts.loadWithoutHW
 
 class LocalImagesGridAdapter(context: Context) :
     LocalImagesBaseAdapter<Image>(context, LocalImagesGridDiffCallback()) {
@@ -57,8 +57,9 @@ class LocalImagesGridAdapter(context: Context) :
             if (gridImageSize == 0 && binding.itemImage.width > 0) {
                 gridImageSize = binding.itemImage.width
             }
-            binding.itemImage.load(image.uri) {
+            binding.itemImage.loadWithoutHW(image.uri) {
                 crossfade(true)
+                allowHardware(false)
                 if (gridImageSize > 0) {
                     size(gridImageSize, gridImageSize)
                 }

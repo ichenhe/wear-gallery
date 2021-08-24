@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.DiffUtil
 import cc.chenhe.weargallery.common.bean.ImageFolder
 import cc.chenhe.weargallery.common.util.fileName
 import cc.chenhe.weargallery.databinding.RvItemLocalFolderBinding
-import coil.load
+import cc.chenhe.weargallery.uilts.loadWithoutHW
 
 class LocalImagesFolderAdapter(context: Context) :
     LocalImagesBaseAdapter<ImageFolder>(context, LocalImagesFolderDiffCallback()) {
@@ -52,7 +52,7 @@ class LocalImagesFolderAdapter(context: Context) :
         fun bind(folder: ImageFolder) {
             binding.itemImageCount.text = folder.imgNum.toString()
             binding.folderName.text = folder.name.fileName
-            binding.itemImage.load(folder.preview.uri) {
+            binding.itemImage.loadWithoutHW(folder.preview.uri) {
                 crossfade(true)
             }
         }
