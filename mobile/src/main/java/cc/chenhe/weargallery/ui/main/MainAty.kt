@@ -56,14 +56,12 @@ class MainAty : AppCompatActivity() {
                 return@registerForActivityResult
             }
             NotificationManagerCompat.from(this).cancel(NOTIFY_ID_PERMISSION)
-            setContentView(binding.root)
+            init()
         }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = AtyMainBinding.inflate(layoutInflater)
-
 
         if (checkHuaWei()) {
             MaterialAlertDialogBuilder(this)
@@ -90,9 +88,14 @@ class MainAty : AppCompatActivity() {
         if (!checkStoragePermissions(this)) {
             introduceLauncher.launch(Unit)
         } else {
-            setContentView(binding.root)
-            resetStatusBarTextColor(binding.root)
+            init()
         }
+    }
+
+    private fun init() {
+        binding = AtyMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        resetStatusBarTextColor(binding.root)
     }
 
     override fun onDestroy() {

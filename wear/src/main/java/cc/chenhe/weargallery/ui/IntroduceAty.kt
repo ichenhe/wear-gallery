@@ -39,26 +39,30 @@ class IntroduceAty : IntroActivity() {
         isButtonBackVisible = false
         isPagerIndicatorVisible = false
 
-        val permissions = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
+        val permissions = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        } else {
+            arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        }
 
-        for (item in permissions) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    item
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(permissions, REQUEST_PERMISSION)
-                    break
-                }
+        val missing = ArrayList<String>(permissions.size)
+        permissions.forEach {
+            if (ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED)
+                missing += it
+        }
+        if (missing.isNotEmpty()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(missing.toTypedArray(), REQUEST_PERMISSION)
             }
         }
 
+        // default layout may cause crash or view offset on API30
         addSlide(
             SimpleSlide.Builder()
+                .layout(R.layout.fr_introduce)
                 .title(R.string.intro_gif_title)
                 .description(R.string.intro_gif_content)
                 .background(R.color.slide_first)
@@ -67,6 +71,7 @@ class IntroduceAty : IntroActivity() {
         )
         addSlide(
             SimpleSlide.Builder()
+                .layout(R.layout.fr_introduce)
                 .title(R.string.intro_lan_title)
                 .description(R.string.intro_lan_content)
                 .background(R.color.slide_second)
@@ -75,6 +80,7 @@ class IntroduceAty : IntroActivity() {
         )
         addSlide(
             SimpleSlide.Builder()
+                .layout(R.layout.fr_introduce)
                 .title(R.string.intro_wf_title)
                 .description(R.string.intro_wf_content)
                 .background(R.color.slide_third)
@@ -83,6 +89,7 @@ class IntroduceAty : IntroActivity() {
         )
         addSlide(
             SimpleSlide.Builder()
+                .layout(R.layout.fr_introduce)
                 .title(R.string.intro_os_title)
                 .description(R.string.intro_os_content)
                 .background(R.color.slide_fourth)
@@ -101,15 +108,7 @@ class IntroduceAty : IntroActivity() {
             return
         }
 
-        var allGrant = true
-        for (item in grantResults) {
-            if (item != PackageManager.PERMISSION_GRANTED) {
-                allGrant = false
-                break
-            }
-        }
-
-        if (!allGrant) {
+        if (!grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             AlertDialog(this).apply {
                 setTitle(R.string.local_err_permission_title)
                 setMessage(R.string.local_err_permission_content)
