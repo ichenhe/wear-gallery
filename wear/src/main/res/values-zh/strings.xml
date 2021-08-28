@@ -75,7 +75,7 @@
     <string name="server_state_running">运行中</string>
     <string name="server_state_stop">已停止</string>
     <string name="server_state_fail">启动失败</string>
-    <string name="server_help">无法访问</string>
+    <string name="server_help">需要帮助</string>
     <string name="server_failed">服务器启动失败\n%1$s</string>
     <string name="server_help_msg">- 确保手表与手机、计算机处于同一局域网(WiFi)内。\n- 传输期间请勿关闭手表窗口。\n- 确保没有被设备的防火墙拦截。</string>
 

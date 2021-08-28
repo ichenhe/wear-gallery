@@ -81,7 +81,7 @@
     <string name="server_state_running">Running</string>
     <string name="server_state_stop">Stop</string>
     <string name="server_state_fail">Fail</string>
-    <string name="server_help">Unable visit</string>
+    <string name="server_help">Need help</string>
     <string name="server_failed">Start failed:\n%1$s</string>
     <string name="server_help_msg">- Make sure the watch is in the same LAN(WiFi) as the phone/pc.\n- Do not close the watch window during transmission.\n- Make sure it is not blocked by the firewall.</string>
 

@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
-import cc.chenhe.weargallery.common.util.GITHUB_RELEASE
+import cc.chenhe.weargallery.common.util.LIVE_PREVIEW_HELP_URL
 import cc.chenhe.weargallery.databinding.FrMobileImagesBinding
 import cc.chenhe.weargallery.databinding.ViewRetryBinding
 import cc.chenhe.weargallery.ui.common.RetryCallback
@@ -85,7 +85,7 @@ class MobileImagesFr : Fragment(), RetryCallback {
                             AlertDialog(requireContext()).apply {
                                 setTitle(R.string.mobile_load_gallery_err_tip)
                                 setMessage(R.string.mobile_load_gallery_err_content)
-                                addQrCode(GITHUB_RELEASE)
+                                addQrCode(LIVE_PREVIEW_HELP_URL)
                                 setPositiveButtonIcon(R.drawable.ic_dialog_confirm, null)
                             }.show()
                         }

@@ -28,9 +28,9 @@ import kotlin.math.abs
 
 const val HUA_WEI = "https://wg.chenhe.me/announcement/huawei/"
 const val GITHUB = "https://github.com/ichenhe/wear-gallery/"
-const val GITHUB_RELEASE = GITHUB + "releases"
 const val TELEGRAM = "https://t.me/weargallery_news"
 const val API_VER = "https://wg.chenhe.me/api/ver.json"
+const val LIVE_PREVIEW_HELP_URL = "https://wg.chenhe.me/tutorials/live-preview/"
 
 const val CHECK_UPDATE_INTERVAL = 24 * 3600 * 3
 
