@@ -75,7 +75,7 @@ class PickImageFr : Fragment() {
                 if (i == 0) requireContext().getString(R.string.pick_image_all) else folders[i - 1].name
             }
             val ids = List(folders.size + 1) { i ->
-                if (i == 0) PickImageViewModel.BUCKET_ALL else folders[i - 1].id
+                if (i == 0) null else folders[i - 1].id
             }
             var currentChoice = ids.indexOf(model.currentBucketId.value)
             if (currentChoice == -1) {

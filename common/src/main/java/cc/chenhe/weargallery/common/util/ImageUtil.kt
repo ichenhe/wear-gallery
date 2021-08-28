@@ -142,7 +142,7 @@ object ImageUtil {
         }
     }
 
-    suspend fun queryBucketImages(context: Context, bucketId: Int): List<Image> {
+    suspend fun queryBucketImages(context: Context, bucketId: Int?): List<Image> {
         return queryImages(context, bucketId)
     }
 
@@ -363,7 +363,7 @@ object ImageUtil {
             queryImageFolders(context)
         }
 
-    fun imagesFlow(context: Context, bucketId: Int = -1) =
+    fun imagesFlow(context: Context, bucketId: Int? = null) =
         contentProviderFlow(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI) {
             queryBucketImages(context, bucketId)
         }

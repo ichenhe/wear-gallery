@@ -28,15 +28,11 @@ import cc.chenhe.weargallery.common.util.ImageUtil
 
 class PickImageViewModel(application: Application) : AndroidViewModel(application) {
 
-    companion object {
-        const val BUCKET_ALL = -1
-    }
-
-    /** Current selected bucket id, [BUCKET_ALL] indicate all images. */
-    private val _currentBucketId = MutableLiveData(-1)
+    /** Current selected bucket id, `null` indicate all images. */
+    private val _currentBucketId = MutableLiveData<Int?>(null)
 
     /** @see [_currentBucketId] */
-    val currentBucketId: LiveData<Int> = _currentBucketId
+    val currentBucketId: LiveData<Int?> = _currentBucketId
 
     /** All local image folders. `null` means loading state. */
     val folders = ImageUtil.imageFoldersFlow(application).asLiveData()
@@ -61,14 +57,14 @@ class PickImageViewModel(application: Application) : AndroidViewModel(applicatio
     val data: LiveData<Resource<List<Image>>> = _data
 
     val currentBucketTitle: LiveData<String?> = currentBucketId.map { id ->
-        if (id == BUCKET_ALL) application.getString(R.string.pick_image_all)
+        if (id == null) application.getString(R.string.pick_image_all)
         else folders.value?.find { it.id == id }?.name
     }
 
     /**
-     * Set the bucket id want to display, [BUCKET_ALL] indicates all buckets.
+     * Set the bucket id want to display, `null` indicates all buckets.
      */
-    fun setBucketId(bucketId: Int) {
+    fun setBucketId(bucketId: Int?) {
         _currentBucketId.postValue(bucketId)
     }
 }
