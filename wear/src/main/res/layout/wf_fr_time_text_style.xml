@@ -8,6 +8,7 @@
     <cc.chenhe.weargallery.view.DigitalWatchFaceView
         android:id="@+id/watchFaceView"
         android:layout_width="match_parent"
+        android:background="#00ff00"
         android:layout_height="match_parent" />
 
     <androidx.viewpager2.widget.ViewPager2

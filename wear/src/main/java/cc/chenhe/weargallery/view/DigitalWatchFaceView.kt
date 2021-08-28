@@ -25,6 +25,7 @@ import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.View
+import android.view.WindowManager
 import cc.chenhe.weargallery.watchface.painter.DigitalPainter
 import cc.chenhe.weargallery.watchface.painter.Painter
 import timber.log.Timber
@@ -32,7 +33,7 @@ import java.util.*
 
 private const val TAG = "WatchFaceView"
 
-/**ØØ
+/**
  * A view to display digital watch face. This view can ensure consistent behavior with the actual watch face service.
  * Full screen size is highly recommended.
  *
@@ -76,6 +77,9 @@ class DigitalWatchFaceView @JvmOverloads constructor(
         is24Hour = DateFormat.is24HourFormat(context)
     }
 
+    val dm: DisplayMetrics = DisplayMetrics()
+
+    @Suppress("DEPRECATION") // no compat function
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         // always use max size
@@ -83,7 +87,8 @@ class DigitalWatchFaceView @JvmOverloads constructor(
         var h = MeasureSpec.getSize(heightMeasureSpec)
 
         // fit screen ratio
-        val dm: DisplayMetrics = resources.displayMetrics
+        (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+            .defaultDisplay.getRealMetrics(dm)
         val ratio = dm.widthPixels / dm.heightPixels.toDouble()
         if (w / h.toDouble() >= ratio) {
             w = (h * ratio).toInt()
