@@ -3,6 +3,7 @@ title: "Live Preview"
 date: 2021-08-28T12:36:27+08:00
 draft: false
 Weight: 15
+aliases: [/tutorials/live-preview]
 ---
 
 ## Basic requirements

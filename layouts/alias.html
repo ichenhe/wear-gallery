@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ .Permalink }}</title>
+    <link rel="canonical" href="{{ .Permalink }}" />
+    <meta name="robots" content="noindex">
+    <meta charset="utf-8" />
+    <noscript>
+        <meta http-equiv="refresh" content="0; url={{ .Permalink }}" />
+    </noscript>
+
+    <script>
+        function isLanguageRedirect() {
+            let target = '{{ .Permalink }}';
+            if (!target) return false
+            let lan = target.replace(window.location.pathname, "").replace(/https?:\/\/.+?\//,"")
+            return lan === "zh" || lan === "en"
+        }
+        ; (function () {
+            // Only do i18n at root, or other path with language-specific redirection, 
+            // otherwise, redirect immediately
+            if (window.location.pathname !== '/' && !isLanguageRedirect()) {
+                window.location.replace('{{ .Permalink }}')
+                return
+            }
+
+            var getFirstBrowserLanguage = function () {
+                var nav = window.navigator,
+                    browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage'],
+                    i,
+                    language
+
+                if (Array.isArray(nav.languages)) {
+                    for (i = 0; i < nav.languages.length; i++) {
+                        language = nav.languages[i]
+                        if (language && language.length) {
+                            return language
+                        }
+                    }
+                }
+
+                // support for other well known properties in browsers
+                for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
+                    language = nav[browserLanguagePropertyKeys[i]]
+                    if (language && language.length) {
+                        return language
+                    }
+                }
+                return 'en'
+            }
+
+            var preferLang = getFirstBrowserLanguage()
+            if (preferLang.indexOf('zh') !== -1) {
+                window.location.replace('/zh' + window.location.pathname)
+            } else {
+                window.location.replace('/en' + window.location.pathname)
+            }
+        })()
+    </script>
+</head>
+
+<body>
+    <h1>Rerouting</h1>
+    <p>You should be rerouted in a jiff, if not, <a href="{{ .Permalink }}">click here</a>.</p>
+</body>
+
+</html>

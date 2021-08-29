@@ -1,10 +1,10 @@
-+++
-title = "Tutorials"
-date = 2021-08-16T20:44:25+08:00
-weight = 5
-chapter = true
-
-+++
+---
+title: "Tutorials"
+date: 2021-08-16T20:44:25+08:00
+weight: 5
+chapter: true
+aliases: [/tutorials/]
+---
 
 ### Welcome to
 

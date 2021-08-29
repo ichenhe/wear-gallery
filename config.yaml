@@ -2,6 +2,7 @@ baseURL: "https://wg.chenhe.me/"
 defaultContentLanguage: en
 title: "Wear Gallery"
 description: "这也许是最好的开源手表图库。This is probably the best open source gallery on your watch."
+defaultContentLanguageInSubdir: true
 
 theme: learn
 

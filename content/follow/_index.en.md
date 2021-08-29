@@ -1,10 +1,10 @@
-+++
-title = "Follow · Feedback"
-date = 2021-08-16T20:44:25+08:00
-weight = 10
-chapter = true
-
-+++
+---
+title: "Follow · Feedback"
+date: 2021-08-16T20:44:25+08:00
+weight: 10
+chapter: true
+aliases: [/follow/]
+---
 
 ### We look forward to hearing
 

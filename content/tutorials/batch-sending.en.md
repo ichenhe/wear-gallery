@@ -3,6 +3,7 @@ title: "Batch Sending"
 date: 2021-08-10T19:06:17+08:00
 draft: false
 weight: 20
+aliases: [/tutorials/batch-sending]
 ---
 
 {{% notice note %}}

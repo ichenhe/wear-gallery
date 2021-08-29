@@ -3,6 +3,7 @@ title: "Compatibility"
 date: 2021-08-10T19:02:58+08:00
 draft: false
 weight: 1
+aliases: [/tutorials/compatibility/]
 ---
 
 {{% notice info %}}

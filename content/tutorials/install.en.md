@@ -3,6 +3,7 @@ title: "Install"
 date: 2021-08-10T18:25:08+08:00
 draft: false
 weight: 10
+aliases: [/tutorials/install]
 ---
 
 ## Release channel
