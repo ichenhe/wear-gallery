@@ -113,7 +113,7 @@ class WebServer(context: Context, private val repository: ImageRepository) : Nan
 
         tmpFile.delete()
         return if (localUri != null) {
-            newFixedLengthResponse(Response.Status.OK, MIME_JSON, "{\"code\":0}")
+            newFixedLengthResponse(Response.Status.CREATED, MIME_JSON, "{\"code\":0}")
         } else {
             newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_HTML, "Copy file failed.")
         }
