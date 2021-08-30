@@ -21,11 +21,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.bean.RemoteImageFolder
+import cc.chenhe.weargallery.common.bean.Error
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.util.LIVE_PREVIEW_HELP_URL
+import cc.chenhe.weargallery.common.util.getVersionName
 import cc.chenhe.weargallery.databinding.FrMobileImagesBinding
 import cc.chenhe.weargallery.databinding.ViewRetryBinding
 import cc.chenhe.weargallery.ui.common.RetryCallback
@@ -33,7 +38,6 @@ import cc.chenhe.weargallery.ui.main.PagerFrDirections
 import cc.chenhe.weargallery.ui.main.SharedViewModel
 import cc.chenhe.weargallery.uilts.addQrCode
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
-import cc.chenhe.weargallery.uilts.shouldShowLoadingLayout
 import cc.chenhe.weargallery.uilts.shouldShowRetryLayout
 import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.android.ext.android.get
@@ -74,10 +78,38 @@ class MobileImagesFr : Fragment(), RetryCallback {
             }
         }
 
+        sharedViewModel.isVersionConflict.observe(viewLifecycleOwner) { isConflict: Boolean? ->
+            if (isConflict != true)
+                return@observe
+            if (binding.retryLayout.binding?.root?.isVisible == true) {
+                (binding.retryLayout.binding as? ViewRetryBinding)?.apply {
+                    retryMessage.setText(R.string.mobile_version_conflict)
+                    retryHelp.setOnClickListener {
+                        AlertDialog(requireContext()).apply {
+                            setTitle(R.string.mobile_load_gallery_err_tip)
+                            message = getString(
+                                R.string.mobile_version_conflict_content,
+                                getVersionName(requireContext()), sharedViewModel.mobileVersion
+                            )
+                            addQrCode(LIVE_PREVIEW_HELP_URL)
+                            setPositiveButtonIcon(R.drawable.ic_dialog_confirm, null)
+                        }.show()
+                    }
+                }
+            } else {
+                context?.also {
+                    Toast.makeText(it, R.string.mobile_version_conflict, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         sharedViewModel.remoteFolders.observe(viewLifecycleOwner) {
             it.data?.let { data -> adapter.submitList(data) }
+            if (it is Error) {
+                sharedViewModel.checkMobileVersion()
+            }
             when {
-                shouldShowRetryLayout(it) -> {
+                shouldShowRetryLayout(Error<List<RemoteImageFolder>>(0, "")) -> {
                     binding.retryLayout.viewStub?.inflate()
                     (binding.retryLayout.binding as ViewRetryBinding).retryHelp.apply {
                         visibility = View.VISIBLE
@@ -93,9 +125,6 @@ class MobileImagesFr : Fragment(), RetryCallback {
                 }
                 shouldShowEmptyLayout(it) -> {
                     binding.emptyLayout.viewStub?.inflate()
-                }
-                shouldShowLoadingLayout(it) -> {
-                    binding.loadingLayout.viewStub?.inflate()
                 }
             }
         }

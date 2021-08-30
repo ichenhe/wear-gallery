@@ -113,6 +113,10 @@
                     android:host="*"
                     android:path="/request/image-hd"
                     android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/request/version"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
     </application>

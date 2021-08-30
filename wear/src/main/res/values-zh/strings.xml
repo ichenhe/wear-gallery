@@ -40,6 +40,8 @@
     </plurals>
     <string name="local_err_permission_title">错误</string>
     <string name="local_err_permission_content">读写sd卡权限是扫描本地图片所必须的，请授予。</string>
+    <string name="mobile_version_conflict">应用版本不一致</string>
+    <string name="mobile_version_conflict_content">手表：%1$s\n手机：%2$s\n\n请安装相同或兼容版本的腕间图库。您可以扫码获取发布渠道。</string>
     <string name="mobile_load_gallery_err_tip">帮助</string>
     <string name="mobile_load_gallery_err_content">- 此功能仅限 Android 手机用户；IOS 请使用局域网传输。\n- 必须在手机安装腕间图库并允许自启。（可以从 GooglePlay 或扫描底部二维码下载）\n- 请检查手机手表的连接。\n- 确保手机手表应用版本一致。</string>
 

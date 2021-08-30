@@ -42,7 +42,7 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    viewModel { SharedViewModel(androidApplication(), get()) }
+    viewModel { SharedViewModel(androidApplication(), get(), get()) }
     viewModel { PageViewModel(androidApplication()) }
     viewModel { LocalImagesViewModel(androidApplication()) }
     viewModel { (bucketId: Int) ->

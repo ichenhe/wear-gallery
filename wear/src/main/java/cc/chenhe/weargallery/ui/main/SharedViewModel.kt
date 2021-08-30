@@ -23,16 +23,30 @@ import androidx.lifecycle.*
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.bean.ImageFolder
 import cc.chenhe.weargallery.common.bean.Success
+import cc.chenhe.weargallery.common.comm.PATH_REQ_VERSION
+import cc.chenhe.weargallery.common.comm.bean.VersionResp
 import cc.chenhe.weargallery.common.util.ImageLiveData
+import cc.chenhe.weargallery.common.util.getVersionCode
 import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.repository.RemoteImageRepository
+import cc.chenhe.weargallery.uilts.MIN_PAIRED_VERSION
+import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.Moshi
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import me.chenhe.lib.wearmsger.BothWayHub
+import timber.log.Timber
 
 class SharedViewModel(
     application: Application,
     private val imageRepo: RemoteImageRepository,
+    private val moshi: Moshi,
 ) : AndroidViewModel(application) {
+    companion object {
+        private const val TAG = "SharedViewModel"
+    }
 
     private val _localImages = ImageScopeLiveData().map { Success(it) }
     val localImages: LiveData<Success<List<Image>>> = _localImages
@@ -51,7 +65,9 @@ class SharedViewModel(
     var currentPosition = -1
 
     private val _fetchRemoteFolders = MutableLiveData(true)
-    val remoteFolders = _fetchRemoteFolders.switchMap { imageRepo.loadImageFolder(application) }
+    val remoteFolders = _fetchRemoteFolders.switchMap {
+        imageRepo.loadImageFolder(application)
+    }
 
 
     /** @see deleteRequestEvent */
@@ -63,6 +79,16 @@ class SharedViewModel(
      * **Note: This represents a event, not a state, so it's value is meaningless unless it just changed.**
      */
     val deleteRequestEvent: LiveData<ImageRepository.Pending?> = _deleteRequestEvent
+
+    /**
+     * Whether the version of wear gallery between the mobile phone and the watch incompatible.
+     *
+     * `null` means unknown. If the watch does not respond to the version request, it will still
+     * be null.
+     */
+    private val _isVersionConflict = MutableLiveData<Boolean?>(null)
+    val isVersionConflict: LiveData<Boolean?> = _isVersionConflict
+    var mobileVersion: String? = null
 
     private inner class ImageScopeLiveData : ImageLiveData(getApplication()) {
         override fun getCoroutineScope(): CoroutineScope = viewModelScope
@@ -103,6 +129,43 @@ class SharedViewModel(
             if (pending != null) {
                 _deleteRequestEvent.postValue(pending)
             }
+        }
+    }
+
+    /**
+     * Check whether the version of the paired application meets the requirements.
+     *
+     * Observe [isVersionConflict] for the result.
+     */
+    fun checkMobileVersion() {
+        viewModelScope.launch(Dispatchers.Main) {
+            Timber.tag(TAG).d("Send version request.")
+            val resp = BothWayHub.requestForMessage(getApplication(), null, PATH_REQ_VERSION, "")
+            if (!resp.isSuccess()) {
+                Timber.tag(TAG).w("Failed to get version request response: %s", resp.result)
+                _isVersionConflict.value = null
+                mobileVersion = null
+                return@launch
+            }
+            val ver = withContext(Dispatchers.IO) {
+                try {
+                    @Suppress("BlockingMethodInNonBlockingContext")
+                    moshi.adapter(VersionResp::class.java).fromJson(String(resp.data!!))
+                } catch (e: JsonDataException) {
+                    Timber.tag(TAG).w(e, "Failed to parse version request response")
+                    null
+                } catch (e: NullPointerException) {
+                    Timber.tag(TAG).w(e, "Failed to parse version request response: null")
+                    null
+                }
+            } ?: kotlin.run {
+                _isVersionConflict.value = null
+                mobileVersion = null
+                return@launch
+            }
+            mobileVersion = ver.name
+            _isVersionConflict.value = getVersionCode(getApplication()) < ver.minPairedVersion
+                    || ver.code < MIN_PAIRED_VERSION
         }
     }
 }

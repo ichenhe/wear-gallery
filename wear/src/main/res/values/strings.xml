@@ -43,6 +43,8 @@
     </plurals>
     <string name="local_err_permission_title">Error</string>
     <string name="local_err_permission_content">Read and write sd card permissions are necessary to scan the local image, please grant.</string>
+    <string name="mobile_version_conflict">Inconsistent app version</string>
+    <string name="mobile_version_conflict_content">watch:\t%1$s\nphone:\t%2$s\n\nPlease install the same or compatible version of the Wear Gallery. You can scan the QR code to get the distribution channel.</string>
     <string name="mobile_load_gallery_err_tip">Help</string>
     <string name="mobile_load_gallery_err_content">- Only for Android phone; IOS need to use LAN Transfer.\n- Wear Gallery must be installed on the phone (By GooglePlay or scan the QR code below).\n- Please check the Wear OS connection.\n- Make sure the phone/watch app version is the same.</string>
 

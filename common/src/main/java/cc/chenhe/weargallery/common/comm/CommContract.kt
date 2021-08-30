@@ -40,6 +40,14 @@ const val PATH_CHANNEL_BATCH_SEND = "/batch-send"
 /**
  * Both way message request.
  *
+ * The receiver should respond to a [cc.chenhe.weargallery.common.comm.bean.VersionResp] object in
+ * the form of Message.
+ */
+const val PATH_REQ_VERSION = "/request/version"
+
+/**
+ * Both way message request.
+ *
  * The receiver should respond to a [cc.chenhe.weargallery.common.comm.bean.IRemoteImageFolder] list in the form of a
  * Message.
  */

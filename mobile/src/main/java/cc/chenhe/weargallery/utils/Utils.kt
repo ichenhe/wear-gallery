@@ -34,6 +34,9 @@ import cc.chenhe.weargallery.common.util.ImageUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/** Minimum version required for pairing applications. */
+const val MIN_PAIRED_VERSION = 220601051L
+
 const val MIME_GIF = "image/gif"
 
 const val NOTIFY_CHANNEL_ID_PERMISSION = "wg.permission"

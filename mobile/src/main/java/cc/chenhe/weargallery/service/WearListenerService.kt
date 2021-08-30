@@ -34,14 +34,8 @@ import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImageFolder
 import cc.chenhe.weargallery.common.comm.*
-import cc.chenhe.weargallery.common.comm.bean.ImageHdReq
-import cc.chenhe.weargallery.common.comm.bean.ImagePreviewReq
-import cc.chenhe.weargallery.common.comm.bean.ImagesReq
-import cc.chenhe.weargallery.common.comm.bean.ImagesResp
-import cc.chenhe.weargallery.common.util.HUA_WEI
-import cc.chenhe.weargallery.common.util.ImageUtil
-import cc.chenhe.weargallery.common.util.checkHuaWei
-import cc.chenhe.weargallery.common.util.fromJsonQ
+import cc.chenhe.weargallery.common.comm.bean.*
+import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.ui.main.MainAty
 import cc.chenhe.weargallery.utils.*
 import com.google.android.gms.wearable.Asset
@@ -60,9 +54,11 @@ import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 
-private const val TAG = "WearListenerService"
-
 class WearListenerService : WMListenerService() {
+
+    companion object {
+        private const val TAG = "WearListenerService"
+    }
 
     private val moshi: Moshi by inject()
     private val context: Context get() = this
@@ -169,6 +165,19 @@ class WearListenerService : WMListenerService() {
             PATH_REQ_IMAGE_PREVIEW -> processRequestImagePreview(messageEvent)
             PATH_REQ_IMAGES -> processRequestImages(messageEvent)
             PATH_REQ_IMAGE_HD -> processRequestImageHd(messageEvent)
+            PATH_REQ_VERSION -> processRequestVersion(messageEvent)
+        }
+    }
+
+    private fun processRequestVersion(request: MessageEvent) {
+        lifecycleScope.launch {
+            val resp = VersionResp(
+                getVersionCode(context), getVersionName(context),
+                MIN_PAIRED_VERSION
+            ).let {
+                moshi.adapter(VersionResp::class.java).toJson(it)
+            }
+            BothWayHub.response(context, request, resp)
         }
     }
 

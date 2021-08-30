@@ -47,11 +47,11 @@
                 app:layout_scrollFlags="scroll|enterAlways" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <ViewStub
-            android:id="@id/loadingLayout"
+        <include
+            android:id="@+id/loadingLayout"
+            layout="@layout/view_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout="@layout/view_loading"
             app:resource="@{sharedModel.remoteFolders}" />
 
         <ViewStub
