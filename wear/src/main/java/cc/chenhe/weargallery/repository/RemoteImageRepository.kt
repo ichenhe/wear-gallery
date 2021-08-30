@@ -169,7 +169,8 @@ class RemoteImageRepository(
         pageSize: Int
     ): ImagesResp = withContext(Dispatchers.IO) {
         val req = moshi.adapter(ImagesReq::class.java).toJson(ImagesReq(bucketId, offset, pageSize))
-        val resp = BothWayHub.requestForMessage(context, null, PATH_REQ_IMAGES, req)
+        val resp =
+            BothWayHub.requestForMessage(context, null, PATH_REQ_IMAGES, req, timeout = 5000L)
         val data = resp.check(true)!!
         try {
             @Suppress("BlockingMethodInNonBlockingContext")
@@ -200,6 +201,8 @@ class RemoteImageRepository(
     suspend fun appendImagesCache(images: List<RemoteImage>) {
         remoteImageDao.insertOrIgnore(images)
     }
+
+    suspend fun getCachedCount(bucketId: Int): Int = remoteImageDao.getCount(bucketId)
 
     suspend fun loadImageHd(context: Context, remoteImage: RemoteImage): Uri? {
         return object : RemoteAssetResource() {

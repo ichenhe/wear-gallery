@@ -25,6 +25,9 @@ import cc.chenhe.weargallery.bean.RemoteImage
 @Dao
 abstract class RemoteImageDao {
 
+    @Query("SELECT COUNT(uri) FROM cache_mobile_image WHERE bucket_id = :bucketId")
+    abstract suspend fun getCount(bucketId: Int): Int
+
     // There is no additional sorting here, because it must match the paging load.
     @Query("SELECT * FROM cache_mobile_image WHERE bucket_id = :bucketId ORDER BY ROWID ASC")
     abstract fun fetchPaging(bucketId: Int): PagingSource<Int, RemoteImage>

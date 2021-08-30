@@ -9,6 +9,7 @@ import cc.chenhe.weargallery.bean.RemoteImage
 import cc.chenhe.weargallery.bean.toRemoteImage
 import cc.chenhe.weargallery.common.comm.RemoteException
 import cc.chenhe.weargallery.uilts.CacheRecordUtils
+import timber.log.Timber
 
 @ExperimentalPagingApi
 class RemoteImageMediator(
@@ -16,6 +17,10 @@ class RemoteImageMediator(
     private val bucketId: Int,
     private val remoteRepo: RemoteImageRepository
 ) : RemoteMediator<Int, RemoteImage>() {
+
+    companion object {
+        private const val TAG = "RemoteImageMediator"
+    }
 
     private val ctx = context.applicationContext
 
@@ -34,19 +39,33 @@ class RemoteImageMediator(
             LoadType.REFRESH -> 0
             // we never need to prepend, since REFRESH will always load the first page in the list.
             LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-            LoadType.APPEND -> state.pages.sumOf { it.data.size }
+            LoadType.APPEND -> remoteRepo.getCachedCount(bucketId)
         }
+        val pageSize = if (loadType == LoadType.REFRESH && state.pages.isEmpty()) {
+            state.config.initialLoadSize
+        } else {
+            state.config.pageSize
+        }
+        Timber.tag(TAG).d(
+            "Request paging remote image list. type=%s, offset=%d, size=%d",
+            loadType,
+            offset,
+            pageSize
+        )
         val resp = try {
-            val pageSize = if (loadType == LoadType.REFRESH && state.pages.isEmpty()) {
-                state.config.initialLoadSize
-            } else {
-                state.config.pageSize
-            }
             remoteRepo.requestImageList(ctx, bucketId, offset, pageSize)
         } catch (e: RemoteException) {
+            Timber.tag(TAG).w(e, "Failed to load paging remote image list. offset=%d", offset)
             return MediatorResult.Error(e)
         }
-        val end = resp.data.size < state.config.pageSize
+        val end = resp.data.size < pageSize
+        Timber.tag(TAG)
+            .d(
+                "Get remote image list. end=%s, returnSize=%d, pageSize=%d",
+                end,
+                resp.data.size,
+                pageSize
+            )
         return when (loadType) {
             LoadType.PREPEND -> throw IllegalStateException("This type should not be here.")
             LoadType.REFRESH -> {
