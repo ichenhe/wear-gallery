@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -42,6 +43,7 @@ import com.google.android.gms.wearable.DataMapItem
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.chenhe.lib.wearmsger.BothWayHub
 import me.chenhe.lib.wearmsger.DataHub
@@ -55,6 +57,7 @@ private const val TAG = "MobileListenerService"
 class MobileListenerService : WMListenerService() {
 
     private val moshi: Moshi by inject()
+    private val context: Context get() = this
 
     // -------------------------------------------------------------------------------------------------
     // Check and Notify
@@ -123,8 +126,7 @@ class MobileListenerService : WMListenerService() {
         }
     }
 
-    private fun processSendImage(dataMapItem: DataMapItem) {
-        val context = this
+    private fun processSendImage(dataMapItem: DataMapItem) = runBlocking {
         ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
             val permission = withContext(Dispatchers.Main) {
                 checkPermissions()
@@ -169,6 +171,6 @@ class MobileListenerService : WMListenerService() {
                 BothWayHub.response(context, dataMapItem, data)
                 return@launch
             }
-        }
+        }.join()
     }
 }

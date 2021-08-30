@@ -44,9 +44,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import id.zelory.compressor.constraint.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import me.chenhe.lib.wearmsger.BothWayHub
 import me.chenhe.lib.wearmsger.service.WMListenerService
 import org.koin.android.ext.android.inject
@@ -181,28 +179,26 @@ class WearListenerService : WMListenerService() {
         }
     }
 
-    private fun processRequestImageFolders(request: MessageEvent) {
-        lifecycleScope.launch {
-            toastIfEnabled(R.string.watch_operation_search_gallery_ing)
-            try {
-                val folders = queryImageFolders(this@WearListenerService)
-                val type =
-                    Types.newParameterizedType(List::class.java, RemoteImageFolder::class.java)
-                val adapter: JsonAdapter<List<RemoteImageFolder>> = moshi.adapter(type)
-                Timber.tag(TAG).v("folder req: Find %d folders", folders.size)
-                val str = adapter.toJson(folders)
-                val result = BothWayHub.response(this@WearListenerService, request, str)
-                Timber.tag(TAG).v("folder req: Response complete, result=%s", result.toString())
-            } catch (e: Exception) {
-                Timber.tag(TAG).e(e, "result: Failed to query image folders.")
-            }
+    private fun processRequestImageFolders(request: MessageEvent) = runBlocking {
+        toastIfEnabled(R.string.watch_operation_search_gallery_ing)
+        try {
+            val folders = queryImageFolders(this@WearListenerService)
+            val type =
+                Types.newParameterizedType(List::class.java, RemoteImageFolder::class.java)
+            val adapter: JsonAdapter<List<RemoteImageFolder>> = moshi.adapter(type)
+            Timber.tag(TAG).v("folder req: Find %d folders", folders.size)
+            val str = adapter.toJson(folders)
+            val result = BothWayHub.response(this@WearListenerService, request, str)
+            Timber.tag(TAG).v("folder req: Response complete, result=%s", result.toString())
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "result: Failed to query image folders.")
         }
     }
 
-    private fun processRequestImagePreview(request: MessageEvent) {
-        lifecycleScope.launch(Dispatchers.IO) {
+    private fun processRequestImagePreview(request: MessageEvent) = runBlocking {
+        withContext(Dispatchers.IO) {
             val data = moshi.adapter(ImagePreviewReq::class.java).fromJsonQ(String(request.data))
-                ?: return@launch
+                ?: return@withContext
             val resp = BothWayHub.obtainResponseDataRequest(request)
             val startTime = SystemClock.uptimeMillis()
 
@@ -231,28 +227,26 @@ class WearListenerService : WMListenerService() {
         }
     }
 
-    private fun processRequestImages(request: MessageEvent) {
-        lifecycleScope.launch {
-            toastIfEnabled(R.string.watch_operation_get_pics_list_ing)
-            val data = moshi.adapter(ImagesReq::class.java).fromJsonQ(String(request.data))
-            if (data == null) {
-                Timber.tag(TAG).w("imgList req: Failed to parse json:\n%s", String(request.data))
-                return@launch
-            }
-            Timber.tag(TAG).v("imgList req: %s", data.toString())
-            val pagingImages =
-                ImageUtil.queryPagingImages(context, data.bucketId, data.offset, data.pageSize)
-            val adapter = moshi.adapter(ImagesResp::class.java)
-            val result = BothWayHub.response(context, request, adapter.toJson(pagingImages))
-            Timber.tag(TAG).v("imgList req: Response complete, result=%s", result.toString())
+    private fun processRequestImages(request: MessageEvent) = runBlocking {
+        toastIfEnabled(R.string.watch_operation_get_pics_list_ing)
+        val data = moshi.adapter(ImagesReq::class.java).fromJsonQ(String(request.data))
+        if (data == null) {
+            Timber.tag(TAG).w("imgList req: Failed to parse json:\n%s", String(request.data))
+            return@runBlocking
         }
+        Timber.tag(TAG).v("imgList req: %s", data.toString())
+        val pagingImages =
+            ImageUtil.queryPagingImages(context, data.bucketId, data.offset, data.pageSize)
+        val adapter = moshi.adapter(ImagesResp::class.java)
+        val result = BothWayHub.response(context, request, adapter.toJson(pagingImages))
+        Timber.tag(TAG).v("imgList req: Response complete, result=%s", result.toString())
     }
 
-    private fun processRequestImageHd(request: MessageEvent) {
-        lifecycleScope.launch(Dispatchers.IO) {
+    private fun processRequestImageHd(request: MessageEvent) = runBlocking {
+        withContext(Dispatchers.IO) {
             toastIfEnabled(R.string.watch_operation_send_hd_picture_ing)
             val data = moshi.adapter(ImageHdReq::class.java).fromJsonQ(String(request.data))
-                ?: return@launch
+                ?: return@withContext
             val resp = BothWayHub.obtainResponseDataRequest(request)
             try {
                 // Test if file is exist and make sure it will be closed with `use`.
