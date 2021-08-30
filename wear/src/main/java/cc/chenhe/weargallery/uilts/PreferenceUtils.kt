@@ -50,7 +50,8 @@ fun showHuawei(context: Context, show: Boolean) {
     }
 }
 
-fun fetchFolderMode(context: Context) = SpBooleanLiveData(getSp(context), PREFERENCE_FOLDER_MODE, false, init = true)
+fun fetchFolderMode(context: Context) =
+    SpBooleanLiveData(getSp(context), PREFERENCE_FOLDER_MODE, true, init = true)
 
 fun folderMode(context: Context, useFolderMode: Boolean) {
     getSp(context).edit {
@@ -58,10 +59,13 @@ fun folderMode(context: Context, useFolderMode: Boolean) {
     }
 }
 
-fun fetchKeepScreenOn(context: Context) = SpBooleanLiveData(getSp(context), PREFERENCE_KEEP_SCREEN_ON, false)
+fun fetchKeepScreenOn(context: Context) =
+    SpBooleanLiveData(getSp(context), PREFERENCE_KEEP_SCREEN_ON, false)
 
-fun fetchShowPhoneImages(context: Context) = SpBooleanLiveData(getSp(context), PREFERENCE_SHOW_PHONE_IMAGES,
-        default = true, init = true)
+fun fetchShowPhoneImages(context: Context) = SpBooleanLiveData(
+    getSp(context), PREFERENCE_SHOW_PHONE_IMAGES,
+    default = true, init = true
+)
 
 fun lastStartVersion(context: Context, version: Long) {
     getSp(context).edit {
@@ -111,18 +115,22 @@ private const val PREFERENCE_WF_TIME_TEXT_COLOR = "watchface_time_text_color" //
 private const val PREFERENCE_WF_TIME_FORMAT = "watchface_time_format"
 
 private const val DEFAULT_WF_TIME_FORMAT = TIME_TAG_HOUR + TIME_TAG_COLON + TIME_TAG_MIN
-fun fetchWatchFaceStyle(context: Context, init: Boolean) = SpStringLiveData(getSp(context), PREFERENCE_WF_STYLE,
-        context.getString(R.string.wf_preference_type_entry_value_analog), init)
+fun fetchWatchFaceStyle(context: Context, init: Boolean) = SpStringLiveData(
+    getSp(context), PREFERENCE_WF_STYLE,
+    context.getString(R.string.wf_preference_type_entry_value_analog), init
+)
 
 fun fetchWatchFaceTimeX(context: Context, init: Boolean) =
-        SpFloatLiveData(getSp(context), PREFERENCE_WF_TIME_X, -1f, init)
+    SpFloatLiveData(getSp(context), PREFERENCE_WF_TIME_X, -1f, init)
 
 fun fetchWatchFaceTimeY(context: Context, init: Boolean) =
-        SpFloatLiveData(getSp(context), PREFERENCE_WF_TIME_Y, -1f, init)
+    SpFloatLiveData(getSp(context), PREFERENCE_WF_TIME_Y, -1f, init)
 
 fun fetchWatchFaceTimeTextSize(context: Context, init: Boolean) =
-        SpFloatLiveData(getSp(context), PREFERENCE_WF_TIME_TEXT_SIZE,
-                context.resources.getDimension(R.dimen.wv_text_size_extra_extra_large), init)
+    SpFloatLiveData(
+        getSp(context), PREFERENCE_WF_TIME_TEXT_SIZE,
+        context.resources.getDimension(R.dimen.wv_text_size_extra_extra_large), init
+    )
 
 fun setWatchFaceTimePosition(context: Context, x: Float, y: Float) {
     getSp(context).edit {
@@ -137,8 +145,10 @@ fun setWatchFaceTextSize(context: Context, size: Float) {
     }
 }
 
-fun getWatchFaceTimeFormat(context: Context): List<String> = parseWatchFaceTagList(getSp(context)
-        .getString(PREFERENCE_WF_TIME_FORMAT, DEFAULT_WF_TIME_FORMAT)!!)
+fun getWatchFaceTimeFormat(context: Context): List<String> = parseWatchFaceTagList(
+    getSp(context)
+        .getString(PREFERENCE_WF_TIME_FORMAT, DEFAULT_WF_TIME_FORMAT)!!
+)
 
 fun setWatchFaceTimeFormat(context: Context, value: List<String>) {
     getSp(context).edit {
@@ -147,7 +157,7 @@ fun setWatchFaceTimeFormat(context: Context, value: List<String>) {
 }
 
 fun fetchWatchFaceTimeFormat(context: Context, init: Boolean) =
-        SpStringLiveData(getSp(context), PREFERENCE_WF_TIME_FORMAT, DEFAULT_WF_TIME_FORMAT, init)
+    SpStringLiveData(getSp(context), PREFERENCE_WF_TIME_FORMAT, DEFAULT_WF_TIME_FORMAT, init)
 
 fun resetWatchFaceTimeFormat(context: Context) {
     getSp(context).edit {
@@ -156,10 +166,10 @@ fun resetWatchFaceTimeFormat(context: Context) {
 }
 
 fun fetchWatchFaceTimeTextColor(context: Context, init: Boolean) =
-        SpIntLiveData(getSp(context), PREFERENCE_WF_TIME_TEXT_COLOR, Color.BLACK, init)
+    SpIntLiveData(getSp(context), PREFERENCE_WF_TIME_TEXT_COLOR, Color.BLACK, init)
 
 fun getWatchFaceTimeTextColor(context: Context): Int = getSp(context)
-        .getInt(PREFERENCE_WF_TIME_TEXT_COLOR, Color.BLACK)
+    .getInt(PREFERENCE_WF_TIME_TEXT_COLOR, Color.BLACK)
 
 fun setWatchFaceTimeTextColor(context: Context, @ColorInt newColor: Int) {
     getSp(context).edit {
