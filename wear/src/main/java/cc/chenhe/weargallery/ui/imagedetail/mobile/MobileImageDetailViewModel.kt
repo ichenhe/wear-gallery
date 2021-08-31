@@ -38,7 +38,7 @@ class MobileImageDetailViewModel(
 
     @ExperimentalPagingApi
     override val pagingImages: Flow<PagingData<RemoteImage>> = Pager(
-        config = PagingConfig(pageSize = 15, initialLoadSize = 15),
+        config = PagingConfig(pageSize = 15, initialLoadSize = 15, prefetchDistance = 10),
         remoteMediator = RemoteImageMediator(application, bucketId, repo)
     ) {
         dao.fetchPaging(bucketId)

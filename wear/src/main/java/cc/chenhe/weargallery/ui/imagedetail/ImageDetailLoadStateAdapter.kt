@@ -21,6 +21,14 @@ class ImageDetailLoadStateAdapter(
         return LoadStateVH(b)
     }
 
+    // FIXME: This is a temporary fix.
+    //  For unknown reasons, the additional page is always loaded during the init loading if the cache is empty.
+    //  If we display the loading status, The page automatically scroll to the end of the first page.
+    //  Discussion: https://stackoverflow.com/questions/66627912/android-paging-3-experiencing-flickers-glitches-or-jumps-in-position-when-scr
+    override fun displayLoadStateAsItem(loadState: LoadState): Boolean {
+        return loadState is LoadState.Error
+    }
+
     override fun onBindViewHolder(holder: LoadStateVH, loadState: LoadState) {
         holder.bind(loadState)
     }
