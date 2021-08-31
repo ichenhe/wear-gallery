@@ -35,7 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /** Minimum version required for pairing applications. */
-const val MIN_PAIRED_VERSION = 220601051L
+const val MIN_PAIRED_VERSION = 220601061L
 
 const val MIME_GIF = "image/gif"
 

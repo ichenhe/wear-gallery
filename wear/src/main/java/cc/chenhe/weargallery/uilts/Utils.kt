@@ -37,7 +37,7 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 /** Minimum version required for pairing applications. */
-const val MIN_PAIRED_VERSION = 220601050L
+const val MIN_PAIRED_VERSION = 220601060L
 
 const val REQUEST_IMAGE_PREVIEW_TIMEOUT = 8000L
 const val REQUEST_IMAGE_HD_TIMEOUT = 20000L
