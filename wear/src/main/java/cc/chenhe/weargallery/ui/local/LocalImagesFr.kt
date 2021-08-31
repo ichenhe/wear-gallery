@@ -39,6 +39,8 @@ import cc.chenhe.weargallery.ui.main.PagerFrDirections
 import cc.chenhe.weargallery.ui.main.SharedViewModel
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
 import me.chenhe.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.util.enableRsbSupport
+import me.chenhe.wearvision.util.postRequestFocus
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -75,6 +77,7 @@ class LocalImagesFr : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         ((binding.delete.layoutParams as CoordinatorLayout.LayoutParams).behavior as FabBehavior)
             .scope = viewLifecycleOwner.lifecycleScope
+        binding.imagesRecyclerView.enableRsbSupport()
 
         model.folderMode.observe(viewLifecycleOwner) { folderMode ->
             resetRecyclerView(folderMode, binding.imagesRecyclerView.adapter != null)
@@ -160,6 +163,11 @@ class LocalImagesFr : Fragment() {
                 }.show()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.imagesRecyclerView.postRequestFocus()
     }
 
     private fun resetRecyclerView(folderMode: Boolean, animation: Boolean) {

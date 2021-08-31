@@ -31,6 +31,7 @@ import cc.chenhe.weargallery.ui.common.SwipeDismissFr
 import cc.chenhe.weargallery.uilts.ZxingUtils
 import cc.chenhe.weargallery.uilts.toast
 import me.chenhe.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.util.postRequestFocus
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -39,7 +40,11 @@ class WebServerFr : SwipeDismissFr() {
     private lateinit var binding: FrWebServerBinding
     private val model: WebServerViewModel by viewModel()
 
-    override fun createView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+    override fun createView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    )
             : ViewBinding {
         return FrWebServerBinding.inflate(inflater, container, false).also {
             binding = it
@@ -85,13 +90,20 @@ class WebServerFr : SwipeDismissFr() {
                 if (serverIp.isNullOrEmpty()) {
                     serverQrCode.setImageBitmap(null)
                 } else {
-                    serverQrCode.setImageBitmap(ZxingUtils.generateBitmap("http://$serverIp", 300, 300))
+                    ZxingUtils.generateBitmap("http://$serverIp", 300, 300).also {
+                        serverQrCode.setImageBitmap(it)
+                    }
                 }
             }
         }
 
         model.checkNetwork()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.scrollView.postRequestFocus()
     }
 
 }

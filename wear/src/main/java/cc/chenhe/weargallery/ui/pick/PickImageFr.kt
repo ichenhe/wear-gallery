@@ -13,6 +13,8 @@ import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.databinding.FrPickImageBinding
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
 import me.chenhe.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.util.enableRsbSupport
+import me.chenhe.wearvision.util.postRequestFocus
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PickImageFr : Fragment() {
@@ -42,6 +44,7 @@ class PickImageFr : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.imagesRecyclerView.enableRsbSupport()
 
         adapter = PickImageAdapter().apply {
             itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
@@ -93,6 +96,11 @@ class PickImageFr : Fragment() {
                 }
             }.show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.imagesRecyclerView.postRequestFocus()
     }
 
 }

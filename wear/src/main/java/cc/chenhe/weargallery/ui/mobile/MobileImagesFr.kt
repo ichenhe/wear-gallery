@@ -40,6 +40,8 @@ import cc.chenhe.weargallery.uilts.addQrCode
 import cc.chenhe.weargallery.uilts.shouldShowEmptyLayout
 import cc.chenhe.weargallery.uilts.shouldShowRetryLayout
 import me.chenhe.wearvision.dialog.AlertDialog
+import me.chenhe.wearvision.util.enableRsbSupport
+import me.chenhe.wearvision.util.postRequestFocus
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -63,6 +65,7 @@ class MobileImagesFr : Fragment(), RetryCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.imagesRecyclerView.enableRsbSupport()
 
         val adapter = MobileImageAdapter(this, get())
         binding.imagesRecyclerView.adapter = adapter
@@ -128,6 +131,11 @@ class MobileImagesFr : Fragment(), RetryCallback {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.imagesRecyclerView.postRequestFocus()
     }
 
     override fun retry() {
