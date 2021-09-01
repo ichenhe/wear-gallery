@@ -9,8 +9,7 @@ on:
       - '**'
 
 jobs:
-
-  test:
+  android-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +33,7 @@ jobs:
           path: build/reports
           if-no-files-found: warn
 
-  lint:
+  android-lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -57,3 +56,43 @@ jobs:
           name: Lint reports
           path: build/reports
           if-no-files-found: warn
+          
+  web-build:
+    runs-on: ubuntu-latest
+    env:
+      WEB_DIR: "lan-web"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ${{ env.WEB_DIR }}
+
+      - name: lint
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: |
+          cd $WEB_DIR
+          npm install
+          npm run build
+
+  web-lint:
+    runs-on: ubuntu-latest
+    env:
+      WEB_DIR: "lan-web"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ${{ env.WEB_DIR }}
+
+      - name: lint
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: |
+          cd $WEB_DIR
+          npm install
+          ./node_modules/.bin/eslint --ext .js,.jsx,.ts,.tsx,.vue --max-warnings=0 .
