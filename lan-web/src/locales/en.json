@@ -1,0 +1,10 @@
+{
+  "logo": "Wear Gallery | Transmission",
+  "language": "Language",
+  "dragFilesHere": "Drag the files here, or ",
+  "clickToSelect": "CLICK TO SELECT",
+  "nonImageFileWarn": "Only picture files are supported.",
+  "uploadError": "Failed to upload {name}.",
+  "retry": "Retry",
+  "retryAll": "Retry All"
+}

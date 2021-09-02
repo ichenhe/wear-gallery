@@ -1,0 +1,88 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+
+.el-button--primary {
+  color: #fff;
+  background-color: #000000;
+  border-color: #f2f2f2;
+}
+
+.el-button--primary.is-active,
+.el-button--primary:active {
+  background: #000000;
+  border-color: #fff;
+  color: #fff;
+}
+
+.el-button--primary:focus,
+.el-button--primary:hover {
+  background: #000000;
+  border-color: #fff;
+  color: #fff;
+}
+
+.el-upload {
+  width: 100%;
+}
+
+.el-upload-dragger:hover {
+  border-color: none;
+}
+
+.el-upload-dragger {
+  background-color: #f5f5f5;
+  width: 100%;
+  display: flex;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  border: none;
+}
+.el-upload-dragger .el-upload-text {
+  color: #000;
+}
+.el-upload-dragger .el-upload-text em {
+  color: #ef5650;
+}
+
+.el-upload-list--picture .el-upload-list__item {
+  background-color: #e1d8d3;
+}
+
+/* 重写并隐藏element的upload列表 */
+.el-upload-list {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
+.el-progress__text i {
+  display: none;
+}
+
+.el-progress-bar {
+  margin-right: 0;
+  padding-right: 0;
+}
+
+.el-button {
+}
+
+.el-button:hover,
+.el-button:focus {
+  color: #fff;
+  border-color: #b3d9d9;
+  background-color: #ef5650;
+}
+
+.el-progress.is-success .el-progress-bar__inner {
+  background-color: #0dbc79;
+}
