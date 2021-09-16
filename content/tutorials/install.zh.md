@@ -11,14 +11,14 @@ weight: 10
 
 - [Github Release](https://github.com/ichenhe/wear-gallery/releases)
 - 小问商店（手表）
-- Google Play
+- 小米商店（手表）
+- [Google Play](https://play.google.com/store/apps/details?id=cc.chenhe.weargallery)
 
 授权的第三方发布渠道为：
 
 - [Wear OS 工具箱](https://www.wearosbox.com/) @flyfish
 - 安卓手表ADB实用工具箱 [@明风之岚](https://space.bilibili.com/33380640)
-
-- [wearbbs](https://wearbbs.cn/) @string/JackuXL
+- [酷安网](https://www.coolapk.com/apk/171970)（手机）
 
 {{% notice warning %}}
 **警告**  

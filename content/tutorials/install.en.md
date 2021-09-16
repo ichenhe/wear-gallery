@@ -11,7 +11,7 @@ aliases: [/tutorials/install]
 The official release channels of wear gallery are:
 
 - [Github Release](https://github.com/ichenhe/wear-gallery/releases)
-- Google Play
+- [Google Play](https://play.google.com/store/apps/details?id=cc.chenhe.weargallery)
 - Mobvoi App Store (watch client)
 
 {{% notice warning %}}

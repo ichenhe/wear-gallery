@@ -24,6 +24,7 @@ Weight: 15
 - 蓝奏云：[https://chenhe.lanzoui.com/b0cw4qhah](https://chenhe.lanzoui.com/b0cw4qhah)  
 密码: `5psy`
 - GitHub Release: [https://github.com/ichenhe/wear-gallery/releases](https://github.com/ichenhe/wear-gallery/releases)
+- [酷安网](https://www.coolapk.com/apk/171970)
 
 ## 错误排除
 
