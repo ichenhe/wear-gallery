@@ -1,0 +1,120 @@
+<resources>
+    <string name="app_name">Wear Gallery</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="tip">Consejos</string>
+    <string name="image_des">Imágenes</string>
+    <string name="date_format_nonyear">MMMM d</string>
+    <string name="date_format_year">MMMM d, aaaa</string>
+    <string name="date_format_full">MMMM d, aaaa HH:mm</string>
+    <string name="today">Hoy</string>
+    <string name="icon">Icono</string>
+    <string name="main_preference">Preferencias</string>
+    <string name="main_legacy"><u>Legal</u></string>
+
+    <string name="nav_menu_images">Imñagenes</string>
+    <string name="nav_menu_folders">Carpetas</string>
+
+    <string name="app_hw_title">Error</string>
+    <string name="app_hw_message">Wear Gallery no funciona en dispositivos Huawei!</string>
+    <string name="app_hw_view">Aprender más</string>
+    <string name="app_hw_exit">Salir</string>
+
+    <string name="intro_permission_title">PERMISOS</string>
+    <string name="intro_permission_content">Se necesitan permisos des escritura en el almacenaje para buscar imágenes.</string>
+    <string name="intro_install_title">INSTALAR en el RELOJ</string>
+    <string name="intro_install_content">Instalar aplicaciones en el reloj mediante bluetooth ya no es posible. Tienes que descargar manualmente WearGallery desde la Tienda del reloj. También puedes instalarla mediante ADB.</string>
+    <string name="intro_auto_run_title">AUTO RUN</string>
+    <string name="intro_auto_run_content">Por favor, asegúrese de que la aplicación pueda arrancar automáticamente, sino el reloj no podrá cargar las imágenes adecuadamente.</string>
+    <string name="intro_os_title">Open Source</string>
+    <string name="intro_os_content">Busca en GitHub: wear-gallery</string>
+
+    <string name="card_intro">Consejos</string>
+    <string name="card_intro_msg">La aplicación del teléfono solamente sirve datos al reloj y ya no ofrece la galleria de fotos en el mismo.\nPuedes pasar fotos del teléfono al reloj usando cualquier aplicación para ello.</string>
+    <string name="card_tic">Atención</string>
+    <string name="card_tic_msg">A Ticwear ya no se le da soporte.(TicWatch bajo WearOS no está afectado). Deberías desinstalar esta aplicación de su teléfono y usar un cable para la transmisión de datos si no tiene un reloj WearOS.</string>
+    <string name="card_update">Nuevo</string>
+    <string name="card_update_msg">Una nueva versión está disponible. (%1$s)</string>
+    <string name="card_update_positive">Saber más</string>
+
+    <string name="images_menu_check_all">Seleccionar TODO</string>
+    <string name="images_selected_none">Seleccionar archivos</string>
+    <string name="images_selected_num">%1$d seleccionados</string>
+    <plurals name="images_subtitle">
+        <item quantity="one">%d picture</item>
+        <item quantity="other">%d pictures</item>
+    </plurals>
+
+    <string name="image_detail_title">Detalles</string>
+
+    <string name="folders_menu_list_style">Tipo de vista</string>
+    <plurals name="folders_subtitle">
+        <item quantity="one">%d folder</item>
+        <item quantity="other">%d folders</item>
+    </plurals>
+
+    <string name="menu_send">Enviar al reloj</string>
+
+    <string name="pref_category_general">General</string>
+    <string name="pref_category_information">Información</string>
+
+    <string name="setting_check_update">Comprobar actualizaciones</string>
+    <string name="pref_donate">Donar</string>
+    <string name="pref_donate_summary">Necesito tu apoyo (≧ω≦)/</string>
+    <string name="pref_donate_alipay_error">Fallo al iniciar AliPay :(</string>
+    <string name="pref_about">Acerca de..</string>
+    <string name="pref_phone_show_tips_about_watch">Aviso cuando se esté operando el reloj</string>
+    <string name="pref_title">Configuraciones</string>
+
+    <string name="watch_operation_search_gallery_ing">Escaneando albums</string>
+    <string name="watch_operation_get_pics_list_ing">Cargando lista de fotos</string>
+    <string name="watch_operation_send_hd_picture_ing">Cargando versión HD</string>
+    <string name="watch_operation_send_hd_picture_fail">Fallo al leer imagen HD</string>
+
+    <plurals name="send_images_subtitle">
+        <item quantity="one">%d picture</item>
+        <item quantity="other">%d pictures</item>
+    </plurals>
+    <string name="send_images_directory">Carpeta destino</string>
+    <string name="send_images_directory_default">Por defecto</string>
+    <string name="send_images_directory_description">Nombre de la carpeta, de acuerdo a donde los archivos están en el reloj . Déjalo en blanco para guardarlo en la carpeta por defecto.</string>
+    <string name="send_images_directory_invalid">Ruta inválida</string>
+    <string name="send_images_device">Dispositivo destino</string>
+    <string name="send_images_select_device">Seleccione un dispositivo destino. Si la lista está vacia, por favor confirme:\n1. El reloj se ha conectado mediante Bluetooth.\n2. Solo funciona con dispositivos Wear OS.\n3. La versión de la aplicación es válida.</string>
+    <string name="send_images_fail_cancel">Cancelado.</string>
+    <string name="send_images_fail_ack_failed">ACK del reloj fallido.</string>
+    <string name="send_images_fail_file_not_found">Archivo no encontrado.</string>
+    <string name="send_images_fail_io">El canal de comunicación se ha cortado.</string>
+    <string name="send_images_fail_size_mismatch">No concuerda el tamaño del archivo.</string>
+    <string name="send_images_fail_no_response">No hay respuesta.</string>
+    <string name="send_images_fail_unknown">Error desconocido.</string>
+
+    <string name="notify_send_images_title">Enviando fotos.. %1$d/%2$d</string>
+    <string name="notify_send_images_success_title">Fotos enviadas correctamente.</string>
+    <string name="notify_send_images_success_content">%1$d fotos enviadas.</string>
+    <string name="notify_send_images_failed_title">Envio fallido</string>
+    <string name="notify_send_images_failed_content">%1$s Enviadas:%2$d</string>
+
+    <string name="share_image_label">Enviar al reloj</string>
+
+    <string name="about_slogan">Una galería de código abierto en Wear OS</string>
+    <string name="about_licence"><u>Licencias Open Source</u></string>
+
+    <string name="notify_channel_permission_name">Permisos</string>
+    <string name="notify_channel_permission_description">Consejos para pedir permisos.</string>
+    <string name="notify_channel_sending_name">Enviar fotos</string>
+    <string name="notify_channel_sending_description">Muestra el progreso del envio de fotos.</string>
+    <string name="notify_channel_send_result_name">Enviar resultado</string>
+    <string name="notify_channel_send_result_description">Muestra el resultado del envio de fotos.</string>
+    <string name="notify_channel_important_processing">Proceso importante</string>
+    <string name="notify_channel_important_processing_description">Show the high priority work being performed.</string>
+
+    <string name="notify_permission_title">Permisios requeridos</string>
+    <string name="notify_permission_text">Haz tap en el teléfono para conceder permisos.</string>
+    <string name="notify_huawei_title">No ha sido posible conectar con el reloj</string>
+    <string name="notify_huawei_text">Wear Gallery no funciona en dispositivos Huawei! Haz click para saber más.</string>
+    <string name="notify_upgrading">Migrando datos</string>
+    <string name="notify_upgrading_content">No salgas para evitar pérdida de datos.</string>
+
+    <string name="links_chooser_browser">Elige navegador web</string>
+</resources>

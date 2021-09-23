@@ -1,0 +1,125 @@
+<resources>
+
+    <string name="app_name">Wear Gallery</string>
+    <string name="tip">Consejo</string>
+    <string name="confirm">Confirmar</string>
+    <string name="retry">Reintentar</string>
+    <string name="help">¿Necesitas ayuda</string>
+    <string name="empty">No se ha encontrado nada</string>
+    <string name="dont_show_again">No mostrar de nuevo</string>
+    <string name="app_hw_title">Error</string>
+    <string name="app_hw_message">Wear Gallery no funciona en dispositivos Huawei.\nScan the QR code to learn more.</string>
+
+    <string name="dialog_scan_to_visit">Escanee el código QR para ir al sitio.</string>
+
+    <string name="intro_gif_title">GIF</string>
+    <string name="intro_gif_content">Soportado :)</string>
+    <string name="intro_lan_title">Transferencia por cable</string>
+    <string name="intro_lan_content">Nos gusta iOS</string>
+    <string name="intro_wf_title">WATCH FACE</string>
+    <string name="intro_wf_content">Imagen personalizada</string>
+    <string name="intro_os_title">OpenSource</string>
+    <string name="intro_os_content">en GitHub:\nwear-gallery</string>
+
+    <string name="drawer_local_gallery">En el reloj</string>
+    <string name="drawer_phone_gallery">En el teléfono</string>
+    <string name="drawer_explore">Explorar</string>
+
+    <string name="image_operation_rotate_left">Girar a la izq</string>
+    <string name="image_operation_rotate_right">Girar a la dcha</string>
+    <string name="image_operation_hd">Cargar HD</string>
+    <string name="image_operation_delete">Borrar</string>
+    <string name="image_detail_zoom_in">Zoom in</string>
+    <string name="image_detail_zoom_out">Zoom out</string>
+
+    <string name="local_title_selection">%1$d comprobada/s</string>
+    <plurals name="local_delete_images_confirm">
+        <item quantity="one">¿Realmente quiere borrar esta/s %1$d foto/s?</item>
+        <item quantity="other">¿Realmente quiere borrar esta/s %1$d foto/s?</item>
+    </plurals>
+    <plurals name="local_delete_image_folders_confirm">
+        <item quantity="one">¿Realmente quiere borrar esta %1$d carpeta?</item>
+        <item quantity="other">¿Realmente quiere borrar esta %1$d carpeta?</item>
+    </plurals>
+    <string name="local_err_permission_title">Error</string>
+    <string name="local_err_permission_content">Son necesarios permisos de lectura y escritura para escanear imágenes guardads, por favor permítalo.</string>
+    <string name="mobile_version_conflict">Versión no reconocida</string>
+    <string name="mobile_version_conflict_content">Reloj:\t%1$s\nTeléfono:\t%2$s\n\nPor favor instale las mismas versiones en reloj y teléfono de Wear Gallery. Puedes escanear el código QR para ir al sitio.</string>
+    <string name="mobile_load_gallery_err_tip">Ayuda</string>
+    <string name="mobile_load_gallery_err_content">- Sólo para teléfonos Android; Los teléfonos iOS necesitan transferir datos mediante cable.\n- Wear Gallery tiene que instalarse en el teléfono (desde la Google Play Store o escaneando el código QR de abajo).\n- Por favor compruebe su conexión Wear OS.\n- Asegúrses que las versiones del teléfono y reloj sean las mismas.</string>
+
+    <string name="image_detail_load_ing">Cargando..</string>
+    <string name="image_detail_load_hd_ing">Cargando HD..</string>
+    <string name="image_detail_loading_next_page">Cargando siguiente página..</string>
+    <string name="image_detail_retry_next_page">Reintentando traer la siguiente</string>
+
+    <string name="preference_display">Mostrar</string>
+    <string name="preference_always_on">Mantener pantalla encendida</string>
+    <string name="preference_always_on_summary">Only when displaying pictures in full screen.</string>
+    <string name="preference_show_phone_images">Mostrar página del teléfono</string>
+    <string name="preference_transfer">Transferir</string>
+    <string name="preference_transfer_lan">Cable</string>
+    <string name="preference_transfer_net">Internet</string>
+    <string name="preference_transfer_disclaimer">Descargo de responsiabildad</string>
+    <string name="preference_transfer_disclaimer_content"># Transferencia por cable\n1. Asegúrese que el cable está conectado correctamente.\n2. Esta app manda datos sin proteger y pueden ser capturados por alguien que esté en la misma red.</string>
+    <string name="preference_about">Acerca de..</string>
+
+    <string name="about_licence">Licencias</string>
+    <string name="about_find_new_version">Nueva versión</string>
+    <string name="about_no_new_version">OK</string>
+    <string name="about_recheck_new_version">Fallo al comprobar</string>
+    <string name="about_thank">Agradecimientos</string>
+    <string name="about_thank_content">Equipo: @TicWatch\nPM: @果冻\nIcon: @五音律吕 @一佳一 @Lance.Moe @碱式碳酸铜\nTraducción: @海棠花未眠 @碱式碳酸铜</string>
+
+    <string name="server_title">Conectar a Wi-Fi</string>
+    <string name="server_trying">Intentando..</string>
+    <string name="server_timeout">Timeout\nPor favor, añada la red manualmente.</string>
+    <string name="server_start_wifi_setting_failed">Por favor abra la configuración manualmente</string>
+    <string name="server_add_wifi">Configuración WiFi</string>
+    <string name="server_ip">Visite nuestra web:\n%1$s</string>
+    <string name="server_state_running">Ejecutándose</string>
+    <string name="server_state_stop">Detenido</string>
+    <string name="server_state_fail">Fallo</string>
+    <string name="server_help">¿Necesitas ayuda?</string>
+    <string name="server_failed">Inicio fallido:\n%1$s</string>
+    <string name="server_help_msg">- Asegúrese que el reloj está en la misma red WiFi que el teléfono/pc.\n- No apague el reloj durante la transmisión.\n- Asegúrese que no hay ningún firewall impidiendo la comunicación.</string>
+
+    <string name="pick_image_title">Elija</string>
+    <string name="pick_image_all">Todo</string>
+    <string name="pick_image_folder">Álbum</string>
+
+    <string name="wf_preference_title">Watch Face</string>
+    <string name="wf_preference_image">Fondo</string>
+    <string name="wf_preference_type">Estilo</string>
+    <string name="wf_preference_position">Posición &amp; Tamaño</string>
+    <string name="wf_preference_format">Formato de hora</string>
+    <string name="wf_preference_format_reset">RESET</string>
+    <string name="wf_preference_format_reset_done">HECHO</string>
+    <string-array name="wf_preference_type_entries">
+        <item>Analog</item>
+        <item>Digital</item>
+    </string-array>
+    <string name="wf_preference_color">Color de la hora</string>
+    <string name="wf_preference_color_hint">Color HEX</string>
+    <string name="wf_preference_color_error">Color inválido</string>
+    <string name="wf_preference_intent_err">Por favor, busque la app en la Tienda</string>
+    <string name="wf_text_hour">Hora</string>
+    <string name="wf_text_min">Minutos</string>
+    <string name="wf_text_year">Año</string>
+    <string name="wf_text_month">Mes</string>
+    <string name="wf_text_day">Día</string>
+    <string name="wf_not_support_gif">Gifs no soportados</string>
+
+    <string name="upgrade_message">Acualizando..\nNo pare el proceso.</string>
+
+    <string name="notify_channel_permission_name">Permisos</string>
+    <string name="notify_channel_permission_description">Consejos para pedir permisos.</string>
+    <string name="notify_channel_important_processing">Proceso Importante</string>
+    <string name="notify_channel_important_processing_description">Muestra la alta prioridad de la tarea en curso.</string>
+
+    <string name="notify_permission_title">Permisios requeridos</string>
+    <string name="notify_permission_text">Haga tap para conceder permisios.</string>
+    <string name="notify_upgrade_title">Actualizando</string>
+    <string name="notify_upgrade_text">Wear Gallery se está actualizando y migrando datos. No salga y pare la app.</string>
+
+</resources>
