@@ -51,7 +51,6 @@ const val NOTIFY_ID_SENDING = 2
 const val NOTIFY_ID_SEND_RESULT = 3
 const val NOTIFY_ID_UPGRADING = 4
 
-const val UPDATE_URL = "http://wg.chenhe.cc"
 
 /** LocalBroadcast with extra 'success' which is a boolean value.*/
 const val ACTION_APP_UPGRADE_COMPLETE = "ACTION_APP_UPGRADE_COMPLETE"

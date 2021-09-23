@@ -3,9 +3,9 @@
 <p align="center">这也许是最棒的开源手表图库应用 (๑•ᴗ•๑)<br>
 <p align="center">May be the best open source gallery on your watch (๑•ᴗ•๑)</p>
 <p align="center">
-   <a href="https://github.com/liangchenhe55/wear-gallery/releases"><img src="https://img.shields.io/github/release-pre/liangchenhe55/wear-gallery.svg?style=flat-square"></a>
+   <a href="https://github.com/ichenhe/wear-gallery/releases"><img src="https://img.shields.io/github/release-pre/ichenhe/wear-gallery.svg?style=flat-square"></a>
    <a target="_blank" href="https://play.google.com/store/apps/details?id=cc.chenhe.weargallery"><img src="https://img.shields.io/badge/download-play%20store-green.svg?style=flat-square"></a>
-   <a href="https://github.com/liangchenhe55/wear-gallery/blob/master/LICENSE"><img src="https://img.shields.io/github/license/liangchenhe55/wear-gallery.svg?style=flat-square"></a>
+   <a href="https://github.com/ichenhe/wear-gallery/blob/master/LICENSE"><img src="https://img.shields.io/github/license/liangchenhe55/wear-gallery.svg?style=flat-square"></a>
 </p>
 
 
