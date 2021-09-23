@@ -1,10 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        // mirrors for china
-        maven("https://maven.aliyun.com/repository/public")
-        maven("https://maven.aliyun.com/repository/google")
-
         google()
         mavenCentral()
     }
@@ -18,7 +14,7 @@ buildscript {
     }
 }
 
-allprojects {
+@Suppress("JcenterRepositoryObsolete") allprojects {
     repositories {
         maven {
             url = uri("https://maven.pkg.github.com/ichenhe/Actions-Mars")
@@ -29,12 +25,9 @@ allprojects {
             }
         }
 
-        // mirrors for china
-        maven("https://maven.aliyun.com/repository/public")
-        maven("https://maven.aliyun.com/repository/google")
-
         maven("https://jitpack.io")
         mavenCentral()
+        jcenter()
         google()
     }
 
