@@ -34,27 +34,20 @@ android {
 
 dependencies {
     api(fileTree(baseDir = "libs") { include("*.jar") })
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Ver.coroutinesAndroid}")
-    implementation("androidx.annotation:annotation:${Ver.annotation}")
-    implementation("androidx.core:core-ktx:${Ver.ktx}")
-    implementation("androidx.constraintlayout:constraintlayout:${Ver.constraintlayout}")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Ver.lifecycle}")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Ver.lifecycle}")
-    implementation("androidx.lifecycle:lifecycle-process:${Ver.lifecycle}")
-    implementation("androidx.recyclerview:recyclerview:${Ver.recyclerview}")
-    implementation("androidx.room:room-ktx:${Ver.room}")
-    kapt("androidx.room:room-compiler:${Ver.room}")
-    implementation("androidx.exifinterface:exifinterface:${Ver.exifinterface}")
+    implementation(kotlinx.bundles.coroutine)
+    implementation(androidx.bundles.base)
+    implementation(androidx.bundles.lifecycle)
+    implementation(androidx.room.ktx)
+    kapt("androidx.room:room-compiler:${androidx.versions.room.get()}")
+    implementation(androidx.exifinterface)
 
-    implementation("com.squareup.moshi:moshi:${Ver.moshi}")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:${Ver.moshi}")
-    compileOnly("me.chenhe:wearmsger:${Ver.wearMsger}")
-    api("com.jakewharton.timber:timber:${Ver.timber}")
-    api("me.chenhe:wearmsger:${Ver.wearMsger}")
+    implementation(lib.moshi)
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:${lib.versions.moshi.get()}")
 
+    api(lib.timber)
+    api(lib.wearmsger)
 
-    testImplementation("org.junit.jupiter:junit-jupiter:${Ver.junit}")
-    testImplementation("io.strikt:strikt-core:${Ver.strikt}")
+    testImplementation(lib.bundles.test)
 }
 
 
