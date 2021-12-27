@@ -1,0 +1,10 @@
+{
+  "logo": "腕间图库 | 图片上传",
+  "language": "语言",
+  "dragFilesHere": "将文件拖到此处，或 ",
+  "clickToSelect": "点击选择",
+  "nonImageFileWarn": "仅支持图片文件",
+  "uploadError": "图片上传失败: {name}",
+  "retry": "重试",
+  "retryAll": "全部重试"
+}

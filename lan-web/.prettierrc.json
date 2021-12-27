@@ -1,0 +1,6 @@
+{
+    "htmlWhitespaceSensitivity": "ignore",
+    "useTabs": false,
+    "trailingComma": "es5",
+    "semi": true
+}
