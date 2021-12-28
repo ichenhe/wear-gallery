@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 31
 
     resourcePrefix = "lib_"
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 31
     }
     buildTypes {
         release {
