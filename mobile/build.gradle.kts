@@ -12,8 +12,8 @@ android {
         applicationId = "cc.chenhe.weargallery"
         minSdk = 23
         targetSdk = 31
-        versionCode = 220601070 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
-        versionName = "v6.1.7"
+        versionCode = 220602000 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
+        versionName = "v6.2.0"
 
         vectorDrawables.useSupportLibrary = true
     }
