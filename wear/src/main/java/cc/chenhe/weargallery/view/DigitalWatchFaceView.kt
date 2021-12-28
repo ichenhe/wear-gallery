@@ -67,6 +67,8 @@ class DigitalWatchFaceView @JvmOverloads constructor(
         override fun getCalendar(): Calendar = calendar
 
         override fun is24Hour(): Boolean = is24Hour
+
+        override fun displayImageInDim(): Boolean = false
     }
 
     override fun onAttachedToWindow() {
