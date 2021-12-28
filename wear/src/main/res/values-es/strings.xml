@@ -89,6 +89,7 @@
     <string name="pick_image_folder">Álbum</string>
 
     <string name="wf_preference_title">Watch Face</string>
+    <string name="wf_preference_dim">Display in dim mode</string>
     <string name="wf_preference_image">Fondo</string>
     <string name="wf_preference_type">Estilo</string>
     <string name="wf_preference_position">Posición &amp; Tamaño</string>

@@ -31,8 +31,8 @@ import cc.chenhe.weargallery.uilts.*
 import cc.chenhe.weargallery.watchface.ITimeHolder
 import java.util.*
 
-class DigitalPainter(context: Context, capacity: Capacity, observeConfig: Boolean = true)
-    : Painter(context, capacity, observeConfig), ITimeHolder {
+class DigitalPainter(context: Context, capacity: Capacity, observeConfig: Boolean = true) :
+    Painter(context, capacity, observeConfig), ITimeHolder {
 
     private val tagParser = TagParser(this)
 
@@ -158,7 +158,7 @@ class DigitalPainter(context: Context, capacity: Capacity, observeConfig: Boolea
     override fun onDraw(canvas: Canvas, bounds: Rect) {
         canvas.drawColor(Color.BLACK)
         tagParser.onFrameStart()
-        if (!isInAmbientMode) {
+        if (!isInAmbientMode || displayImageInDim) {
             bg?.let { bg ->
                 canvas.drawBitmap(bg, (width - bg.width) / 2f, (height - bg.height) / 2f, null)
             }
@@ -170,7 +170,8 @@ class DigitalPainter(context: Context, capacity: Capacity, observeConfig: Boolea
 
     private fun drawMessage(canvas: Canvas, msg: String, x: Float, y: Float) {
         @Suppress("DEPRECATION")
-        val staticLayout = StaticLayout(msg, paint, width, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, true)
+        val staticLayout =
+            StaticLayout(msg, paint, width, Layout.Alignment.ALIGN_NORMAL, 1f, 0f, true)
         canvas.save()
         canvas.translate(x, y - staticLayout.height / 2f)
         staticLayout.draw(canvas)

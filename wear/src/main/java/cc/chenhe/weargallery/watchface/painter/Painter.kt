@@ -64,6 +64,8 @@ abstract class Painter(
         fun getCalendar(): Calendar
 
         fun is24Hour(): Boolean
+
+        fun displayImageInDim(): Boolean
     }
 
     protected var width: Int = 0
@@ -78,6 +80,7 @@ abstract class Painter(
     protected val isInAmbientMode get() = capacity.isInAmbientMode()
     protected val calendar: Calendar get() = capacity.getCalendar()
     protected val is24Hour: Boolean get() = capacity.is24Hour()
+    protected val displayImageInDim: Boolean get() = capacity.displayImageInDim()
 
     protected var bg: Bitmap? = null
         private set

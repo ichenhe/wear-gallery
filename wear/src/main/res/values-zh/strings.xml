@@ -86,6 +86,7 @@
     <string name="pick_image_folder">相册</string>
 
     <string name="wf_preference_title">表盘设置</string>
+    <string name="wf_preference_dim">微光模式下保留背景图</string>
     <string name="wf_preference_image">背景图片</string>
     <string name="wf_preference_type">时间样式</string>
     <string name="wf_preference_position">位置与大小</string>
@@ -106,6 +107,7 @@
     <string name="wf_text_month">月</string>
     <string name="wf_text_day">日</string>
     <string name="wf_not_support_gif">暂不支持gif动图</string>
+    <string name="wf_dim_dialog">由于设备与图片的不同，微光模式下可能会有频闪。请尝试使用不是很&quot;灰&quot;的图片。</string>
 
     <string name="upgrade_message">数据升级中\n请勿强行终止进程</string>
 

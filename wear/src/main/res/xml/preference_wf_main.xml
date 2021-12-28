@@ -5,6 +5,10 @@
         app:layout="@layout/preference_title"
         app:title="@string/wf_preference_title" />
 
+    <SwitchPreferenceCompat
+        app:key="preference_watchface_dim"
+        app:title="@string/wf_preference_dim" />
+
     <Preference
         app:icon="@drawable/ic_pref_wf_image"
         app:key="preference_watchface_image"

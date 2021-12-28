@@ -65,6 +65,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    lint {
+        disable("MissingTranslation")
+    }
 
     afterEvaluate {
         tasks.register<Copy>("copyApk") {

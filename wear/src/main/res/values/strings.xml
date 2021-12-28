@@ -92,6 +92,7 @@
     <string name="pick_image_folder">Album</string>
 
     <string name="wf_preference_title">Watch Face</string>
+    <string name="wf_preference_dim">Display in dim mode</string>
     <string name="wf_preference_image">Background</string>
     <string name="wf_preference_type">Style type</string>
     <string name="wf_preference_position">Position &amp; Size</string>
@@ -122,6 +123,7 @@
     <string name="wf_text_day">day</string>
     <string name="wf_text_slash" translatable="false">&#160;&#160;/</string>
     <string name="wf_not_support_gif">Gif is not supported</string>
+    <string name="wf_dim_dialog">According to your device and image, there may be strobes in dim mode. Try other images with less &quot;grey&quot; color then.</string>
 
     <string name="upgrade_message">Upgrading…\nDon\'t forcibly stop the process.</string>
 

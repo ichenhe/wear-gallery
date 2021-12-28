@@ -31,8 +31,8 @@ import kotlin.math.sin
 
 private const val CENTER_GAP_AND_CIRCLE_RADIUS = 4f
 
-class AnalogPainter(context: Context, capacity: Capacity, observeConfig: Boolean = true)
-    : Painter(context, capacity, observeConfig) {
+class AnalogPainter(context: Context, capacity: Capacity, observeConfig: Boolean = true) :
+    Painter(context, capacity, observeConfig) {
 
     private lateinit var paint: Paint
 
@@ -58,7 +58,7 @@ class AnalogPainter(context: Context, capacity: Capacity, observeConfig: Boolean
 
     override fun onDraw(canvas: Canvas, bounds: Rect) {
         canvas.drawColor(Color.BLACK)
-        if (!isInAmbientMode) {
+        if (!isInAmbientMode || displayImageInDim) {
             bg?.let { bg ->
                 canvas.drawBitmap(bg, (width - bg.width) / 2f, (height - bg.height) / 2f, null)
             }
@@ -73,8 +73,10 @@ class AnalogPainter(context: Context, capacity: Capacity, observeConfig: Boolean
             val innerY = (-cos(tickRot.toDouble())).toFloat() * innerTickRadius
             val outerX = sin(tickRot.toDouble()).toFloat() * outerTickRadius
             val outerY = (-cos(tickRot.toDouble())).toFloat() * outerTickRadius
-            canvas.drawLine(centerX + innerX, centerY + innerY,
-                    centerX + outerX, centerY + outerY, scalePaint)
+            canvas.drawLine(
+                centerX + innerX, centerY + innerY,
+                centerX + outerX, centerY + outerY, scalePaint
+            )
         }
 
         // time
@@ -83,7 +85,8 @@ class AnalogPainter(context: Context, capacity: Capacity, observeConfig: Boolean
          * These calculations reflect the rotation in degrees per unit of time, e.g.,
          * 360 / 60 = 6 and 360 / 12 = 30.
          */
-        val seconds: Float = calendar.get(Calendar.SECOND) + calendar.get(Calendar.MILLISECOND) / 1000f
+        val seconds: Float =
+            calendar.get(Calendar.SECOND) + calendar.get(Calendar.MILLISECOND) / 1000f
         val secondsRotation = seconds * 6f
 
         val minutesRotation: Float = calendar.get(Calendar.MINUTE) * 6f
@@ -96,36 +99,39 @@ class AnalogPainter(context: Context, capacity: Capacity, observeConfig: Boolean
 
         canvas.rotate(hoursRotation, centerX, centerY)
         canvas.drawLine(
-                centerX,
-                centerY - CENTER_GAP_AND_CIRCLE_RADIUS,
-                centerX,
-                centerY - hourHandLength,
-                hourPaint)
+            centerX,
+            centerY - CENTER_GAP_AND_CIRCLE_RADIUS,
+            centerX,
+            centerY - hourHandLength,
+            hourPaint
+        )
 
         canvas.rotate(minutesRotation - hoursRotation, centerX, centerY)
         canvas.drawLine(
-                centerX,
-                centerY - CENTER_GAP_AND_CIRCLE_RADIUS,
-                centerX,
-                centerY - minuteHandLength,
-                minutePaint)
+            centerX,
+            centerY - CENTER_GAP_AND_CIRCLE_RADIUS,
+            centerX,
+            centerY - minuteHandLength,
+            minutePaint
+        )
 
         if (!isInAmbientMode) {
             canvas.rotate(secondsRotation - minutesRotation, centerX, centerY)
             canvas.drawLine(
-                    centerX,
-                    centerY - CENTER_GAP_AND_CIRCLE_RADIUS,
-                    centerX,
-                    centerY - secondHandLength,
-                    secondPaint)
+                centerX,
+                centerY - CENTER_GAP_AND_CIRCLE_RADIUS,
+                centerX,
+                centerY - secondHandLength,
+                secondPaint
+            )
         }
 
         canvas.drawCircle(
-                centerX,
-                centerY,
-                CENTER_GAP_AND_CIRCLE_RADIUS,
-                scalePaint)
-
+            centerX,
+            centerY,
+            CENTER_GAP_AND_CIRCLE_RADIUS,
+            scalePaint
+        )
 
         canvas.restore()
     }

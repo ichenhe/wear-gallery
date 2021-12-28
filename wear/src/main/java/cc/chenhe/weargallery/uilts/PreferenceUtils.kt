@@ -82,6 +82,15 @@ fun lastStartVersion(context: Context): Long {
 // Watch Face
 // ----------------------------------------------------------------------------------------------
 
+/** bool */
+private const val PREFERENCE_WF_DIM = "preference_watchface_dim"
+
+/**
+ * Whether show image background in dim mode.
+ */
+fun fetchWatchFaceDimImage(context: Context, init: Boolean) =
+    SpBooleanLiveData(getSp(context), PREFERENCE_WF_DIM, false, init)
+
 // --------------------------
 // -     Time Text Tag      -
 // --------------------------

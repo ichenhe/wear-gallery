@@ -30,11 +30,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
+import androidx.preference.SwitchPreferenceCompat
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.uilts.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.chenhe.wearvision.dialog.AlertDialog
 import me.chenhe.wearvision.preference.PreferenceFragmentCompat
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -57,6 +59,8 @@ class PreferenceFr : PreferenceFragmentCompat() {
     private lateinit var positionPreference: Preference
     private lateinit var textPreference: Preference
     private lateinit var textColorPreference: Preference
+    private lateinit var dimPreference: SwitchPreferenceCompat
+    private var dimFlag = false
 
     private val selectBgImageLauncher =
         registerForActivityResult(object : ActivityResultContract<Unit, Uri?>() {
@@ -86,9 +90,25 @@ class PreferenceFr : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preference_wf_main, rootKey)
 
+        dimPreference = requireNotNull(findPreference("preference_watchface_dim"))
         positionPreference = requireNotNull(findPreference("preference_watchface_text_position"))
         textPreference = requireNotNull(findPreference("preference_watchface_text"))
         textColorPreference = requireNotNull(findPreference("preference_watchface_text_color"))
+
+        dimPreference.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue == false || dimFlag)
+                return@setOnPreferenceChangeListener true
+            AlertDialog(requireContext()).apply {
+                setTitle(R.string.tip)
+                setMessage(R.string.wf_dim_dialog)
+                setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { dialog, _ ->
+                    dimFlag = true
+                    dimPreference.isChecked = true
+                    dialog.dismiss()
+                }
+            }.show()
+            false
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

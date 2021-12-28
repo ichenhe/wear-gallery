@@ -27,6 +27,7 @@ import androidx.lifecycle.map
 import cc.chenhe.lib.watchfacehelper.BaseWatchFaceService
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
+import cc.chenhe.weargallery.uilts.fetchWatchFaceDimImage
 import cc.chenhe.weargallery.uilts.fetchWatchFaceStyle
 import cc.chenhe.weargallery.watchface.painter.AnalogPainter
 import cc.chenhe.weargallery.watchface.painter.DigitalPainter
@@ -42,6 +43,7 @@ class WatchFaceService : BaseWatchFaceService() {
     private lateinit var analogStyle: String
     private lateinit var digitalStyle: String
     private lateinit var type: LiveData<StyleMode>
+    private lateinit var showImageInDim: LiveData<Boolean>
 
     override fun onCreate() {
         super.onCreate()
@@ -57,6 +59,7 @@ class WatchFaceService : BaseWatchFaceService() {
                 }
             }
         }
+        showImageInDim = fetchWatchFaceDimImage(context, true)
     }
 
     override fun onCreateEngine(): Engine {
@@ -65,6 +68,10 @@ class WatchFaceService : BaseWatchFaceService() {
 
     private inner class MyEngine : BaseWatchFaceService.BaseEngine() {
 
+        private val showImageInDimObserver = Observer<Boolean> {
+            if (isInAmbientMode)
+                invalidate()
+        }
         private val styleObserver = StyleObserver()
         private var painter: Painter? = null
 
@@ -78,6 +85,8 @@ class WatchFaceService : BaseWatchFaceService() {
             override fun getCalendar(): Calendar = calendar
 
             override fun is24Hour(): Boolean = !is12h
+
+            override fun displayImageInDim(): Boolean = showImageInDim.value ?: true
         }
 
         private inner class StyleObserver : Observer<StyleMode> {
@@ -119,6 +128,7 @@ class WatchFaceService : BaseWatchFaceService() {
             super.onCreate(holder)
             setInteractiveUpdateRateMS(50)
             this.holder = holder
+            showImageInDim.observeForever(showImageInDimObserver)
             type.observeForever(styleObserver)
         }
 
@@ -169,6 +179,9 @@ class WatchFaceService : BaseWatchFaceService() {
         override fun onDestroy() {
             if (::type.isInitialized) {
                 type.removeObserver(styleObserver)
+            }
+            if (::showImageInDim.isInitialized) {
+                showImageInDim.removeObserver(showImageInDimObserver)
             }
             super.onDestroy()
             painter?.onDestroy()
