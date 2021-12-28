@@ -26,7 +26,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.DimenRes
 import androidx.annotation.IdRes
 import androidx.core.util.containsKey
-import androidx.core.util.set
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -109,7 +108,7 @@ open class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         return if (viewCache.containsKey(id)) {
             viewCache[id] as T
         } else {
-            itemView.findViewById<T>(id).also { viewCache[id] = it }
+            itemView.findViewById<T>(id).also { viewCache.put(id, it) }
         }
     }
 
