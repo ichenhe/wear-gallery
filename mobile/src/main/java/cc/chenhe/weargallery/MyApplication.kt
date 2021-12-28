@@ -31,6 +31,7 @@ import com.microsoft.appcenter.crashes.model.ErrorReport
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import timber.log.Timber
 
 
@@ -67,7 +68,7 @@ class MyApplication : Application() {
         }
 
         startKoin {
-            androidLogger()
+            androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
             androidContext(this@MyApplication)
             modules(appModule)
         }

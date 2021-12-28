@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 31
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
         minSdk = 23
-        targetSdk = 30
+        targetSdk = 31
         versionCode = 220601070 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName = "v6.1.7"
 

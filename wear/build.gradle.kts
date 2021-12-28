@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 31
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 31
         versionCode = 220601071 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName = "v6.1.7"
 
@@ -92,6 +92,7 @@ dependencies {
     implementation(androidx.palette)
     implementation(androidx.exifinterface)
     implementation(androidx.room.ktx)
+    implementation(androidx.room.paging)
     kapt("androidx.room:room-compiler:${androidx.versions.room.get()}")
     implementation(androidx.paging.runtime.ktx)
 
