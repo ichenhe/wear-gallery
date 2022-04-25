@@ -1,8 +1,12 @@
 ---
 title: "兼容性"
-date: 2021-08-10T19:02:58+08:00
-draft: false
 weight: 1
+# bookFlatSection: false
+# bookToc: true
+# bookHidden: false
+# bookCollapseSection: false
+# bookComments: false
+# bookSearchExclude: false
 ---
 
 **腕间图库手机端不兼容一切华为手机！**
@@ -14,11 +18,11 @@ weight: 1
 - Wear OS 2.x 及以上
 - ~~Ticwear~~
 
-{{% notice note %}}
+{{% hint info %}}
 
 从腕间图库 v6.1 版本起，不再支持 Ticwear 的实时预览。Ticwear 用户没必要再安装手机端。
 
-{{% /notice %}}
+{{% /hint %}}
 
 ## 非官方支持的手表
 

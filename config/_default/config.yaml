@@ -1,18 +1,24 @@
 baseURL: "https://wg.chenhe.me/"
-defaultContentLanguage: en
-title: "Wear Gallery"
 description: "这也许是最好的开源手表图库。This is probably the best open source gallery on your watch."
+defaultContentLanguage: en
 defaultContentLanguageInSubdir: true
 
-theme: learn
+module:
+  imports:
+    - path: github.com/alex-shpak/hugo-book
 
 markup:
   goldmark:
     renderer:
+      ## Set to true if you have HTML content inside Markdown
       unsafe: true
+  tableOfContents:
+    startLevel: 1
 
 outputs:
-  home: [ "HTML", "RSS", "JSON"]
+  home: ["HTML"]
+
+title: Wear Gallery
 
 languages:
   en:
@@ -27,16 +33,16 @@ languages:
     languageName: 简体中文
 
 menu:
-  shortcuts:
-    - name: "<i class='fab fa-github'></i> Github repo"
-      identifier: "d"
+  # before: []
+  after:
+    - name: "Github"
       url: "https://github.com/ichenhe/wear-gallery"
       weight: 10
+    - name: "Chenhe's Blog"
+      url: "https://chenhe.me/"
+      weight: 20
 
 params:
-  editURL: "https://github.com/ichenhe/wear-gallery/edit/website/content/"
-  disableLandingPageButton: true
-  disableLanguageSwitchingButton: false
-  disableNextPrev: false
-  themeVariant: blue
-  titleSeparator: "-"
+  BookRepo: https://github.com/ichenhe/wear-gallery
+  BookEditPath: edit/website
+  BookSection: docs

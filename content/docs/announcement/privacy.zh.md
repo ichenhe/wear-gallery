@@ -1,8 +1,12 @@
 ---
 title: "隐私权政策"
-date: 2021-08-16T22:03:49+08:00
-draft: false
 weight: 1
+# bookFlatSection: false
+# bookToc: true
+# bookHidden: false
+# bookCollapseSection: false
+# bookComments: false
+# bookSearchExclude: false
 ---
 
 本页用于通知用户我们的隐私政策，如果有人决定使用我们的服务，即腕间图库应用，及其网站，我们所收集、使用和披露的个人信息。
@@ -55,4 +59,3 @@ weight: 1
 ## 联系我们
 
 如果您对我们的隐私政策有任何疑问或建议，请随时与我们联系。
-

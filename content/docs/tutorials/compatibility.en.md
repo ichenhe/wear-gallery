@@ -1,16 +1,15 @@
 ---
 title: "Compatibility"
-date: 2021-08-10T19:02:58+08:00
-draft: false
 weight: 1
-aliases: [/tutorials/compatibility/]
+# bookFlatSection: false
+# bookToc: true
+# bookHidden: false
+# bookCollapseSection: false
+# bookComments: false
+# bookSearchExclude: false
 ---
 
-{{% notice info %}}
-
-Wear Gallery is not compatible with all Huawei phones! 
-
-{{% /notice %}}
+**Wear Gallery is not compatible with all Huawei phones!**
 
 ## Supported OS on watch
 
@@ -18,11 +17,11 @@ Wear Gallery is not compatible with all Huawei phones!
 - Samsung Galaxy Watch 4+ (Wear OS version)
 - ~~Ticwear~~
 
-{{% notice note %}}
+{{% hint info %}}
 
 Start with v6.1, live-previews for Ticwear are no longer supported. There is no need for Ticwear-only users to install the mobile client.
 
-{{% /notice %}}
+{{% /hint %}}
 
 ## Unofficially supported watches
 

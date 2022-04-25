@@ -1,9 +1,13 @@
 ---
 title: "Live Preview"
-date: 2021-08-28T12:36:27+08:00
-draft: false
-Weight: 15
-aliases: [/tutorials/live-preview]
+weight: 15
+aliases: ["/tutorials/live-preview/", "/en/tutorials/live-preview/"]
+# bookFlatSection: false
+# bookToc: true
+# bookHidden: false
+# bookCollapseSection: false
+# bookComments: false
+# bookSearchExclude: false
 ---
 
 ## Basic requirements
@@ -17,15 +21,15 @@ The Wear Gallery supports live preview of images in your phone, but only if you 
 
 You can download the Wear Gallery mobile phone installation package through any of the links below.
 
-{{% notice info %}}
+{{% hint info %}}
 
 Users in China mainland strongly recommend opening it with a system browser (click on the top right corner) after scanning the QR code. Downloading directly in Wechat or QQ may be mistakenly blocked.
 
-{{% /notice %}}
+{{% /hint %}}
 
 - GitHub Release: [https://github.com/ichenhe/wear-gallery/releases](https://github.com/ichenhe/wear-gallery/releases)
 - 蓝奏云：[https://chenhe.lanzoui.com/b0cw4qhah](https://chenhe.lanzoui.com/b0cw4qhah)  
-密码: `5psy`
+  密码: `5psy`
 
 ## Debug
 

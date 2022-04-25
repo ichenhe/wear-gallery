@@ -1,9 +1,12 @@
 ---
 title: "Install"
-date: 2021-08-10T18:25:08+08:00
-draft: false
 weight: 10
-aliases: [/tutorials/install]
+# bookFlatSection: false
+# bookToc: true
+# bookHidden: false
+# bookCollapseSection: false
+# bookComments: false
+# bookSearchExclude: false
 ---
 
 ## Release channel
@@ -14,9 +17,9 @@ The official release channels of wear gallery are:
 - [Google Play](https://play.google.com/store/apps/details?id=cc.chenhe.weargallery)
 - Mobvoi App Store (watch client)
 
-{{% notice warning %}}
+{{% hint warning %}}
 Please do not install from unofficial sources, as this may put your device at risk.
-{{% /notice %}}
+{{% /hint %}}
 
 ## Install
 
@@ -29,7 +32,7 @@ Please do not install from unofficial sources, as this may put your device at ri
 
 Just download the  `.apk` file directly from the distribution above and install it.
 
-{{% notice note %}}
+{{% hint note %}}
 
 Your mobile phone and watch must have the same version of the Wear Gallery, otherwise the live-preview or other features will not be available, or even cause app to crash.
-{{% /notice %}}
+{{% /hint %}}

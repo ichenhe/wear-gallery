@@ -1,9 +1,12 @@
 ---
 title: "Privacy"
-date: 2021-08-16T22:03:49+08:00
-draft: false
 weight: 1
-aliases: [/announcement/privacy]
+# bookFlatSection: false
+# bookToc: true
+# bookHidden: false
+# bookCollapseSection: false
+# bookComments: false
+# bookSearchExclude: false
 ---
 
 This page is used to inform you our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service, the Wear Gallery application and website.

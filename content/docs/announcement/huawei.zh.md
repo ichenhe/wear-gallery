@@ -1,8 +1,13 @@
 ---
 title: "关于拒绝在华为手机运行"
-date: 2021-08-16T23:16:25+08:00
-draft: false
 weight: 10
+aliases: ["/announcement/huawei/", "/zh/announcement/huawei/"]
+# bookFlatSection: false
+# bookToc: true
+# bookHidden: false
+# bookCollapseSection: false
+# bookComments: false
+# bookSearchExclude: false
 ---
 
 **针对当前时政（2020.5.30）的澄清**
@@ -23,11 +28,11 @@ weight: 10
 
 [人民网：华为的回应不是“法治”，而是以势压人](http://yuqing.people.com.cn/n1/2019/1203/c209043-31487738.html)（原文已删除，备份见[Archive](https://web.archive.org/web/20191204063655/http://yuqing.people.com.cn/n1/2019/1203/c209043-31487738.html)）
 
-[【查看截图】](https://raw.githubusercontent.com/wiki/liangchenhe55/wear-gallery/imgs/hw_251.jpg)
+[【查看截图】](/hw_251.jpg)
 
 ### 混用闪存
 
-概览：[Wikipedia](https://zh.wikipedia.org/wiki/对华为的争议#产品品质)，[知乎-华为P10闪存门事件全记录](https://zhuanlan.zhihu.com/p/26508723)（[Archive](https://web.archive.org/web/20191208025921/https://zhuanlan.zhihu.com/p/26508723)备份）
+概览：[Wikipedia](https://zh.wikipedia.org/wiki/对华为的争议#产品品质)，[知乎-华为 P10 闪存门事件全记录](https://zhuanlan.zhihu.com/p/26508723)（[Archive](https://web.archive.org/web/20191208025921/https://zhuanlan.zhihu.com/p/26508723)备份）
 
 ### Mate 20 Pro 屏幕发绿
 
@@ -37,7 +42,7 @@ weight: 10
 
 ### 2020 发布会地图争议区域缺失
 
-概览：[Wikipedia](https://zh.wikipedia.org/wiki/对华为的争议#政治争议)，[知乎-如何看待华为在2020年发布会上关于地图的事情？](https://www.zhihu.com/question/374722202)
+概览：[Wikipedia](https://zh.wikipedia.org/wiki/对华为的争议#政治争议)，[知乎-如何看待华为在 2020 年发布会上关于地图的事情？](https://www.zhihu.com/question/374722202)
 
 在问题曝光后始终（有可能是过了很长时间后）都没有正面回应，且试图控制热度。其他犯了类似错误的团队哪怕及时道歉都被揪着不放。
 
