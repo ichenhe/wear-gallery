@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>指南 on 腕间图库</title><link>https://weargallery.app/zh/docs/tutorials/</link><description>Recent content in 指南 on 腕间图库</description><generator>Hugo -- gohugo.io</generator><language>zh</language><atom:link href="https://weargallery.app/zh/docs/tutorials/index.xml" rel="self" type="application/rss+xml"/><item><title>兼容性</title><link>https://weargallery.app/zh/docs/tutorials/compatibility/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://weargallery.app/zh/docs/tutorials/compatibility/</guid><description>腕间图库手机端不兼容一切华为手机！
+支持的手表操作系统 # 配合 Android 手机客户端可实时预览图片：
+Wear OS 2.x 及以上 Ticwear 从腕间图库 v6.1 版本起，不再支持 Ticwear 的实时预览。Ticwear 用户没必要再安装手机端。 非官方支持的手表 # 也许能用，但无法实时预览，只安装手表端使用局域网传输即可：
+OPPO 华为 Watch 3 其他基于 Android 系统魔改的手表 不支持的手表 # 无法安装：
+三星手表（Tizen 版本） 华米等轻智能手表 Apple Watch</description></item><item><title>安装</title><link>https://weargallery.app/zh/docs/tutorials/install/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://weargallery.app/zh/docs/tutorials/install/</guid><description> 发布渠道 # 腕间图库官方发布渠道为：
+Github Release 小问商店（手表） 小米商店（手表） Google Play 授权的第三方发布渠道为：
+Wear OS 工具箱 @flyfish 安卓手表 ADB 实用工具箱 @明风之岚 酷安网（手机） 警告
+请勿从非官方或授权渠道安装，这不仅可能使您的设备面临危险，同时腕间图库也保留拒绝运行甚至采取进一步封禁措施的权利。 安装 # 手表端 # 请优先从 手表上 的应用商店安装，这是最简单快捷安全的方案。 若您的手表没有应用商店或找不到腕间图库，请从上面的发布渠道直接下载安装包 (*.apk) 使用 ADB 安装到手表。 若您不会使用 ADB 则可以选择上面授权的第三方工具辅助安装。 手机端 # 直接从上面的发布渠道下载安装包 (*.apk) 安装即可。
+注意
+手机与手表必须安装相同版本的腕间图库，否则实时预览或其他功能将不可用，甚至导致应用崩溃。</description></item><item><title>实时预览</title><link>https://weargallery.app/zh/docs/tutorials/live-preview/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://weargallery.app/zh/docs/tutorials/live-preview/</guid><description> 要求 # 腕间图库支持实时预览手机中的图片，但必须满足下面要求。若无法满足要求或不想使用此功能，您可以在设置中关闭手机预览页面。
+手机为 Android 系统且必须安装腕间图库手机端。 手表与手机已配对且通过蓝牙连接。 安装手机端 # 您可以通过下面任意链接下载手机安装包。
+注意
+中国大陆用户强烈建议扫码后使用系统浏览器打开（点击右上角），在微信或 QQ 里直接下载可能会被误拦截。 蓝奏云：https://chenhe.lanzoui.com/b0cw4qhah
+密码: 5psy GitHub Release: https://github.com/ichenhe/wear-gallery/releases 酷安网 错误排除 # 确认手机已安装 相同版本 的腕间图库。 确认手机与手表已经通过蓝牙连接。 确认手机已经允许腕间图库自启或其他必要的权限。</description></item><item><title>批量发送</title><link>https://weargallery.app/zh/docs/tutorials/batch-sending/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://weargallery.app/zh/docs/tutorials/batch-sending/</guid><description>从腕间图库 v6.1 开始，手机端专注于为手表服务，不再标配图片浏览功能。 从速度与稳定性考虑，如果您需要一次性传输大量，或超清图片，强烈建议使用 LAN 局域网传输，而不是依赖蓝牙批量发送。 打开任意 App（建议为系统相册），选中所有您希望发送的图片，点击「分享」，在弹出的列表中选择 「发送到手表」即可。
+如果您未能找到此选项，请确认列表是否完整、当前应用是否使用系统原生的分享接口。</description></item></channel></rss>
