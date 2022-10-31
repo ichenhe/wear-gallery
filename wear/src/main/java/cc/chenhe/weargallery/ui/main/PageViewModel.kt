@@ -20,35 +20,56 @@ package cc.chenhe.weargallery.ui.main
 import android.app.Application
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.map
+import androidx.lifecycle.MediatorLiveData
 import cc.chenhe.weargallery.ui.explore.ExploreFr
 import cc.chenhe.weargallery.ui.local.LocalImagesFr
 import cc.chenhe.weargallery.ui.mobile.MobileImagesFr
+import cc.chenhe.weargallery.uilts.fetchQueryShowPhoneImages
 import cc.chenhe.weargallery.uilts.fetchShowPhoneImages
 
 class PageViewModel(application: Application) : AndroidViewModel(application) {
 
     enum class Item(val id: Int) {
-        Local(1), Phone(2), Explore(3)
+        Local(1), Phone(2), Explore(3), WhetherShowPhone(4)
     }
 
     private val showMobileImages = fetchShowPhoneImages(application)
+    private val queryShowPhoneImages = fetchQueryShowPhoneImages(application)
+    val items: MediatorLiveData<List<Item>> = MediatorLiveData()
 
-    val items = showMobileImages.map { showMobileImages ->
-        if (showMobileImages) {
-            listOf(Item.Local, Item.Phone, Item.Explore)
-        } else {
-            listOf(Item.Local, Item.Explore)
+    val size get() = items.value?.size ?: 0
+
+    init {
+        items.addSource(showMobileImages) { show ->
+            queryShowPhoneImages.value?.also { query ->
+                items.value = createFragmentList(show, query)
+            }
+        }
+        items.addSource(queryShowPhoneImages) { query ->
+            showMobileImages.value?.also { show ->
+                items.value = createFragmentList(show, query)
+            }
         }
     }
 
-    val size get() = items.value?.size ?: 0
+    private fun createFragmentList(
+        showPhoneImages: Boolean,
+        queryShowPhoneImages: Boolean
+    ): List<Item> {
+        if (queryShowPhoneImages)
+            return listOf(Item.Local, Item.WhetherShowPhone, Item.Explore)
+        return if (showPhoneImages)
+            listOf(Item.Local, Item.Phone, Item.Explore)
+        else
+            listOf(Item.Local, Item.Explore)
+    }
 
     fun createFragment(position: Int): Fragment? {
         return when (items.value?.getOrNull(position)) {
             Item.Local -> LocalImagesFr()
             Item.Phone -> MobileImagesFr()
             Item.Explore -> ExploreFr()
+            Item.WhetherShowPhone -> WhetherShoePhoneImageFr()
             null -> null
         }
     }

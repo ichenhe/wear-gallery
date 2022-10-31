@@ -24,6 +24,11 @@
     <string name="drawer_phone_gallery">手机图片</string>
     <string name="drawer_explore">扩展</string>
 
+    <string name="fr_whether_show_phone_image_title">手机图片</string>
+    <string name="fr_whether_show_phone_image_text">要使用实时图片功能, 需要在配对的 Android 手机上安装腕间图库。\n\n否则你依然可以使用其他功能，例如通过 WiFi 传输图片。\n\n稍后可以在设置中修改选择。</string>
+    <string name="fr_whether_show_phone_image_enable">启用</string>
+    <string name="fr_whether_show_phone_image_disable">关闭</string>
+
     <string name="image_operation_rotate_left">向左旋转</string>
     <string name="image_operation_rotate_right">向右旋转</string>
     <string name="image_operation_hd">加载原图</string>

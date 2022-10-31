@@ -25,6 +25,11 @@
     <string name="drawer_phone_gallery">En el teléfono</string>
     <string name="drawer_explore">Explorar</string>
 
+    <string name="fr_whether_show_phone_image_title">Phone Pics</string>
+    <string name="fr_whether_show_phone_image_text">To use real-time phone pictures feature, you need to install Wear Gallery on your paired Android phone.\n\nOtherwise you can continue to use other features of the application, such as using wifi to transfer pictures.\n\nYou can change your decision later in settings.</string>
+    <string name="fr_whether_show_phone_image_enable">Enable</string>
+    <string name="fr_whether_show_phone_image_disable">Disable</string>
+
     <string name="image_operation_rotate_left">Girar a la izq</string>
     <string name="image_operation_rotate_right">Girar a la dcha</string>
     <string name="image_operation_hd">Cargar HD</string>

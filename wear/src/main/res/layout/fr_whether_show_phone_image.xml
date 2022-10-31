@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/wv_page_vertical_padding">
+
+        <TextView
+            android:id="@+id/preferenceTitle"
+            style="?attr/wv_windowAppBarContentStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/fr_whether_show_phone_image_title"
+            android:textAppearance="@style/TextAppearance.Title" />
+
+        <TextView
+            style="@style/TextAppearance.WearVision.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/wv_page_horizontal_padding"
+            android:paddingEnd="@dimen/wv_page_horizontal_padding"
+            android:text="@string/fr_whether_show_phone_image_text"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <Button
+            android:id="@+id/enable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/wv_page_horizontal_padding"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="@dimen/wv_page_horizontal_padding"
+            android:text="@string/fr_whether_show_phone_image_enable" />
+
+        <Button
+            android:id="@+id/disable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/wv_page_horizontal_padding"
+            android:layout_marginEnd="@dimen/wv_page_horizontal_padding"
+            android:text="@string/fr_whether_show_phone_image_disable" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>

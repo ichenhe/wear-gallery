@@ -39,6 +39,8 @@ private const val PREFERENCE_FOLDER_MODE = "folder_mode"
 const val PREFERENCE_KEEP_SCREEN_ON = "keep_screen_on" // boolean
 private const val PREFERENCE_SHOW_PHONE_IMAGES = "show_phone_images" // boolean
 private const val LAST_START_VERSION = "last_start_version_l" // long
+private const val PREFERENCE_QUERY_SHOW_PHONE_IMAGES = "query_show_phone_images" // boolean
+
 
 private fun getSp(context: Context) = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -66,6 +68,18 @@ fun fetchShowPhoneImages(context: Context) = SpBooleanLiveData(
     getSp(context), PREFERENCE_SHOW_PHONE_IMAGES,
     default = true, init = true
 )
+
+fun fetchQueryShowPhoneImages(context: Context) = SpBooleanLiveData(
+    getSp(context), PREFERENCE_QUERY_SHOW_PHONE_IMAGES,
+    default = true, init = true
+)
+
+fun showPhoneImages(context: Context, shouldQuery: Boolean, show: Boolean) {
+    getSp(context).edit {
+        putBoolean(PREFERENCE_QUERY_SHOW_PHONE_IMAGES, shouldQuery)
+        putBoolean(PREFERENCE_SHOW_PHONE_IMAGES, show)
+    }
+}
 
 fun lastStartVersion(context: Context, version: Long) {
     getSp(context).edit {
