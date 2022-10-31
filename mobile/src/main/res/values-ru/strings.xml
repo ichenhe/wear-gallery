@@ -1,0 +1,129 @@
+<resources>
+    <string name="app_name">Wear Галерея</string>
+    <string name="cancel">Отменить</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="tip">Подсказка</string>
+    <string name="image_des">Изображение</string>
+    <string name="date_format_nonyear">ММММ д</string>
+    <string name="date_format_year">ММММ д, гггг</string>
+    <string name="date_format_full">ММММ д, гггг ЧЧ:мм</string>
+    <string name="today">Сегодня</string>
+    <string name="icon">Значок</string>
+    <string name="main_preference">Настройки</string>
+    <string name="main_legacy"><u>Устаревшее</u></string>
+
+    <string name="nav_menu_images">Изображения</string>
+    <string name="nav_menu_folders">Папки</string>
+
+    <string name="app_hw_title">Ошибка</string>
+    <string name="app_hw_message">Wear Галерея отказывается работать на устройствах Huawei!</string>
+    <string name="app_hw_view">Узнать больше</string>
+    <string name="app_hw_exit">Выйти</string>
+
+    <string name="intro_permission_title">РАЗРЕШЕНИЕ</string>
+    <string name="intro_permission_content">Нам нужно получить доступ к сохраненным разрешениям для сканирования изображения.</string>
+    <string name="intro_install_title">УСТАНОВИТЬ НА ЧАСЫ</string>
+    <string name="intro_install_content">Начиная с Wear OS, установка приложений для часов через Bluetooth больше не поддерживается. Вы должны вручную загрузить и установить Wear Галерея из Google Play для часов. Или вы можете установить его с помощью ADB.</string>
+    <string name="intro_auto_run_title">АВТОЗАПУСК</string>
+    <string name="intro_auto_run_content">Не забудьте разрешить автоматический запуск приложения, иначе часы не смогут нормально загрузить изображения.</string>
+    <string name="intro_os_title">Открытый исходный код</string>
+    <string name="intro_os_content">Найти на GitHub: wear-gallery</string>
+
+    <string name="card_intro">Подсказки</string>
+    <string name="card_intro_msg">Мобильный клиент только связывате приложения на часах и телефоне и больше не предлагает просмотр изображений.\nВы можете активировать пакетную передачу, выбрав изображения из другого приложения и отправив их в «Отправить на просмотр»..</string>
+    <string name="card_tic">Внимание</string>
+    <string name="card_tic_msg">Ticwear больше не поддерживается (На TicWatch с Wear OS это не влияет). Вам, вероятно, следует удалить это приложение со своего телефона и использовать передачу по локальной сети, если у вас нет часов с Wear OS.</string>
+    <string name="card_update">Новая версия</string>
+    <string name="card_update_msg">Вышла новая версия. (%1$s)</string>
+    <string name="card_update_positive">Узнать больше</string>
+
+    <string name="images_menu_check_all">Выбрать ВСЁ</string>
+    <string name="images_selected_none">Выбрать предметы</string>
+    <string name="images_selected_num">%1$d выбрано</string>
+    <plurals name="images_subtitle">
+        <item quantity="one">%d картинка</item>
+        <item quantity="few">%d картин</item>
+        <item quantity="many">%d картин</item>
+    </plurals>
+
+    <string name="image_detail_title">Деталь</string>
+
+    <string name="folders_menu_list_style">Стиль списка</string>
+    <plurals name="folders_subtitle">
+        <item quantity="one">%d папка</item>
+        <item quantity="few">%d папок</item>
+        <item quantity="many">%d папок</item>
+    </plurals>
+    <string name="folders_item_small_title" translatable="false">%1$s (%2$d)</string>
+
+    <string name="pref_version" translatable="false">%1$s  (%2$d)</string>
+
+    <string name="menu_send">Отправить на часы</string>
+
+    <string name="pref_category_general">Обшие</string>
+    <string name="pref_category_information">Информация</string>
+
+    <string name="setting_check_update">Проверить обновления</string>
+    <string name="pref_donate">Пожертвование</string>
+    <string name="pref_donate_summary">Мне нужна твоя поддержка (≧ω≦)/</string>
+    <string name="pref_donate_alipay_error">Не удалось запустить AliPay :(</string>
+    <string name="pref_about">О приложении</string>
+    <string name="pref_phone_show_tips_about_watch">Подсказка-уведомление при работе с часами</string>
+    <string name="pref_title">Настройки</string>
+
+    <string name="watch_operation_search_gallery_ing">Сканирование альбомов</string>
+    <string name="watch_operation_get_pics_list_ing">Загрузка списка изображений</string>
+    <string name="watch_operation_send_hd_picture_ing">Загружается HD версия</string>
+    <string name="watch_operation_send_hd_picture_fail">Ошибка чтения HD-изображения</string>
+
+    <plurals name="send_images_subtitle">
+        <item quantity="one">%d картинка</item>
+        <item quantity="few">%d картинок</item>
+        <item quantity="many">%d картинок</item>
+    </plurals>
+    <string name="send_images_directory">Целевой каталог</string>
+    <string name="send_images_directory_default">По умолчанию</string>
+    <string name="send_images_directory_description">Относительный каталог на основе мультимедийной библиотеки изображений на часах. Оставьте пустым, чтобы сохранить в каталоге по умолчанию.</string>
+    <string name="send_images_directory_invalid">неверный путь</string>
+    <string name="send_images_device">Целевое устройство</string>
+    <string name="send_images_select_device">Выберите целевое устройство. Если список пуст, подтвердите:\n1. Часы подключены через Bluetooth.\n2. Поддерживается только Wear OS.\n3. Версия приложения должна быть соответствующей.</string>
+    <string name="send_images_fail_cancel">Отменено.</string>
+    <string name="send_images_fail_ack_failed">Часы не подтверждены.</string>
+    <string name="send_images_fail_file_not_found">Файл изображения не найден.</string>
+    <string name="send_images_fail_io">Канал связи нарушен.</string>
+    <string name="send_images_fail_size_mismatch">Несоответствие размера файла.</string>
+    <string name="send_images_fail_no_response">Нет ответа.</string>
+    <string name="send_images_fail_unknown">Неизвестная ошибка.</string>
+
+    <string name="notify_send_images_title">Отправка изображений… %1$d/%2$d</string>
+    <string name="notify_send_images_success_title">Изображения отправлены.</string>
+    <string name="notify_send_images_success_content">%1$d изображений не было отправлено.</string>
+    <string name="notify_send_images_failed_title">Ошибка отправки</string>
+    <string name="notify_send_images_failed_content">%1$s Отправлено:%2$d</string>
+
+    <string name="share_image_label">Отправить на часы</string>
+
+    <string name="about_slogan">Галерея Wear OS с открытым исходным кодом</string>
+    <string name="about_github" translatable="false"><u>github.com/ichenhe/wear-gallery</u></string>
+    <string name="about_tg" translatable="false"><u>t.me/weargallery_news</u></string>
+    <string name="about_qq" translatable="false">549321774</string>
+    <string name="about_licence"><u>Лицензии с открытым исходным кодом</u></string>
+
+    <string name="notify_channel_permission_name">Разрешения</string>
+    <string name="notify_channel_permission_description">Советы по запросам разрешений.</string>
+    <string name="notify_channel_sending_name">Отправить Изображения</string>
+    <string name="notify_channel_sending_description">Показать ход отправки изображений.</string>
+    <string name="notify_channel_send_result_name">Отправить Результат</string>
+    <string name="notify_channel_send_result_description">Показать результат отправки картинок.</string>
+    <string name="notify_channel_important_processing">Важная Обработка</string>
+    <string name="notify_channel_important_processing_description">Показать выполняемую работу с высоким приоритетом.</string>
+
+    <string name="notify_permission_title">Требуются Разрешения</string>
+    <string name="notify_permission_text">Нажмите чтобы предоставить разрешения.</string>
+    <string name="notify_huawei_title">Нет ответа от часов</string>
+    <string name="notify_huawei_text">Wear Галерея отказывается работать на устройствах Huawei! Нажмите чтобы узнать больше.</string>
+    <string name="notify_upgrading">Перенос Данных</string>
+    <string name="notify_upgrading_content">Не завершайте процесс во избежание потери данных.</string>
+
+    <string name="links_chooser_browser">Выберете браузер</string>
+</resources>

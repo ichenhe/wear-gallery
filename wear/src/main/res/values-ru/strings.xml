@@ -1,0 +1,142 @@
+<resources>
+
+    <string name="app_name">Wear Галерея</string>
+    <string name="tip">Подсказка</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="retry">Повторить</string>
+    <string name="help">Нужна помощь?</string>
+    <string name="empty">Пусто</string>
+    <string name="dont_show_again">Не показывать снова</string>
+    <string name="app_hw_title">Ошибка</string>
+    <string name="app_hw_message">Wear Gallery не хочет работать на устройствах Huawei.\nПросканируйте QR-код, чтобы узнать больше.</string>
+
+    <string name="dialog_scan_to_visit">Пожалуйста, отсканируйте QR-код, чтобы перейти.</string>
+
+    <string name="intro_gif_title">GIF</string>
+    <string name="intro_gif_content">Поддерживаются :)</string>
+    <string name="intro_lan_title">Локальная передача</string>
+    <string name="intro_lan_content">IOS совместимость</string>
+    <string name="intro_wf_title">Циферблат</string>
+    <string name="intro_wf_content">Пользовательское изображение</string>
+    <string name="intro_os_title">Открытый исходный код</string>
+    <string name="intro_os_content">на GitHub:\nwear-gallery</string>
+
+    <string name="drawer_local_gallery">Локально</string>
+    <string name="drawer_phone_gallery">Смартфон</string>
+    <string name="drawer_explore">Открыть</string>
+
+    <string name="image_operation_rotate_left">Повернуть влево</string>
+    <string name="image_operation_rotate_right">Повернуть вправо</string>
+    <string name="image_operation_hd">Загрузить HD</string>
+    <string name="image_operation_delete">Удалить</string>
+    <string name="image_detail_zoom_in">Приблизить</string>
+    <string name="image_detail_zoom_out">Отдалить</string>
+
+    <string name="local_title_selection">%1$d выбрано</string>
+    <plurals name="local_delete_images_confirm">
+        <item quantity="one">Вы действительно хотите удалить это %1$d изображение?</item>
+        <item quantity="many">Вы действительно хотите удалить эти %1$d изображения?</item>
+        <item quantity="few">Вы действительно хотите удалить эти %1$d изображения?</item>
+    </plurals>
+    <plurals name="local_delete_image_folders_confirm">
+        <item quantity="one">Вы действительно хотите удалить изображения из этой папки %1$d?</item>
+        <item quantity="few">Вы действительно хотите удалить изображения из этих папок %1$d?</item>
+        <item quantity="many">Вы действительно хотите удалить изображения из этих папок %1$d?</item>
+    </plurals>
+    <string name="local_err_permission_title">Ошибка</string>
+    <string name="local_err_permission_content">Разрешения на чтение и запись SD-карты необходимы для сканирования локальных изображений, пожалуйста, предоставьте их.</string>
+    <string name="mobile_version_conflict">Несовместимая версия приложения</string>
+    <string name="mobile_version_conflict_content">Часы:\t%1$s\nтелефон:\t%2$s\n\nПожалуйста, установите ту же или совместимую версию Wear Gallery. Вы можете отсканировать QR-код, чтобы получить ссылку на скачивание.</string>
+    <string name="mobile_load_gallery_err_tip">Помощь</string>
+    <string name="mobile_load_gallery_err_content">- Только для телефонов на Android; IOS требуется для локальной передачи.\n- Wear Галерея должна быть установлена на телефоне (Через Google Play или по ссылке через QR код).\n- Пожалуйста, проверьте подключение Wear OS.\n- Убедитесь, что версии приложений для телефона/часов совпадают.</string>
+
+    <string name="image_detail_load_ing">Загрузка</string>
+    <string name="image_detail_load_hd_ing">Загрузка HD</string>
+    <string name="image_detail_count" translatable="false">%1$d/%2$d</string>
+    <string name="image_detail_loading_next_page">Загрузка следующей страницы…</string>
+    <string name="image_detail_retry_next_page">Повтор попытки получения следующей страницы</string>
+
+    <string name="preference_display">Экран</string>
+    <string name="preference_always_on">Не отключать экран</string>
+    <string name="preference_always_on_summary">Только при отображении картинки на весь экран.</string>
+    <string name="preference_show_phone_images">Показать страницу телефона</string>
+    <string name="preference_transfer">Передача</string>
+    <string name="preference_transfer_lan">Локально</string>
+    <string name="preference_transfer_net">Интернет</string>
+    <string name="preference_transfer_disclaimer">Отказ от ответственности</string>
+    <string name="preference_transfer_disclaimer_content"># Локальная передача\n1. Не должно быть ограничений для взаимодействия между оборудованием вашей локальной сети.\n2. Это приложение отправляет данные в незашифрованном виде, и ваши данные могут быть свободно получены другими пользователями той же сети.</string>
+    <string name="preference_about">О приложении</string>
+
+    <string name="about_github" translatable="false">GitHub: wear-gallery</string>
+    <string name="about_telegram" translatable="false">Telegram: Wear Gallery News</string>
+    <string name="about_licence">Лицензии</string>
+    <string name="about_find_new_version">Новая Версия</string>
+    <string name="about_no_new_version">ОК</string>
+    <string name="about_recheck_new_version">Не удалось проверить</string>
+    <string name="about_thank">Благодарность</string>
+    <string name="about_thank_content">Оборудование: @TicWatch\nPM: @果冻\nIcon: @五音律吕 @一佳一 @Lance.Moe @碱式碳酸铜\nПеревод: @海棠花未眠 @碱式碳酸铜</string>
+
+    <string name="server_title">Подключение к Wi-Fi</string>
+    <string name="server_trying">Подключение…</string>
+    <string name="server_timeout">Тайм-аут\n, пожалуйста, добавьте сеть вручную.</string>
+    <string name="server_start_wifi_setting_failed">пожалуйста откройте настройки вручную</string>
+    <string name="server_add_wifi">Настройки WiFi</string>
+    <string name="server_ip">Посетите сайт:\n%1$s</string>
+    <string name="server_state_running">Запущено</string>
+    <string name="server_state_stop">Остановить</string>
+    <string name="server_state_fail">Неудача</string>
+    <string name="server_help">Нужна помощь</string>
+    <string name="server_failed">Запуск не удался:\n%1$s</string>
+    <string name="server_help_msg">- Убедитесь, что часы находятся в той же локальной сети (Wi-Fi), что и телефон/компьютер.\n- Не закрывайте окно на часах во время передачи.\n- Убедитесь, что приложение не заблокировано брандмауэром.</string>
+
+    <string name="pick_image_title">Выбрать</string>
+    <string name="pick_image_all">Все</string>
+    <string name="pick_image_folder">Альбом</string>
+
+    <string name="wf_preference_title">Циферблат</string>
+    <string name="wf_preference_dim">Отображать в затемнённом режиме</string>
+    <string name="wf_preference_image">Фон</string>
+    <string name="wf_preference_type">Тип стиля</string>
+    <string name="wf_preference_position">Позиция &amp; Размер</string>
+    <string name="wf_preference_format">Формат времени</string>
+    <string name="wf_preference_format_reset">СБРОС</string>
+    <string name="wf_preference_format_reset_done">готово</string>
+    <string-array name="wf_preference_type_entries">
+        <item>Аналоговый</item>
+        <item>Цифровой</item>
+    </string-array>
+    <string name="wf_preference_type_entry_value_analog" translatable="false">analog</string>
+    <string name="wf_preference_type_entry_value_digital" translatable="false">digital</string>
+    <string-array name="wf_preference_type_entry_values">
+        <item>@string/wf_preference_type_entry_value_analog</item>
+        <item>@string/wf_preference_type_entry_value_digital</item>
+    </string-array>
+    <string name="wf_preference_color">Цвет времени</string>
+    <string name="wf_preference_color_hint">hex цвет</string>
+    <string name="wf_preference_color_error">неправильный цвет</string>
+    <string name="wf_preference_cot" translatable="false">Powered by COT</string>
+    <string name="wf_preference_intent_err">пожалуйста поищите в магазине приложений</string>
+    <string name="wf_text_line" translatable="false">&#160;&#160;↓</string><!--space is necessary-->
+    <string name="wf_text_hour">часы</string>
+    <string name="wf_text_min">минуты</string>
+    <string name="wf_text_colon" translatable="false">&#160;&#160;:</string>
+    <string name="wf_text_year">год</string>
+    <string name="wf_text_month">месяц</string>
+    <string name="wf_text_day">день</string>
+    <string name="wf_text_slash" translatable="false">&#160;&#160;/</string>
+    <string name="wf_not_support_gif">GIF не поддерживается</string>
+    <string name="wf_dim_dialog">В зависимости от вашего устройства и изображения могут быть артефакты в затемненном режиме. В таком случае попробуйте другие изображения с менее &quot;серым&quot; цветом.</string>
+
+    <string name="upgrade_message">Обновление…\nНе останавливайте процесс.</string>
+
+    <string name="notify_channel_permission_name">Разрешения</string>
+    <string name="notify_channel_permission_description">Советы по запросам разрешений.</string>
+    <string name="notify_channel_important_processing">Важная Обработка</string>
+    <string name="notify_channel_important_processing_description">Показать выполняемую работу с высоким приоритетом.</string>
+
+    <string name="notify_permission_title">Требуются Разрешения</string>
+    <string name="notify_permission_text">Нажмите чтобы предоставить разрешения</string>
+    <string name="notify_upgrade_title">Обновление</string>
+    <string name="notify_upgrade_text">Wear Галерея обновляется и сохраняет данные. Не останавливайте приложение.</string>
+
+</resources>
