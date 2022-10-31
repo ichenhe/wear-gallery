@@ -9,7 +9,12 @@
             android:icon="@drawable/ic_pref_watch"
             android:key="tip_with_watch"
             android:title="@string/pref_phone_show_tips_about_watch" />
+        <SwitchPreferenceCompat
+            android:key="foreground_service"
+            android:summary="@string/pref_foreground_service_summary"
+            android:title="@string/pref_foreground_service" />
     </PreferenceCategory>
+
 
     <PreferenceCategory android:title="@string/pref_category_information">
 
@@ -20,9 +25,9 @@
         <Preference
             android:icon="@drawable/ic_pref_donate"
             android:key="donate"
-            app:isPreferenceVisible="false"
             android:summary="@string/pref_donate_summary"
-            android:title="@string/pref_donate" />
+            android:title="@string/pref_donate"
+            app:isPreferenceVisible="false" />
         <Preference
             android:icon="@drawable/ic_pref_about"
             android:key="about"

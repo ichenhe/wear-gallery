@@ -20,6 +20,7 @@ package cc.chenhe.weargallery.utils
 import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import cc.chenhe.weargallery.common.util.SpBooleanLiveData
 import cc.chenhe.weargallery.common.util.SpIntLiveData
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -28,6 +29,7 @@ private const val PREFERENCE_LAST_START_VERSION = "last_start_version"
 private const val PREFERENCE_IMAGE_COLUMN_WIDTH = "image_column_width" // int
 
 private const val PREFERENCE_TIP_WITH_WATCH = "tip_with_watch" // boolean
+private const val PREFERENCE_FOREGROUND_SERVICE = "foreground_service" // boolean
 private const val PREFERENCE_CHECK_UPDATE_TIME = "check_update_time" // long unix second
 
 
@@ -64,6 +66,10 @@ fun fetchImageColumnWidth(context: Context): SpIntLiveData {
     val m = context.resources.displayMetrics
     val default = min(m.widthPixels, m.heightPixels) / 3
     return SpIntLiveData(getSp(context), PREFERENCE_IMAGE_COLUMN_WIDTH, default, true)
+}
+
+fun fetchForegroundService(context: Context, init: Boolean = false): SpBooleanLiveData {
+    return SpBooleanLiveData(getSp(context), PREFERENCE_FOREGROUND_SERVICE, false, init)
 }
 
 fun addImageColumnCount(context: Context) {

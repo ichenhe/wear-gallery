@@ -29,7 +29,9 @@ import androidx.preference.PreferenceFragmentCompat
 import cc.chenhe.weargallery.BuildConfig
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.*
+import cc.chenhe.weargallery.service.ForegroundService
 import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
+import cc.chenhe.weargallery.utils.fetchForegroundService
 import cc.chenhe.weargallery.utils.requireCompatAty
 import cc.chenhe.weargallery.utils.setupToolbar
 
@@ -46,6 +48,17 @@ class PreferenceFr : PreferenceFragmentCompat() {
         }
         requireCompatAty().supportActionBar?.setDisplayHomeAsUpEnabled(true)
         view.findViewById<CollapseHeaderLayout>(R.id.header).setTitle(R.string.pref_title)
+
+        fetchForegroundService(
+            requireContext(),
+            init = false
+        ).observe(viewLifecycleOwner) { foregroundService ->
+            if (foregroundService)
+                ForegroundService.start(requireContext())
+            else
+                ForegroundService.stop(requireContext())
+
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

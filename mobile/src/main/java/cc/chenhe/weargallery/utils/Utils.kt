@@ -46,10 +46,16 @@ const val NOTIFY_CHANNEL_ID_SEND_RESULT = "wg.send_images_result"
 /** Use to display important foreground service */
 const val NOTIFY_CHANNEL_ID_IMPORTANT_PROCESSING = "wg.important_processing"
 
+/** Use to prevent this application from being killed on some systems e.g. MiUI */
+const val NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE = "wg.foreground_service"
+
 const val NOTIFY_ID_PERMISSION = 1
 const val NOTIFY_ID_SENDING = 2
 const val NOTIFY_ID_SEND_RESULT = 3
 const val NOTIFY_ID_UPGRADING = 4
+
+/** See [NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE] */
+const val NOTIFY_ID_FOREGROUND_SERVICE = 5
 
 
 /** LocalBroadcast with extra 'success' which is a boolean value.*/

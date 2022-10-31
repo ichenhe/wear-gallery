@@ -67,6 +67,8 @@
     <string name="pref_donate_alipay_error">Failed to start AliPay :(</string>
     <string name="pref_about">About</string>
     <string name="pref_phone_show_tips_about_watch">Tip when watch is been operated</string>
+    <string name="pref_foreground_service">Foreground service</string>
+    <string name="pref_foreground_service_summary">Try to solve the problem of not being able to wake up in the background. Only recommended for Chinese systems.</string>
     <string name="pref_title">Settings</string>
 
     <string name="watch_operation_search_gallery_ing">Scanning albums</string>
@@ -114,6 +116,7 @@
     <string name="notify_channel_send_result_description">Show result of sending pictures.</string>
     <string name="notify_channel_important_processing">Important Processing</string>
     <string name="notify_channel_important_processing_description">Show the high priority work being performed.</string>
+    <string name="notify_channel_foreground_name">Keep Foreground</string>
 
     <string name="notify_permission_title">Require Permissions</string>
     <string name="notify_permission_text">Click on the phone to grant permissions.</string>
@@ -121,6 +124,7 @@
     <string name="notify_huawei_text">Wear Gallery refuses to run on HuaWei devices! Click to learn more.</string>
     <string name="notify_upgrading">Migrating Data</string>
     <string name="notify_upgrading_content">Do not end the process to avoid data loss.</string>
+    <string name="notify_foreground_text">Feel free to hide this notification.</string>
 
     <string name="links_chooser_browser">Choose browser</string>
 </resources>
