@@ -95,8 +95,7 @@ abstract class LocalImagesBaseAdapter<T>(context: Context, diffCallback: DiffUti
                 selectionModeChangedListener?.invoke(true)
                 recyclerView?.performHapticFeedback(
                     HapticFeedbackConstants.LONG_PRESS,
-                    HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
-                            or HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING
+                    HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING
                 )
             } else if (msg.what == MSG_UP_ENTER_SELECTION_MODE) {
                 val position = msg.obj as Int
@@ -314,7 +313,7 @@ abstract class LocalImagesBaseAdapter<T>(context: Context, diffCallback: DiffUti
     private fun View.fadeOut() {
         animate().alpha(0f).setDuration(shortAnimDuration.toLong())
             .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     visibility = View.GONE
                 }
             })

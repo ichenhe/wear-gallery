@@ -32,8 +32,8 @@ import androidx.core.view.ViewCompat
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
-class ImageDetailOperationBehavior(context: Context?, attrs: AttributeSet?)
-    : CoordinatorLayout.Behavior<View>(context, attrs) {
+class ImageDetailOperationBehavior(context: Context, attrs: AttributeSet?) :
+    CoordinatorLayout.Behavior<View>(context, attrs) {
 
     companion object {
         @Retention(AnnotationRetention.SOURCE)
@@ -90,7 +90,7 @@ class ImageDetailOperationBehavior(context: Context?, attrs: AttributeSet?)
         childRef = null
     }
 
-    override fun onSaveInstanceState(parent: CoordinatorLayout, child: View): Parcelable? {
+    override fun onSaveInstanceState(parent: CoordinatorLayout, child: View): Parcelable {
         val superState = super.onSaveInstanceState(parent, child)
         return SavedState(superState, state)
     }

@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = 33
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
         minSdk = 21
-        targetSdk = 31
-        versionCode = 220602001 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
-        versionName = "v6.2.0"
+        targetSdk = 33
+        versionCode = 220603001 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
+        versionName = "v6.3.0"
 
         kapt {
             arguments {
@@ -101,8 +101,8 @@ dependencies {
 
     implementation(lib.koin.android)
     implementation(lib.play.services.wearable)
-    implementation("com.google.android.support:wearable:2.8.1")
-    compileOnly("com.google.android.wearable:wearable:2.8.1")
+    implementation("com.google.android.support:wearable:2.9.0")
+    compileOnly("com.google.android.wearable:wearable:2.9.0")
     implementation("cc.chenhe:watch-face-helper:2.0.3")
     implementation(lib.intro)
     implementation("org.nanohttpd:nanohttpd:2.3.1")

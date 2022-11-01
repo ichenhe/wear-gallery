@@ -290,7 +290,7 @@ abstract class ImageDetailBaseFr<T : Any> : SwipeDismissFr(), View.OnClickListen
             .alpha(1f)
             .setDuration(fadeAnimationDuration.toLong())
             .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationStart(animation: Animator?) {
+                override fun onAnimationStart(animation: Animator) {
                     visibility = View.VISIBLE
                 }
             })

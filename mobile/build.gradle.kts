@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    compileSdk = 31
+    compileSdk = 33
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
         minSdk = 23
-        targetSdk = 31
-        versionCode = 220602000 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
-        versionName = "v6.2.0"
+        targetSdk = 33
+        versionCode = 220603000 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
+        versionName = "v6.3.0"
 
         vectorDrawables.useSupportLibrary = true
     }

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Wear Gallery</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>

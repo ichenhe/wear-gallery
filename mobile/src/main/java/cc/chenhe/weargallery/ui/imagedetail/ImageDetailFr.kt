@@ -132,7 +132,7 @@ class ImageDetailFr : Fragment() {
 
         imageGestureDetector =
             GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
-                override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                     setSystemBarVisibility(rootView, !isNavigationBarVisible)
                     return true
                 }

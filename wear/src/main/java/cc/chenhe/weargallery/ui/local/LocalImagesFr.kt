@@ -31,7 +31,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.bean.*
+import cc.chenhe.weargallery.common.bean.Image
+import cc.chenhe.weargallery.common.bean.ImageFolder
+import cc.chenhe.weargallery.common.bean.Resource
+import cc.chenhe.weargallery.common.bean.Success
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.databinding.FrLocalImagesBinding
 import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailFr
@@ -106,7 +109,7 @@ class LocalImagesFr : Fragment() {
                 binding.delete.apply {
                     animate().scaleX(0f).scaleY(0f).setDuration(duration)
                         .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator?) {
+                            override fun onAnimationEnd(animation: Animator) {
                                 visibility = View.GONE
                             }
                         })
@@ -182,7 +185,7 @@ class LocalImagesFr : Fragment() {
             requireContext().resources.getInteger(android.R.integer.config_shortAnimTime)
         binding.imagesRecyclerView.animate().setDuration(duration.toLong()).alpha(0f)
             .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     binding.imagesRecyclerView.adapter = null
                     resetAdapterAndObserver(folderMode)
                     binding.imagesRecyclerView.animate().setDuration(duration.toLong())
