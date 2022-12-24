@@ -94,6 +94,7 @@ jobs:
         with:
           allowUpdates: false
           artifactErrorsFailBuild: true
+          draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "build/outs/mobile-normal-release.apk,build/outs/wear-normal-release.apk"
           prerelease: ${{ endsWith(steps.vars.outputs.tag, '-pre') || endsWith(steps.vars.outputs.tag, '-preview') }}
