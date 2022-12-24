@@ -98,29 +98,33 @@
             android:name="me.chenhe.lib.wearmsger.service.GmsListenerAgentService"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <!-- Google's bug on Android13: https://issuetracker.google.com/issues/235538840 -->
+                <action
+                    android:name="com.google.android.gms.wearable.BIND_LISTENER"
+                    tools:ignore="WearableBindListener" />
+                <!--                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />-->
+                <!--                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />-->
 
-                <data
-                    android:host="*"
-                    android:path="/request/image-folders"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/request/image-preview"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/request/images"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/request/image-hd"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:path="/request/version"
-                    android:scheme="wear" />
+                <!--                <data-->
+                <!--                    android:host="*"-->
+                <!--                    android:path="/request/image-folders"-->
+                <!--                    android:scheme="wear" />-->
+                <!--                <data-->
+                <!--                    android:host="*"-->
+                <!--                    android:path="/request/image-preview"-->
+                <!--                    android:scheme="wear" />-->
+                <!--                <data-->
+                <!--                    android:host="*"-->
+                <!--                    android:path="/request/images"-->
+                <!--                    android:scheme="wear" />-->
+                <!--                <data-->
+                <!--                    android:host="*"-->
+                <!--                    android:path="/request/image-hd"-->
+                <!--                    android:scheme="wear" />-->
+                <!--                <data-->
+                <!--                    android:host="*"-->
+                <!--                    android:path="/request/version"-->
+                <!--                    android:scheme="wear" />-->
             </intent-filter>
         </service>
     </application>
