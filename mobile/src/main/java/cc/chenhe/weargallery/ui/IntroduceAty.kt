@@ -29,9 +29,11 @@ class IntroduceAty : IntroActivity() {
         super.onCreate(savedInstanceState)
         isButtonBackVisible = false
         if (Build.VERSION.SDK_INT >= 23 && !checkStoragePermissions(this)) {
-            val permissions = arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-            )
+            val permissions = if (Build.VERSION.SDK_INT >= 33) {
+                arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
+            } else {
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
             addSlide(
                 SimpleSlide.Builder()
                     .title(R.string.intro_permission_title)

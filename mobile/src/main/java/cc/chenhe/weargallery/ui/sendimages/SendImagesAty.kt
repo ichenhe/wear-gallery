@@ -17,19 +17,24 @@
 
 package cc.chenhe.weargallery.ui.sendimages
 
+import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.ui.SimpleItemDecoration
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
+import cc.chenhe.weargallery.common.util.checkPermission
+import cc.chenhe.weargallery.common.util.isAlwaysDenied
 import cc.chenhe.weargallery.databinding.AtySendImagesBinding
 import cc.chenhe.weargallery.service.SendPicturesService
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -44,6 +49,19 @@ class SendImagesAty : AppCompatActivity() {
     private val model by viewModel<SendImagesViewModel> { parametersOf(this.intent) }
 
     private lateinit var adapter: SendImagesAdapter
+
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (!granted && isAlwaysDenied(Manifest.permission.POST_NOTIFICATIONS)) {
+                Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                    putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                }.also { intent ->
+                    startActivity(intent)
+                }
+            }
+            if (granted)
+                startSendImagesAndFinish()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,10 +126,21 @@ class SendImagesAty : AppCompatActivity() {
                     .show()
                 return@setOnClickListener
             }
-            model.images.value?.also { images ->
-                SendPicturesService.add(this, images, targetNode, model.targetFolder.value)
+            if (!checkPermission(Manifest.permission.POST_NOTIFICATIONS)) {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.tip)
+                    .setMessage(R.string.send_images_need_notification_permission)
+                    .setPositiveButton(R.string.confirm) { _, _ ->
+                        requestNotificationPermissionLauncher
+                            .launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                    .setNegativeButton(R.string.send_images_need_notification_permission_skip) { _, _ ->
+                        startSendImagesAndFinish()
+                    }
+                    .show()
+            } else {
+                startSendImagesAndFinish()
             }
-            finish()
         }
 
         model.columnWidth.observe(this) { itemWidth ->
@@ -138,6 +167,20 @@ class SendImagesAty : AppCompatActivity() {
         model.targetNode.observe(this) { targetNode ->
             binding.targetDevice.setText(targetNode?.displayName)
         }
+    }
+
+    private fun startSendImagesAndFinish() {
+        model.targetNode.value?.let { targetNode ->
+            model.images.value?.also { images ->
+                SendPicturesService.add(
+                    this,
+                    images,
+                    targetNode,
+                    model.targetFolder.value
+                )
+            }
+        }
+        finish()
     }
 
     private fun setSpanCount(count: Int) {

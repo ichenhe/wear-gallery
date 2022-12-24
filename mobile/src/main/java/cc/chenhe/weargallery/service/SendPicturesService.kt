@@ -467,6 +467,7 @@ class SendPicturesService : LifecycleService() {
                         + "  " + if (totalSize > 1) totalSize.fileSizeStr() else ""
             )
             .setProgress(100, (sentSize / totalSize.toDouble() * 100).toInt(), false)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .build()
     }
 

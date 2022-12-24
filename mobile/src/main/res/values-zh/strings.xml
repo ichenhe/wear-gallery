@@ -79,6 +79,8 @@
     <string name="send_images_directory_invalid">目录无效</string>
     <string name="send_images_device">目标设备</string>
     <string name="send_images_select_device">请选择目标设备。若列表为空请确认：\n1. 手表是否通过蓝牙连接。\n2. 仅支持 Wear OS 设备。\n3. 应用版本是否一致。</string>
+    <string name="send_images_need_notification_permission">授予通知权限以显示传输进度和结果。</string>
+    <string name="send_images_need_notification_permission_skip">忽略发送结果</string>
     <string name="send_images_fail_cancel">发送取消。</string>
     <string name="send_images_fail_ack_failed">手表确认失败。</string>
     <string name="send_images_fail_file_not_found">图片文件不存在。</string>
