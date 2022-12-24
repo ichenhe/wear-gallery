@@ -64,7 +64,7 @@ class PreferenceFr : PreferenceFragmentCompat() {
 
     private val selectBgImageLauncher =
         registerForActivityResult(object : ActivityResultContract<Unit, Uri?>() {
-            override fun createIntent(context: Context, input: Unit?): Intent {
+            override fun createIntent(context: Context, input: Unit): Intent {
                 return Intent(Intent.ACTION_PICK).apply {
                     setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
                 }

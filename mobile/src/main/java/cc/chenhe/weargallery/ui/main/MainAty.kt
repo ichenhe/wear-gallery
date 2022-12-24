@@ -44,7 +44,7 @@ class MainAty : AppCompatActivity() {
 
     private val introduceLauncher =
         registerForActivityResult(object : ActivityResultContract<Unit, Unit>() {
-            override fun createIntent(context: Context, input: Unit?): Intent {
+            override fun createIntent(context: Context, input: Unit): Intent {
                 return Intent(context, IntroduceAty::class.java)
             }
 

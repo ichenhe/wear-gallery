@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
@@ -82,31 +83,31 @@ dependencies {
     implementation(project(":common"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services")
-    implementation("io.insert-koin:koin-android:3.1.4")
+    implementation("io.insert-koin:koin-android:3.2.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.preference:preference-ktx:1.1.1")
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.preference:preference-ktx:1.2.0")
+    implementation("com.google.android.material:material:1.6.0")
     implementation("id.zelory:compressor:3.0.1")
     implementation("com.heinrichreimersoftware:material-intro:2.0.0")
-    implementation("com.google.android.gms:play-services-wearable:17.1.0")
+    implementation("com.google.android.gms:play-services-wearable:18.0.0")
 
     val nav = rootProject.ext["nav"] as String
     implementation("androidx.navigation:navigation-fragment-ktx:$nav")
     implementation("androidx.navigation:navigation-ui-ktx:$nav")
 
-    val lifecycle = "2.4.0"
+    val lifecycle = "2.5.1"
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle")
 
     val moshi = rootProject.extra["moshi"] as String
     implementation("com.squareup.moshi:moshi:$moshi")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
 
-    val appcenter = "4.4.2"
+    val appcenter = "5.0.0"
     implementation("com.microsoft.appcenter:appcenter-analytics:$appcenter")
     implementation("com.microsoft.appcenter:appcenter-crashes:$appcenter")
 
     // pictures
-    val glide = "4.12.0"
+    val glide = "4.14.2"
     implementation("com.github.bumptech.glide:glide:$glide")
     kapt("com.github.bumptech.glide:compiler:$glide")
     implementation("com.davemorrissey.labs:subsampling-scale-image-view:3.10.0")

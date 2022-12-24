@@ -189,9 +189,9 @@ class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
                     val imageView = view.findViewById<ImageView>(R.id.itemImageView)
                     val action =
                         PagerFrDirections.actionPagerFrToImageDetailFr(
+                            imageView.transitionName,
+                            -1,
                             ImageDetailFr.Source.IMAGES,
-                            shareAnimationName = imageView.transitionName,
-                            -1
                         )
                     val extras = FragmentNavigatorExtras(
                         imageView to imageView.transitionName

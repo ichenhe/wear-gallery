@@ -88,10 +88,10 @@ dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":common"))
 
-    implementation("androidx.exifinterface:exifinterface:1.3.3")
+    implementation("androidx.exifinterface:exifinterface:1.3.5")
     implementation("androidx.palette:palette:1.0.0")
-    implementation("io.insert-koin:koin-android:3.1.4")
-    implementation("com.google.android.gms:play-services-wearable:17.1.0")
+    implementation("io.insert-koin:koin-android:3.2.0")
+    implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("com.google.android.support:wearable:2.9.0")
     compileOnly("com.google.android.wearable:wearable:2.9.0")
     implementation("cc.chenhe:watch-face-helper:2.0.3")
@@ -104,20 +104,20 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$nav")
     implementation("androidx.navigation:navigation-ui-ktx:$nav")
 
-    val lifecycle = "2.4.0"
+    val lifecycle = "2.5.1"
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle")
 
-    val room = "2.4.0"
+    val room = "2.4.3"
     implementation("androidx.room:room-ktx:$room")
     implementation("androidx.room:room-paging:$room")
     ksp("androidx.room:room-compiler:$room")
-    implementation("androidx.paging:paging-runtime-ktx:3.1.0")
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
 
     val moshi = rootProject.extra["moshi"] as String
     implementation("com.squareup.moshi:moshi:$moshi")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
 
-    val appcenter = "4.4.2"
+    val appcenter = "5.0.0"
     implementation("com.microsoft.appcenter:appcenter-analytics:$appcenter")
     implementation("com.microsoft.appcenter:appcenter-crashes:$appcenter")
 
@@ -126,7 +126,7 @@ dependencies {
     implementation("me.panpf:sketch-gif:$sketch")
     implementation("me.chenhe:wearvision:0.1.1")
 
-    val coil = "1.4.0"
+    val coil = "2.2.2"
     implementation("io.coil-kt:coil:$coil")
     implementation("io.coil-kt:coil-gif:$coil")
 

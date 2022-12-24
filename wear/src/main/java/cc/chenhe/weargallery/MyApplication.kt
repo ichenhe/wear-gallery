@@ -18,10 +18,12 @@
 package cc.chenhe.weargallery
 
 import android.app.Application
+import android.os.Build
 import android.util.Log
 import cc.chenhe.weargallery.common.log.MmapLogTree
 import cc.chenhe.weargallery.common.util.getLogDir
 import cc.chenhe.weargallery.common.util.xlogAppenderCloseSafely
+import coil.ComponentRegistry
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -78,13 +80,13 @@ class MyApplication : Application(), ImageLoaderFactory {
     }
 
     override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this)
-        .componentRegistry {
+        .components(fun ComponentRegistry.Builder.() {
             // https://coil-kt.github.io/coil/gifs/#gifs
-            if (android.os.Build.VERSION.SDK_INT >= 28) {
-                add(ImageDecoderDecoder(this@MyApplication))
+            if (Build.VERSION.SDK_INT >= 28) {
+                add(ImageDecoderDecoder.Factory())
             } else {
-                add(GifDecoder())
+                add(GifDecoder.Factory())
             }
-        }
+        })
         .build()
 }

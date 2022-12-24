@@ -74,8 +74,8 @@ class PreferenceFr : PreferenceFragmentCompat() {
         )
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-        when (preference?.key) {
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
+        when (preference.key) {
             "check_update" -> {
                 if (BuildConfig.IS_GP) {
                     openMarket(requireContext()) {
