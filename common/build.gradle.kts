@@ -7,6 +7,7 @@ plugins {
 }
 
 android {
+    namespace = "cc.chenhe.weargallery.common"
     compileSdk = 31
 
     resourcePrefix = "lib_"

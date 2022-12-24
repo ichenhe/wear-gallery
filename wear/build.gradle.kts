@@ -8,6 +8,7 @@ plugins {
 }
 
 android {
+    namespace = "cc.chenhe.weargallery"
     compileSdk = 33
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
@@ -67,7 +68,7 @@ android {
         jvmTarget = "1.8"
     }
     lint {
-        disable("MissingTranslation")
+        disable += "MissingTranslation"
     }
 
     afterEvaluate {

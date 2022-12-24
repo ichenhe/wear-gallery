@@ -8,6 +8,7 @@ plugins {
 }
 
 android {
+    namespace = "cc.chenhe.weargallery"
     compileSdk = 33
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
@@ -86,7 +87,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.2.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.0")
-    implementation("com.google.android.material:material:1.6.0")
+    implementation("com.google.android.material:material:1.7.0")
     implementation("id.zelory:compressor:3.0.1")
     implementation("com.heinrichreimersoftware:material-intro:2.0.0")
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
