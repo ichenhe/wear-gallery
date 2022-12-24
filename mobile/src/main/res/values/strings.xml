@@ -86,6 +86,8 @@
     <string name="send_images_directory_invalid">invalid path</string>
     <string name="send_images_device">Target device</string>
     <string name="send_images_select_device">Please select the target device. If the list is empty, please confirm:\n1. The watch has been connected via Bluetooth.\n2. Only Wear OS is supported.\n3. The app version must be consistent.</string>
+    <string name="send_images_need_notification_permission">Notification permission is required to show the progress and results of the transmission.</string>
+    <string name="send_images_need_notification_permission_skip">Ignore the result</string>
     <string name="send_images_fail_cancel">Canceled.</string>
     <string name="send_images_fail_ack_failed">Watch ACK failed.</string>
     <string name="send_images_fail_file_not_found">Picture file not found.</string>
