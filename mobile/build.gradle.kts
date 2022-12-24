@@ -1,6 +1,6 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
@@ -81,29 +81,36 @@ dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":common"))
 
-    implementation(androidx.bundles.base)
-    implementation(androidx.bundles.nav)
-    implementation(androidx.cardview)
-    implementation(androidx.bundles.lifecycle)
-    implementation(androidx.work.runtime.ktx)
-    implementation(androidx.preference.ktx)
-    implementation(androidx.exifinterface)
-    implementation(kotlinx.bundles.coroutine)
-    implementation(kotlinx.coroutines.playservices)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services")
+    implementation("io.insert-koin:koin-android:3.1.4")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.preference:preference-ktx:1.1.1")
+    implementation("com.google.android.material:material:1.4.0")
+    implementation("id.zelory:compressor:3.0.1")
+    implementation("com.heinrichreimersoftware:material-intro:2.0.0")
+    implementation("com.google.android.gms:play-services-wearable:17.1.0")
 
-    implementation(lib.koin.android)
-    implementation(lib.moshi)
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:${lib.versions.moshi.get()}")
-    implementation(lib.md)
-    implementation(lib.compressor)
-    implementation(lib.intro)
-    implementation(lib.play.services.wearable)
-    implementation(lib.bundles.appcenter)
+    val nav = rootProject.ext["nav"] as String
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav")
+
+    val lifecycle = "2.4.0"
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle")
+
+    val moshi = rootProject.extra["moshi"] as String
+    implementation("com.squareup.moshi:moshi:$moshi")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
+
+    val appcenter = "4.4.2"
+    implementation("com.microsoft.appcenter:appcenter-analytics:$appcenter")
+    implementation("com.microsoft.appcenter:appcenter-crashes:$appcenter")
 
     // pictures
-    implementation(lib.glide)
-    kapt("com.github.bumptech.glide:compiler:${lib.versions.glide.get()}")
-    implementation(lib.subsampling)
+    val glide = "4.12.0"
+    implementation("com.github.bumptech.glide:glide:$glide")
+    kapt("com.github.bumptech.glide:compiler:$glide")
+    implementation("com.davemorrissey.labs:subsampling-scale-image-view:3.10.0")
 
-    testImplementation(lib.bundles.test)
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.strikt:strikt-core:0.33.0")
 }

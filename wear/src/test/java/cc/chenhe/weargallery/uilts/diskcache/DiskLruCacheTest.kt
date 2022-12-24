@@ -20,9 +20,9 @@ package cc.chenhe.weargallery.uilts.diskcache
 import okio.buffer
 import okio.sink
 import okio.source
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import strikt.api.expect
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
@@ -41,14 +41,14 @@ class DiskLruCacheTest {
     private lateinit var cacheFile: File
     private lateinit var cache: DiskLruCache
 
-    @BeforeEach
+    @Before
     fun setup() {
         cacheFile = File(System.getProperty("java.io.tmpdir"), "wg_cache_test")
         clean()
         cache = DiskLruCache.open(cacheFile, APP_VERSION, MAX_SIZE)
     }
 
-    @AfterEach
+    @After
     fun clean() {
         if (cacheFile.isDirectory && cacheFile.exists()) {
             cacheFile.deleteRecursively()

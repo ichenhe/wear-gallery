@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
@@ -87,36 +88,48 @@ dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":common"))
 
-    implementation(androidx.bundles.base)
-    implementation(androidx.bundles.nav)
-    implementation(androidx.bundles.lifecycle)
-    implementation(androidx.percentlayout)
-    implementation(androidx.preference.ktx)
-    implementation(androidx.palette)
-    implementation(androidx.exifinterface)
-    implementation(androidx.room.ktx)
-    implementation(androidx.room.paging)
-    kapt("androidx.room:room-compiler:${androidx.versions.room.get()}")
-    implementation(androidx.paging.runtime.ktx)
-
-    implementation(lib.koin.android)
-    implementation(lib.play.services.wearable)
+    implementation("androidx.exifinterface:exifinterface:1.3.3")
+    implementation("androidx.palette:palette:1.0.0")
+    implementation("io.insert-koin:koin-android:3.1.4")
+    implementation("com.google.android.gms:play-services-wearable:17.1.0")
     implementation("com.google.android.support:wearable:2.9.0")
     compileOnly("com.google.android.wearable:wearable:2.9.0")
     implementation("cc.chenhe:watch-face-helper:2.0.3")
-    implementation(lib.intro)
+    implementation("com.heinrichreimersoftware:material-intro:2.0.0")
     implementation("org.nanohttpd:nanohttpd:2.3.1")
-    implementation(lib.moshi)
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:${lib.versions.moshi.get()}")
-    implementation(lib.bundles.appcenter)
+    implementation("com.github.zhpanvip:viewpagerindicator:1.2.1")
+
+
+    val nav = rootProject.ext["nav"] as String
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav")
+
+    val lifecycle = "2.4.0"
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle")
+
+    val room = "2.4.0"
+    implementation("androidx.room:room-ktx:$room")
+    implementation("androidx.room:room-paging:$room")
+    ksp("androidx.room:room-compiler:$room")
+    implementation("androidx.paging:paging-runtime-ktx:3.1.0")
+
+    val moshi = rootProject.extra["moshi"] as String
+    implementation("com.squareup.moshi:moshi:$moshi")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
+
+    val appcenter = "4.4.2"
+    implementation("com.microsoft.appcenter:appcenter-analytics:$appcenter")
+    implementation("com.microsoft.appcenter:appcenter-crashes:$appcenter")
+
     val sketch = "2.7.1"
     implementation("me.panpf:sketch:$sketch")
     implementation("me.panpf:sketch-gif:$sketch")
     implementation("me.chenhe:wearvision:0.1.1")
 
-    implementation(lib.bundles.coil)
-    implementation(lib.viewpagerindicator)
+    val coil = "1.4.0"
+    implementation("io.coil-kt:coil:$coil")
+    implementation("io.coil-kt:coil-gif:$coil")
 
-    testImplementation(lib.bundles.test)
-    testImplementation(lib.koin.test)
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.strikt:strikt-core:0.33.0")
 }

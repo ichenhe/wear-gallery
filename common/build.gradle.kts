@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+
     id("kotlin-parcelize")
     id("kotlin-kapt")
 }
@@ -34,20 +36,25 @@ android {
 
 dependencies {
     api(fileTree(baseDir = "libs") { include("*.jar") })
-    implementation(kotlinx.bundles.coroutine)
-    implementation(androidx.bundles.base)
-    implementation(androidx.bundles.lifecycle)
-    implementation(androidx.room.ktx)
-    kapt("androidx.room:room-compiler:${androidx.versions.room.get()}")
-    implementation(androidx.exifinterface)
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.1")
 
-    implementation(lib.moshi)
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:${lib.versions.moshi.get()}")
+    val lifecycle = "2.4.0"
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle")
+    implementation("androidx.lifecycle:lifecycle-process:$lifecycle")
 
-    api(lib.timber)
-    api(lib.wearmsger)
+    val moshi = rootProject.extra["moshi"] as String
+    implementation("com.squareup.moshi:moshi:$moshi")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
 
-    testImplementation(lib.bundles.test)
+    implementation("androidx.exifinterface:exifinterface:1.3.3")
+
+    api("com.jakewharton.timber:timber:5.0.1")
+    api("me.chenhe:wearmsger:2.0.2")
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.strikt:strikt-core:0.33.0")
 }
-
-
