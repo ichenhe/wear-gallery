@@ -64,9 +64,6 @@
     <string name="pref_category_information">Информация</string>
 
     <string name="setting_check_update">Проверить обновления</string>
-    <string name="pref_donate">Пожертвование</string>
-    <string name="pref_donate_summary">Мне нужна твоя поддержка (≧ω≦)/</string>
-    <string name="pref_donate_alipay_error">Не удалось запустить AliPay :(</string>
     <string name="pref_about">О приложении</string>
     <string name="pref_phone_show_tips_about_watch">Подсказка-уведомление при работе с часами</string>
     <string name="pref_title">Настройки</string>

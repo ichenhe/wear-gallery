@@ -17,11 +17,8 @@
 
 package cc.chenhe.weargallery.ui.preference
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
@@ -34,9 +31,6 @@ import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
 import cc.chenhe.weargallery.utils.fetchForegroundService
 import cc.chenhe.weargallery.utils.requireCompatAty
 import cc.chenhe.weargallery.utils.setupToolbar
-
-private const val ALIPAY =
-    "alipayqr://platformapi/startapp?saId=10000007&qrcode=https://qr.alipay.com/tsx12672qtk37hufsxfkub7"
 
 class PreferenceFr : PreferenceFragmentCompat() {
 
@@ -64,9 +58,6 @@ class PreferenceFr : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        // donate
-        findPreference<Preference>("donate")?.isVisible = !BuildConfig.IS_GP
-
         // version
         findPreference<Preference>("check_update")?.summary = getString(
             R.string.pref_version,
@@ -88,22 +79,8 @@ class PreferenceFr : PreferenceFragmentCompat() {
             "about" -> {
                 findNavController().navigate(PreferenceFrDirections.actionPreferenceFrToAboutFr())
             }
-            "donate" -> {
-                startAliPay()
-            }
             else -> return super.onPreferenceTreeClick(preference)
         }
         return true
-    }
-
-    private fun startAliPay() {
-        try {
-            val uri = Uri.parse(ALIPAY)
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            startActivity(intent)
-        } catch (e: java.lang.Exception) {
-            Toast.makeText(requireContext(), R.string.pref_donate_alipay_error, Toast.LENGTH_SHORT)
-                .show()
-        }
     }
 }

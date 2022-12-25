@@ -56,9 +56,6 @@
     <string name="pref_category_information">信息</string>
 
     <string name="setting_check_update">检查更新</string>
-    <string name="pref_donate">捐助</string>
-    <string name="pref_donate_summary">大学狗需要您的投食(≧ω≦)/</string>
-    <string name="pref_donate_alipay_error">拉起支付宝失败 :(</string>
     <string name="pref_about">关于</string>
     <string name="pref_phone_show_tips_about_watch">手表操作时手机提示</string>
     <string name="pref_foreground_service">前台服务</string>

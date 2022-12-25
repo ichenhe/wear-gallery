@@ -59,9 +59,6 @@
     <string name="pref_category_information">Información</string>
 
     <string name="setting_check_update">Comprobar actualizaciones</string>
-    <string name="pref_donate">Donar</string>
-    <string name="pref_donate_summary">Necesito tu apoyo (≧ω≦)/</string>
-    <string name="pref_donate_alipay_error">Fallo al iniciar AliPay :(</string>
     <string name="pref_about">Acerca de..</string>
     <string name="pref_phone_show_tips_about_watch">Aviso cuando se esté operando el reloj</string>
     <string name="pref_foreground_service">Foreground service</string>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/pref_category_general">
 
@@ -22,12 +21,6 @@
             android:icon="@drawable/ic_pref_update"
             android:key="check_update"
             android:title="@string/setting_check_update" />
-        <Preference
-            android:icon="@drawable/ic_pref_donate"
-            android:key="donate"
-            android:summary="@string/pref_donate_summary"
-            android:title="@string/pref_donate"
-            app:isPreferenceVisible="false" />
         <Preference
             android:icon="@drawable/ic_pref_about"
             android:key="about"
