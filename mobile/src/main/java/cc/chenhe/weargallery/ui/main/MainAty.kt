@@ -25,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.HUA_WEI
 import cc.chenhe.weargallery.common.util.checkHuaWei
@@ -34,7 +35,6 @@ import cc.chenhe.weargallery.service.AppUpgradeService
 import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.utils.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.utils.checkStoragePermissions
-import cc.chenhe.weargallery.utils.resetStatusBarTextColor
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
@@ -62,6 +62,7 @@ class MainAty : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         if (checkHuaWei()) {
             MaterialAlertDialogBuilder(this)
@@ -95,7 +96,6 @@ class MainAty : AppCompatActivity() {
     private fun init() {
         binding = AtyMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        resetStatusBarTextColor(binding.root)
     }
 
     override fun onDestroy() {

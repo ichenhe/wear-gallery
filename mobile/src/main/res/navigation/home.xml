@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/mainFr"
         android:name="cc.chenhe.weargallery.ui.main.MainFr"
-        android:label="MainFr"
-        tools:layout="@layout/fr_main">
+        android:label="MainFr">
         <action
             android:id="@+id/action_mainFr_to_preferenceFr"
             app:destination="@id/preferenceFr"

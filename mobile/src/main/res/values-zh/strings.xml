@@ -34,7 +34,8 @@
     <string name="card_tic_msg">腕间图库已经不再支持 Ticwear 系统（不影响 Wear OS 的 TicWatch）。若您没有 Wear OS 设备建议卸载手机端应用，改用局域网传输功能。</string>
     <string name="card_update">新版本</string>
     <string name="card_update_msg">发现新版本。(%1$s)</string>
-    <string name="card_update_positive">去看看</string>
+    <string name="card_update_open_appstore">应用商店</string>
+    <string name="card_update_open_url">了解详情</string>
 
     <string name="images_menu_check_all">选择全部</string>
     <string name="images_selected_none">选择项目</string>
@@ -115,7 +116,5 @@
     <string name="notify_upgrading_content">请勿强制结束进程以免数据丢失。</string>
     <string name="notify_foreground_text">仅用于保活，可关闭此通知。</string>
 
-    <string name="links_chooser_browser">选择浏览器</string>
     <string name="tip">提示</string>
-
 </resources>

@@ -35,7 +35,6 @@
     <string name="card_tic_msg">Ticwear больше не поддерживается (На TicWatch с Wear OS это не влияет). Вам, вероятно, следует удалить это приложение со своего телефона и использовать передачу по локальной сети, если у вас нет часов с Wear OS.</string>
     <string name="card_update">Новая версия</string>
     <string name="card_update_msg">Вышла новая версия. (%1$s)</string>
-    <string name="card_update_positive">Узнать больше</string>
 
     <string name="images_menu_check_all">Выбрать ВСЁ</string>
     <string name="images_selected_none">Выбрать предметы</string>
@@ -121,6 +120,4 @@
     <string name="notify_huawei_text">Wear Галерея отказывается работать на устройствах Huawei! Нажмите чтобы узнать больше.</string>
     <string name="notify_upgrading">Перенос Данных</string>
     <string name="notify_upgrading_content">Не завершайте процесс во избежание потери данных.</string>
-
-    <string name="links_chooser_browser">Выберете браузер</string>
 </resources>
