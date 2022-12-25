@@ -23,7 +23,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import cc.chenhe.weargallery.BuildConfig
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.service.ForegroundService
@@ -68,11 +67,7 @@ class PreferenceFr : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         when (preference.key) {
             "check_update" -> {
-                if (BuildConfig.IS_GP) {
-                    openMarket(requireContext()) {
-                        openWithBrowser(requireContext(), GITHUB)
-                    }
-                } else {
+                openMarket(requireContext()) {
                     openWithBrowser(requireContext(), GITHUB)
                 }
             }

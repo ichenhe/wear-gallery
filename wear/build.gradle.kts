@@ -44,18 +44,6 @@ android {
         }
     }
 
-    flavorDimensions.add("channel")
-    productFlavors {
-        create("normal") {
-            dimension = "channel"
-            buildConfigField("Boolean", "IS_GP", "false")
-        }
-        create("gp") {
-            dimension = "channel"
-            buildConfigField("Boolean", "IS_GP", "true")
-        }
-    }
-
     buildFeatures {
         viewBinding = true
         dataBinding = true

@@ -18,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cc.chenhe.weargallery.BuildConfig
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.databinding.FrMainBinding
@@ -144,11 +143,7 @@ class MainFr : Fragment() {
                 ColorStateList.valueOf(context.getColor(card.bgColor))
             if (card.tag == "UPDATE") {
                 holder.binding.positiveBtn.setOnClickListener {
-                    if (BuildConfig.IS_GP) {
-                        openMarket(context) {
-                            openWithBrowser(context, card.obj as? String ?: GITHUB)
-                        }
-                    } else {
+                    openMarket(context) {
                         openWithBrowser(context, card.obj as? String ?: GITHUB)
                     }
                 }

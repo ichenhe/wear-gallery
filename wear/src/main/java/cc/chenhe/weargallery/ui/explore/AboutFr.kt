@@ -23,7 +23,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import cc.chenhe.weargallery.BuildConfig
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.GITHUB
 import cc.chenhe.weargallery.common.util.TELEGRAM
@@ -93,11 +92,7 @@ class AboutFr : SwipeDismissFr() {
 
         binding.update.setOnClickListener {
             when (newVersion) {
-                1 -> if (BuildConfig.IS_GP) {
-                    openMarket(requireContext()) { showUrl(model.url) }
-                } else {
-                    showUrl(model.url)
-                }
+                1 -> openMarket(requireContext()) { showUrl(model.url) }
                 2, 3 -> model.checkUpdate()
             }
         }
