@@ -69,6 +69,7 @@
     <string name="watch_operation_send_hd_picture_ing">Cargando versión HD</string>
     <string name="watch_operation_send_hd_picture_fail">Fallo al leer imagen HD</string>
 
+    <string name="send_images_title">Enviar al reloj</string>
     <plurals name="send_images_subtitle">
         <item quantity="one">%d picture</item>
         <item quantity="other">%d pictures</item>

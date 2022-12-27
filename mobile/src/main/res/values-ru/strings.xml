@@ -72,6 +72,7 @@
     <string name="watch_operation_send_hd_picture_ing">Загружается HD версия</string>
     <string name="watch_operation_send_hd_picture_fail">Ошибка чтения HD-изображения</string>
 
+    <string name="send_images_title">Отправить на часы</string>
     <plurals name="send_images_subtitle">
         <item quantity="one">%d картинка</item>
         <item quantity="few">%d картинок</item>

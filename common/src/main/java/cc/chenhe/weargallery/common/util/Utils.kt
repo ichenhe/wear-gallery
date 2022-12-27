@@ -17,7 +17,9 @@
 
 package cc.chenhe.weargallery.common.util
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import androidx.core.content.pm.PackageInfoCompat
 import cc.chenhe.weargallery.common.log.MLog
 import cc.chenhe.weargallery.common.log.Mmap
@@ -119,4 +121,13 @@ fun <T> JsonAdapter<T>.fromJsonQ(string: String): T? {
     } catch (e: Exception) {
         null
     }
+}
+
+/**
+ * Try to get the corresponding Activity。Usually used in Compose。
+ */
+fun Context.getActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
 }

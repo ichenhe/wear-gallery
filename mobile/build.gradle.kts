@@ -85,6 +85,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")
+    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanist")
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
 
@@ -119,6 +120,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:$glide")
     kapt("com.github.bumptech.glide:compiler:$glide")
     implementation("com.davemorrissey.labs:subsampling-scale-image-view:3.10.0")
+    val coil = "2.2.2"
+    implementation("io.coil-kt:coil:$coil")
+    implementation("io.coil-kt:coil-compose:$coil")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.strikt:strikt-core:0.33.0")

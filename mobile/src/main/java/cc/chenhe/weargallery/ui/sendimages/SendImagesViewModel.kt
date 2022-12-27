@@ -23,6 +23,8 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.database.getIntOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
@@ -32,63 +34,82 @@ import cc.chenhe.weargallery.common.comm.CAP_WEAR
 import cc.chenhe.weargallery.common.util.ImageExifUtil
 import cc.chenhe.weargallery.common.util.fileName
 import cc.chenhe.weargallery.common.util.filePath
+import cc.chenhe.weargallery.service.SendPicturesService
 import cc.chenhe.weargallery.ui.common.getContext
-import cc.chenhe.weargallery.utils.fetchImageColumnWidth
+import cc.chenhe.weargallery.utils.*
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
+import java.util.concurrent.atomic.AtomicBoolean
 
-class SendImagesViewModel(application: Application, intent: Intent) :
+data class SendImagesUiState(
+    val targetFolder: String? = null,
+    val devices: List<SendImagesViewModel.NodeInfo> = emptyList(),
+    val targetDevice: SendImagesViewModel.NodeInfo? = null,
+    val images: List<Image> = emptyList(),
+    val notificationPermission: PermissionState = PermissionState.Granted
+) {
+    sealed class PermissionState {
+        object Granted : PermissionState()
+        object NotGranted : PermissionState()
+        object Disabled : PermissionState()
+        class ChannelDisabled(val channelId: String) : PermissionState()
+    }
+}
+
+sealed class SendImagesIntent {
+    data class SelectTargetFolder(val folder: String?) : SendImagesIntent()
+    data class SetTargetDevice(val device: SendImagesViewModel.NodeInfo?) : SendImagesIntent()
+    object CheckNotificationPermission : SendImagesIntent()
+    object StartSend : SendImagesIntent()
+}
+
+class SendImagesViewModel(
+    application: Application,
+    private val notificationChecker: NotificationChecker,
+    intent: Intent,
+) :
     AndroidViewModel(application) {
-
     companion object {
         private const val TAG = "SendImagesViewModel"
-    }
 
-    val columnWidth = fetchImageColumnWidth(application)
-
-    var nodes: Set<Node> = emptySet()
-        private set(value) {
-            field = value
-            val target = targetNode.value
-            if (target != null) {
-                if (!value.contains(target)) {
-                    // The selected device is disconnected -> set as the first node or null
-                    _targetNode.postValue(if (value.isEmpty()) null else value.first())
-                }
-            } else {
-                // The default setting is the first node
-                if (value.isNotEmpty())
-                    _targetNode.postValue(value.first())
-            }
+        fun isFolderPathValid(s: String?): Boolean {
+            return s.isNullOrEmpty() || s.matches(Regex("[^\\\\<>*?|\"]+")) && s.isNotBlank()
         }
-
-    private val _targetNode = MutableLiveData<Node?>(null)
-    val targetNode: LiveData<Node?> = _targetNode
-
-    private val _targetFolder = MutableLiveData<String?>(null)
-    val targetFolder: LiveData<String?> = _targetFolder
-
-    val images: LiveData<List<Image>?> = liveData {
-        emit(processIntent(intent))
     }
+
+    data class NodeInfo(val id: String, val name: String)
+
+    private var _uiState = mutableStateOf(SendImagesUiState())
+    val uiState: State<SendImagesUiState> = _uiState
+
+    private val intents: MutableSharedFlow<SendImagesIntent> = MutableSharedFlow()
+
+    /**
+     * Sending or send complete
+     */
+    private val sending: AtomicBoolean = AtomicBoolean(false)
 
     private val capChangedListener = CapabilityClient.OnCapabilityChangedListener {
-        nodes = it.nodes ?: emptySet()
+        updateDeviceList(it.nodes)
     }
     private val capClient = Wearable.getCapabilityClient(getContext())
 
     init {
         viewModelScope.launch {
-            loadNodes()
+            updateDeviceList(getDevices())
+            _uiState.value =
+                _uiState.value.copy(images = extractImagesFromIntent(intent) ?: emptyList())
         }
         capClient.addListener(capChangedListener, CAP_WEAR)
+        subscribeIntent()
     }
 
     override fun onCleared() {
@@ -96,13 +117,90 @@ class SendImagesViewModel(application: Application, intent: Intent) :
         super.onCleared()
     }
 
-    private suspend fun processIntent(intent: Intent): List<Image>? {
+    fun sendIntent(intent: SendImagesIntent) {
+        viewModelScope.launch {
+            intents.emit(intent)
+        }
+    }
+
+    private fun subscribeIntent() {
+        viewModelScope.launch {
+            intents.collect { intent ->
+                when (intent) {
+                    is SendImagesIntent.SelectTargetFolder -> updateTargetFolder(intent.folder)
+                    is SendImagesIntent.SetTargetDevice -> updateTargetDevice(intent.device)
+                    SendImagesIntent.CheckNotificationPermission -> checkPermission()
+                    SendImagesIntent.StartSend -> startSend()
+                }
+            }
+        }
+    }
+
+    private fun updateTargetFolder(folder: String?) {
+        _uiState.value = _uiState.value.copy(
+            targetFolder = folder?.takeIf { it.isNotEmpty() && it.isNotBlank() }
+        )
+    }
+
+    private fun updateTargetDevice(device: NodeInfo?) {
+        _uiState.value = _uiState.value.copy(
+            targetDevice = device?.takeIf { _uiState.value.devices.contains(device) }
+        )
+    }
+
+    private fun checkPermission() {
+        if (!notificationChecker.hasNotificationPermission()) {
+            _uiState.value = _uiState.value.copy(
+                notificationPermission = SendImagesUiState.PermissionState.NotGranted
+            )
+            return
+        }
+        if (!notificationChecker.areNotificationsEnabled()) {
+            _uiState.value = _uiState.value.copy(
+                notificationPermission = SendImagesUiState.PermissionState.Disabled
+            )
+            return
+        }
+        if (!notificationChecker.isNotificationChannelEnabled(NOTIFY_CHANNEL_ID_SENDING)) {
+            _uiState.value = _uiState.value.copy(
+                notificationPermission = SendImagesUiState.PermissionState.ChannelDisabled(
+                    NOTIFY_CHANNEL_ID_SENDING
+                )
+            )
+            return
+        }
+        if (!notificationChecker.isNotificationChannelEnabled(NOTIFY_CHANNEL_ID_SEND_RESULT)) {
+            _uiState.value = _uiState.value.copy(
+                notificationPermission = SendImagesUiState.PermissionState.ChannelDisabled(
+                    NOTIFY_CHANNEL_ID_SEND_RESULT
+                )
+            )
+            return
+        }
+        _uiState.value = _uiState.value.copy(
+            notificationPermission = SendImagesUiState.PermissionState.Granted
+        )
+    }
+
+    private suspend fun startSend() {
+        _uiState.value.apply {
+            val device = getDevices()?.find { it.id == targetDevice?.id }
+            val images = _uiState.value.images
+            if (device != null && images.isNotEmpty()) {
+                if (sending.compareAndSet(false, true)) {
+                    SendPicturesService.add(getApplication(), images, device, targetFolder)
+                }
+            }
+        }
+    }
+
+    private suspend fun extractImagesFromIntent(intent: Intent): List<Image>? {
         val uris = when (intent.action) {
             Intent.ACTION_SEND -> {
-                intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let { listOf(it) }
+                intent.getParcelable<Uri>(Intent.EXTRA_STREAM)?.let { listOf(it) }
             }
             Intent.ACTION_SEND_MULTIPLE -> {
-                intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
+                intent.getParcelableArrayList(Intent.EXTRA_STREAM)
             }
             else -> {
                 Timber.tag(TAG).w("Unknown intent, action=%s", intent.action)
@@ -110,68 +208,54 @@ class SendImagesViewModel(application: Application, intent: Intent) :
             }
         }
         if (uris.isNullOrEmpty()) return null
-        val images = ArrayList<Image>(uris.size)
-        uris.forEach { uri ->
-            processUri(uri)?.also {
-                images += it
-            }
-        }
-        return images
+        return uris.mapNotNull { extractImageFromUri(it) }
     }
 
-    private suspend fun loadNodes() {
-        nodes = try {
+    private suspend fun getDevices(): Set<Node>? {
+        return try {
             // It will throw a exception if cannot connect to wearable client
-            val info = Wearable.getCapabilityClient(getContext())
-                .getCapability(CAP_WEAR, CapabilityClient.FILTER_REACHABLE).await()
-            info?.nodes ?: emptySet()
+            Wearable.getCapabilityClient(getContext())
+                .getCapability(CAP_WEAR, CapabilityClient.FILTER_REACHABLE).await()?.nodes
         } catch (e: Exception) {
-            emptySet()
-        }
-    }
-
-    fun setTargetNode(node: Node) {
-        if (nodes.contains(node)) {
-            _targetNode.value = node
-        } else {
-            _targetNode.value = null
+            null
         }
     }
 
     /**
-     * @return Whether the new path is valid and has been set.
+     * Update device list and select the first one as default if
+     * [SendImagesUiState.targetDevice] is null.
+     *
+     * If current selected device is no more available, change it to the first one.
      */
-    fun setTargetFolder(s: String?): Boolean {
-        if (!isFolderPathValid(s)) {
-            return false
-        }
-        if (s == null || s.isEmpty() || s.isBlank()) {
-            _targetFolder.value = null
-        } else {
-            _targetFolder.value = s
-        }
-        return true
+    private fun updateDeviceList(nodes: Set<Node>?) {
+        val nodeList = nodes?.mapTo(ArrayList()) { NodeInfo(it.id, it.displayName) }
+            ?.apply { sortBy { it.name } } ?: emptyList()
+        val selected = _uiState.value.targetDevice
+            ?.takeIf { t -> nodeList.find { it.id == t.id } != null }
+            ?: nodeList.firstOrNull()
+        _uiState.value = _uiState.value.copy(devices = nodeList, targetDevice = selected)
     }
 
-    private fun isFolderPathValid(s: String?): Boolean {
-        return s.isNullOrEmpty() || s.matches(Regex("[^\\\\<>*?|\"]+")) && s.isNotBlank()
-    }
-
-    private suspend fun processUri(uri: Uri): Image? {
-
-        if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
-            var img = querySignalImage(uri)
-            if (img != null) return img
-            Timber.tag(TAG).d("Cannot find a record for shared uri, try to parse stream. uri=$uri")
-            img = ImageExifUtil.parseImageFromIns(getContext(), uri)
-            if (img != null) return img
-            Timber.tag(TAG).i("Cannot parse stream to a image, discard. uri=$uri")
-            return null
-        } else if (uri.scheme == ContentResolver.SCHEME_FILE) {
-            return ImageExifUtil.parseImageFromFile(File(requireNotNull(uri.path)))
+    private suspend fun extractImageFromUri(uri: Uri): Image? {
+        when (uri.scheme) {
+            ContentResolver.SCHEME_CONTENT -> {
+                var img = querySignalImage(uri)
+                if (img != null) return img
+                Timber.tag(TAG)
+                    .d("Cannot find a record for shared uri, try to parse stream. uri=$uri")
+                img = ImageExifUtil.parseImageFromIns(getContext(), uri)
+                if (img != null) return img
+                Timber.tag(TAG).i("Cannot parse stream to a image, discard. uri=$uri")
+                return null
+            }
+            ContentResolver.SCHEME_FILE -> {
+                return ImageExifUtil.parseImageFromFile(File(requireNotNull(uri.path)))
+            }
+            else -> {
+                Timber.tag(TAG).i("Unrecognized uri - not content or file. uri=$uri")
+                return null
+            }
         }
-        Timber.tag(TAG).i("Unrecognized uri - not content or file. uri=$uri")
-        return null
     }
 
     @Suppress("DEPRECATION") // We use `DATA` field to show file path information.
@@ -231,5 +315,4 @@ class SendImagesViewModel(application: Application, intent: Intent) :
                 }
             }
     }
-
 }

@@ -10,6 +10,8 @@
     <string name="icon">图标</string>
     <string name="main_preference">进入设置</string>
     <string name="main_legacy"><u>传统页面</u></string>
+    <string name="navup">返回</string>
+    <string name="permission_grant">授予</string>
 
     <string name="nav_menu_images">图片</string>
     <string name="nav_menu_folders">相册</string>
@@ -68,6 +70,7 @@
     <string name="watch_operation_send_hd_picture_ing">正在传输高清图</string>
     <string name="watch_operation_send_hd_picture_fail">读取高清图失败</string>
 
+    <string name="send_images_title">发送到手表</string>
     <plurals name="send_images_subtitle">
         <item quantity="other">%d张图片</item>
     </plurals>
@@ -76,9 +79,10 @@
     <string name="send_images_directory_description">手表设备上基于图片媒体库的相对目录，留空保存在默认目录中。</string>
     <string name="send_images_directory_invalid">目录无效</string>
     <string name="send_images_device">目标设备</string>
+    <string name="send_images_device_none">未找到已连接且安装腕间图库的手表。</string>
     <string name="send_images_select_device">请选择目标设备。若列表为空请确认：\n1. 手表是否通过蓝牙连接。\n2. 仅支持 Wear OS 设备。\n3. 应用版本是否一致。</string>
-    <string name="send_images_need_notification_permission">授予通知权限以显示传输进度和结果。</string>
-    <string name="send_images_need_notification_permission_skip">忽略发送结果</string>
+    <string name="send_images_permission_card_notification_title">发送进度与结果</string>
+    <string name="send_images_permission_card_notification_message">需要通知栏权限以显示发送状态。</string>
     <string name="send_images_fail_cancel">发送取消。</string>
     <string name="send_images_fail_ack_failed">手表确认失败。</string>
     <string name="send_images_fail_file_not_found">图片文件不存在。</string>

@@ -10,5 +10,4 @@
     <dimen name="image_checkbox_margin">8dp</dimen>
 
     <dimen name="fab_margin">32dp</dimen>
-    <dimen name="dialog_view_margin">20dp</dimen>
 </resources>

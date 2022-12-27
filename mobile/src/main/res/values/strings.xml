@@ -11,6 +11,8 @@
     <string name="icon">Icon</string>
     <string name="main_preference">Preferences</string>
     <string name="main_legacy"><u>Legacy</u></string>
+    <string name="navup">Navigate up</string>
+    <string name="permission_grant">Grant</string>
 
     <string name="nav_menu_images">Images</string>
     <string name="nav_menu_folders">Folders</string>
@@ -74,6 +76,7 @@
     <string name="watch_operation_send_hd_picture_ing">Loading HD version</string>
     <string name="watch_operation_send_hd_picture_fail">Read HD image failed</string>
 
+    <string name="send_images_title">Send to watch</string>
     <plurals name="send_images_subtitle">
         <item quantity="one">%d picture</item>
         <item quantity="other">%d pictures</item>
@@ -83,9 +86,10 @@
     <string name="send_images_directory_description">The relative directory based on the picture media library on the watch. Leave blank to save in the default directory.</string>
     <string name="send_images_directory_invalid">invalid path</string>
     <string name="send_images_device">Target device</string>
+    <string name="send_images_device_none">No connected watches with Wear Gallery installed.</string>
     <string name="send_images_select_device">Please select the target device. If the list is empty, please confirm:\n1. The watch has been connected via Bluetooth.\n2. Only Wear OS is supported.\n3. The app version must be consistent.</string>
-    <string name="send_images_need_notification_permission">Notification permission is required to show the progress and results of the transmission.</string>
-    <string name="send_images_need_notification_permission_skip">Ignore the result</string>
+    <string name="send_images_permission_card_notification_title">Delivery progress and results</string>
+    <string name="send_images_permission_card_notification_message">Notification permission is required to show the send status.</string>
     <string name="send_images_fail_cancel">Canceled.</string>
     <string name="send_images_fail_ack_failed">Watch ACK failed.</string>
     <string name="send_images_fail_file_not_found">Picture file not found.</string>
