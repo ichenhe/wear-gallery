@@ -17,6 +17,7 @@
 
 package cc.chenhe.weargallery.service
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -33,6 +34,7 @@ import cc.chenhe.weargallery.bean.toMetadata
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.comm.*
 import cc.chenhe.weargallery.common.comm.bean.SendResp
+import cc.chenhe.weargallery.common.util.checkPermission
 import cc.chenhe.weargallery.common.util.fromJsonQ
 import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.ui.main.MainAty
@@ -77,24 +79,26 @@ class MobileListenerService : WMListenerService() {
         if (checkStoragePermissions(this)) {
             return true
         }
-        val intent = Intent(this, MainAty::class.java)
+        if (checkPermission(Manifest.permission.POST_NOTIFICATIONS)) {
+            val intent = Intent(this, MainAty::class.java)
 
-        @SuppressLint("UnspecifiedImmutableFlag")
-        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        } else {
-            PendingIntent.getActivity(this, 0, intent, 0)
+            @SuppressLint("UnspecifiedImmutableFlag")
+            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            } else {
+                PendingIntent.getActivity(this, 0, intent, 0)
+            }
+            val notify = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_PERMISSION)
+                .setSmallIcon(R.drawable.ic_notify_permission)
+                .setContentTitle(getString(R.string.notify_permission_title))
+                .setContentText(getString(R.string.notify_permission_text))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setTicker(getString(R.string.notify_permission_title))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
+            NotificationManagerCompat.from(this).notify(NOTIFY_ID_PERMISSION, notify)
         }
-        val notify = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_PERMISSION)
-            .setSmallIcon(R.drawable.ic_notify_permission)
-            .setContentTitle(getString(R.string.notify_permission_title))
-            .setContentText(getString(R.string.notify_permission_text))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setTicker(getString(R.string.notify_permission_title))
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-            .build()
-        NotificationManagerCompat.from(this).notify(NOTIFY_ID_PERMISSION, notify)
         return false
     }
 
