@@ -116,12 +116,10 @@ dependencies {
     implementation("com.microsoft.appcenter:appcenter-crashes:$appcenter")
 
     // pictures
-    val glide = "4.14.2"
-    implementation("com.github.bumptech.glide:glide:$glide")
-    kapt("com.github.bumptech.glide:compiler:$glide")
     implementation("com.davemorrissey.labs:subsampling-scale-image-view:3.10.0")
     val coil = "2.2.2"
     implementation("io.coil-kt:coil:$coil")
+    implementation("io.coil-kt:coil-gif:$coil")
     implementation("io.coil-kt:coil-compose:$coil")
 
     testImplementation("junit:junit:4.13.2")

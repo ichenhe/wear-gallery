@@ -18,10 +18,15 @@
 package cc.chenhe.weargallery
 
 import android.app.Application
+import android.os.Build.VERSION.SDK_INT
 import android.util.Log
 import cc.chenhe.weargallery.common.log.MmapLogTree
 import cc.chenhe.weargallery.common.util.getLogDir
 import cc.chenhe.weargallery.common.util.xlogAppenderCloseSafely
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.AbstractCrashesListener
@@ -35,7 +40,7 @@ import org.koin.core.logger.Level
 import timber.log.Timber
 
 
-class MyApplication : Application() {
+class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
 
@@ -73,5 +78,15 @@ class MyApplication : Application() {
             modules(appModule)
         }
     }
+
+    override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this)
+        .components {
+            if (SDK_INT >= 28) {
+                add(ImageDecoderDecoder.Factory())
+            } else {
+                add(GifDecoder.Factory())
+            }
+        }
+        .build()
 
 }
