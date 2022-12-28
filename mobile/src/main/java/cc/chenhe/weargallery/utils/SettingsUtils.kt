@@ -20,7 +20,6 @@ package cc.chenhe.weargallery.utils
 import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import cc.chenhe.weargallery.common.util.SpBooleanLiveData
 import cc.chenhe.weargallery.common.util.SpIntLiveData
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -28,8 +27,8 @@ import kotlin.math.roundToInt
 private const val PREFERENCE_LAST_START_VERSION = "last_start_version"
 private const val PREFERENCE_IMAGE_COLUMN_WIDTH = "image_column_width" // int
 
-private const val PREFERENCE_TIP_WITH_WATCH = "tip_with_watch" // boolean
-private const val PREFERENCE_FOREGROUND_SERVICE = "foreground_service" // boolean
+const val PREFERENCE_TIP_WITH_WATCH = "tip_with_watch" // boolean
+const val PREFERENCE_FOREGROUND_SERVICE = "foreground_service" // boolean
 private const val PREFERENCE_CHECK_UPDATE_TIME = "check_update_time" // long unix second
 
 
@@ -53,6 +52,12 @@ fun lastCheckUpdateTime(context: Context, timeInSecond: Long) {
 fun getLastStartVersion(context: Context): Long =
     getSp(context).getLong(PREFERENCE_LAST_START_VERSION, 0)
 
+fun setTipWithWatch(context: Context, tip: Boolean) {
+    getSp(context).edit {
+        putBoolean(PREFERENCE_TIP_WITH_WATCH, tip)
+    }
+}
+
 fun isTipWithWatch(context: Context): Boolean =
     getSp(context).getBoolean(PREFERENCE_TIP_WITH_WATCH, true)
 
@@ -68,8 +73,13 @@ fun fetchImageColumnWidth(context: Context): SpIntLiveData {
     return SpIntLiveData(getSp(context), PREFERENCE_IMAGE_COLUMN_WIDTH, default, true)
 }
 
-fun fetchForegroundService(context: Context, init: Boolean = false): SpBooleanLiveData {
-    return SpBooleanLiveData(getSp(context), PREFERENCE_FOREGROUND_SERVICE, false, init)
+fun isForegroundService(context: Context): Boolean =
+    getSp(context).getBoolean(PREFERENCE_FOREGROUND_SERVICE, false)
+
+fun setForegroundService(context: Context, enabled: Boolean) {
+    getSp(context).edit {
+        putBoolean(PREFERENCE_FOREGROUND_SERVICE, enabled)
+    }
 }
 
 fun addImageColumnCount(context: Context) {

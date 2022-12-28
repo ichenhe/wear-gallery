@@ -54,9 +54,6 @@
 
     <string name="menu_send">Enviar al reloj</string>
 
-    <string name="pref_category_general">General</string>
-    <string name="pref_category_information">Información</string>
-
     <string name="setting_check_update">Comprobar actualizaciones</string>
     <string name="pref_about">Acerca de..</string>
     <string name="pref_phone_show_tips_about_watch">Aviso cuando se esté operando el reloj</string>

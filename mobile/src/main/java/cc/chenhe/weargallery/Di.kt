@@ -26,6 +26,7 @@ import cc.chenhe.weargallery.ui.imagedetail.ImageDetailViewModel
 import cc.chenhe.weargallery.ui.images.ImagesViewModel
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.ui.main.MainScreenViewModel
+import cc.chenhe.weargallery.ui.preference.PreferenceViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesViewModel
 import cc.chenhe.weargallery.utils.NotificationChecker
 import com.squareup.moshi.Moshi
@@ -46,4 +47,5 @@ val appModule = module {
     viewModel { (bucketId: Int) -> FolderImagesViewModel(androidApplication(), bucketId) }
     viewModel { (bucketId: Int) -> ImageDetailViewModel(androidApplication(), bucketId) }
     viewModel { (intent: Intent) -> SendImagesViewModel(androidApplication(), get(), intent) }
+    viewModel { PreferenceViewModel(androidApplication()) }
 }

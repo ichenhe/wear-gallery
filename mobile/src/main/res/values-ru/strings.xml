@@ -53,14 +53,8 @@
         <item quantity="few">%d папок</item>
         <item quantity="many">%d папок</item>
     </plurals>
-    <string name="folders_item_small_title" translatable="false">%1$s (%2$d)</string>
-
-    <string name="pref_version" translatable="false">%1$s  (%2$d)</string>
 
     <string name="menu_send">Отправить на часы</string>
-
-    <string name="pref_category_general">Обшие</string>
-    <string name="pref_category_information">Информация</string>
 
     <string name="setting_check_update">Проверить обновления</string>
     <string name="pref_about">О приложении</string>
@@ -101,9 +95,6 @@
     <string name="share_image_label">Отправить на часы</string>
 
     <string name="about_slogan">Галерея Wear OS с открытым исходным кодом</string>
-    <string name="about_github" translatable="false"><u>github.com/ichenhe/wear-gallery</u></string>
-    <string name="about_tg" translatable="false"><u>t.me/weargallery_news</u></string>
-    <string name="about_qq" translatable="false">549321774</string>
     <string name="about_licence"><u>Лицензии с открытым исходным кодом</u></string>
 
     <string name="notify_channel_permission_name">Разрешения</string>

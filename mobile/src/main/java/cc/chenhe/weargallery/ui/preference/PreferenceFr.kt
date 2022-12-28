@@ -18,64 +18,31 @@
 package cc.chenhe.weargallery.ui.preference
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.widget.Toolbar
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.util.*
-import cc.chenhe.weargallery.service.ForegroundService
-import cc.chenhe.weargallery.ui.common.CollapseHeaderLayout
-import cc.chenhe.weargallery.utils.fetchForegroundService
-import cc.chenhe.weargallery.utils.requireCompatAty
-import cc.chenhe.weargallery.utils.setupToolbar
+import cc.chenhe.weargallery.ui.theme.WearGalleryTheme
 
-class PreferenceFr : PreferenceFragmentCompat() {
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.findViewById<Toolbar>(R.id.toolbar).let {
-            setupToolbar(it)
-            it.setNavigationOnClickListener { findNavController().navigateUp() }
-        }
-        requireCompatAty().supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        view.findViewById<CollapseHeaderLayout>(R.id.header).setTitle(R.string.pref_title)
-
-        fetchForegroundService(
-            requireContext(),
-            init = false
-        ).observe(viewLifecycleOwner) { foregroundService ->
-            if (foregroundService)
-                ForegroundService.start(requireContext())
-            else
-                ForegroundService.stop(requireContext())
-
-        }
-    }
-
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.preferences, rootKey)
-
-        // version
-        findPreference<Preference>("check_update")?.summary = getString(
-            R.string.pref_version,
-            getVersionName(requireContext()), getVersionCode(requireContext())
-        )
-    }
-
-    override fun onPreferenceTreeClick(preference: Preference): Boolean {
-        when (preference.key) {
-            "check_update" -> {
-                openMarket(requireContext()) {
-                    openWithBrowser(requireContext(), GITHUB)
-                }
+class PreferenceFr : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            WearGalleryTheme {
+                PreferenceScreen(
+                    navUp = { findNavController().navigateUp() },
+                    navToAbout = {
+                        findNavController().navigate(PreferenceFrDirections.actionPreferenceFrToAboutFr())
+                    }
+                )
             }
-            "about" -> {
-                findNavController().navigate(PreferenceFrDirections.actionPreferenceFrToAboutFr())
-            }
-            else -> return super.onPreferenceTreeClick(preference)
         }
-        return true
     }
 }

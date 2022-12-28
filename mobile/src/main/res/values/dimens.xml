@@ -4,7 +4,6 @@
     <dimen name="images_grid_padding">2dp</dimen>
     <dimen name="folders_grid_padding">8dp</dimen>
     <dimen name="folders_preview_corner_radius">16dp</dimen>
-    <dimen name="preference_icon_size">32dp</dimen>
 
     <dimen name="image_checkbox_size">20dp</dimen>
     <dimen name="image_checkbox_margin">8dp</dimen>
