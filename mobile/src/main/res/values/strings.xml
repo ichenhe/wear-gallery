@@ -66,6 +66,7 @@
     <string name="pref_phone_show_tips_about_watch">Tip when watch is been operated</string>
     <string name="pref_foreground_service">Foreground service</string>
     <string name="pref_foreground_service_summary">Try to solve the problem of not being able to wake up in the background. Only recommended for Chinese systems.</string>
+    <string name="pref_foreground_service_notification">Foreground service notification</string>
     <string name="pref_title">Settings</string>
 
     <string name="watch_operation_search_gallery_ing">Scanning albums</string>
@@ -126,4 +127,6 @@
     <string name="notify_upgrading">Migrating Data</string>
     <string name="notify_upgrading_content">Do not end the process to avoid data loss.</string>
     <string name="notify_foreground_text">Feel free to hide this notification.</string>
+    <string name="notify_foreground_hide_button">Hide</string>
+    <string name="notify_foreground_disable_button">Shutdown</string>
 </resources>

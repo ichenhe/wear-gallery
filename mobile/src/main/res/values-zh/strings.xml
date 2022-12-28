@@ -60,6 +60,7 @@
     <string name="pref_phone_show_tips_about_watch">手表操作时手机提示</string>
     <string name="pref_foreground_service">前台服务</string>
     <string name="pref_foreground_service_summary">尝试解决无法后台响应手表请求的问题。只推荐中国系统开启。</string>
+    <string name="pref_foreground_service_notification">前台服务通知</string>
     <string name="pref_title">设置</string>
 
     <string name="watch_operation_search_gallery_ing">正在扫描图库</string>
@@ -115,7 +116,9 @@
     <string name="notify_huawei_text">腕间图库拒绝在华为设备上运行！点击了解更多。</string>
     <string name="notify_upgrading">正在迁移数据</string>
     <string name="notify_upgrading_content">请勿强制结束进程以免数据丢失。</string>
-    <string name="notify_foreground_text">仅用于保活，可关闭此通知。</string>
+    <string name="notify_foreground_text">仅用于保活，可隐藏此通知。</string>
+    <string name="notify_foreground_hide_button">隐藏通知</string>
+    <string name="notify_foreground_disable_button">关闭后台</string>
 
     <string name="tip">提示</string>
 </resources>

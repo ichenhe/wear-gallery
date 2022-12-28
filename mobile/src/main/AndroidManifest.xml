@@ -74,7 +74,9 @@
             android:exported="false" />
 
         <service android:name=".service.AppUpgradeService" />
-        <service android:name=".service.ForegroundService" />
+        <service
+            android:name=".service.ForegroundService"
+            android:exported="false" />
 
         <receiver
             android:name=".AppUpgradeReceiver"

@@ -15,14 +15,19 @@ import kotlinx.coroutines.launch
 data class PreferenceUiState(
     val tipWhenWatchOperating: Boolean = false,
     val foregroundService: Boolean = false,
+    val foregroundServiceNotification: Boolean = false,
 )
 
 sealed class PreferenceIntent {
     data class SetTipWhenWatchOperating(val enable: Boolean) : PreferenceIntent()
     data class SetForegroundService(val enable: Boolean) : PreferenceIntent()
+    object RecheckNotificationState : PreferenceIntent()
 }
 
-class PreferenceViewModel(application: Application) : AndroidViewModel(application) {
+class PreferenceViewModel(
+    application: Application,
+    private val notificationChecker: NotificationChecker,
+) : AndroidViewModel(application) {
     private var _uiState = mutableStateOf(PreferenceUiState())
     val uiState: State<PreferenceUiState> = _uiState
 
@@ -44,6 +49,9 @@ class PreferenceViewModel(application: Application) : AndroidViewModel(applicati
         _uiState.value = _uiState.value.copy(
             tipWhenWatchOperating = isTipWithWatch(getApplication()),
             foregroundService = isForegroundService(getApplication()),
+            foregroundServiceNotification = notificationChecker.isNotificationChannelEnabled(
+                NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE
+            )
         )
         subscribeIntent()
     }
@@ -78,8 +86,16 @@ class PreferenceViewModel(application: Application) : AndroidViewModel(applicati
                         getApplication(),
                         intent.enable
                     )
+                    PreferenceIntent.RecheckNotificationState -> {
+                        _uiState.value = uiState.value.copy(
+                            foregroundServiceNotification = notificationChecker.isNotificationChannelEnabled(
+                                NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE
+                            )
+                        )
+                    }
                 }
             }
         }
     }
+
 }

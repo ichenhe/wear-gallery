@@ -47,5 +47,5 @@ val appModule = module {
     viewModel { (bucketId: Int) -> FolderImagesViewModel(androidApplication(), bucketId) }
     viewModel { (bucketId: Int) -> ImageDetailViewModel(androidApplication(), bucketId) }
     viewModel { (intent: Intent) -> SendImagesViewModel(androidApplication(), get(), intent) }
-    viewModel { PreferenceViewModel(androidApplication()) }
+    viewModel { PreferenceViewModel(androidApplication(), get()) }
 }
