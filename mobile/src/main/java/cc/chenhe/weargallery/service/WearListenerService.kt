@@ -17,14 +17,11 @@
 
 package cc.chenhe.weargallery.service
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.SystemClock
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -38,6 +35,8 @@ import cc.chenhe.weargallery.common.comm.bean.*
 import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.ui.main.MainAty
 import cc.chenhe.weargallery.utils.*
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_PERMISSION
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_PERMISSION
 import com.google.android.gms.wearable.Asset
 import com.google.android.gms.wearable.MessageEvent
 import com.squareup.moshi.JsonAdapter
@@ -47,6 +46,7 @@ import id.zelory.compressor.constraint.*
 import kotlinx.coroutines.*
 import me.chenhe.lib.wearmsger.BothWayHub
 import me.chenhe.lib.wearmsger.service.WMListenerService
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.io.File
@@ -67,7 +67,7 @@ class WearListenerService : WMListenerService() {
 
     override fun onCreate() {
         super.onCreate()
-        createPermissionNotificationChannel()
+        get<NotificationUtils>().registerNotificationChannel(CHANNEL_ID_PERMISSION)
     }
 
     /**
@@ -81,7 +81,7 @@ class WearListenerService : WMListenerService() {
         }
         val intent = Intent(this, MainAty::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        val notify = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_PERMISSION)
+        val notify = NotificationCompat.Builder(this, CHANNEL_ID_PERMISSION)
             .setSmallIcon(R.drawable.ic_notify_permission)
             .setContentTitle(getString(R.string.notify_permission_title))
             .setContentText(getString(R.string.notify_permission_text))
@@ -108,7 +108,7 @@ class WearListenerService : WMListenerService() {
             }
             val pendingIntent =
                 PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-            val notify = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_PERMISSION)
+            val notify = NotificationCompat.Builder(this, CHANNEL_ID_PERMISSION)
                 .setSmallIcon(R.drawable.ic_notify_permission)
                 .setContentTitle(getString(R.string.notify_huawei_title))
                 .setContentText(getString(R.string.notify_huawei_text))
@@ -120,19 +120,6 @@ class WearListenerService : WMListenerService() {
             return true
         }
         return false
-    }
-
-    private fun createPermissionNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NOTIFY_CHANNEL_ID_PERMISSION,
-                getString(R.string.notify_channel_permission_name),
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = getString(R.string.notify_channel_permission_description)
-            }
-            getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
-        }
     }
 
     private suspend fun toastIfEnabled(@StringRes resId: Int) {

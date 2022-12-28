@@ -37,6 +37,8 @@ import cc.chenhe.weargallery.common.util.filePath
 import cc.chenhe.weargallery.service.SendPicturesService
 import cc.chenhe.weargallery.ui.common.getContext
 import cc.chenhe.weargallery.utils.*
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_SENDING
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_SEND_RESULT
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
@@ -161,18 +163,18 @@ class SendImagesViewModel(
             )
             return
         }
-        if (!notificationChecker.isNotificationChannelEnabled(NOTIFY_CHANNEL_ID_SENDING)) {
+        if (!notificationChecker.isNotificationChannelEnabled(CHANNEL_ID_SENDING)) {
             _uiState.value = _uiState.value.copy(
                 notificationPermission = SendImagesUiState.PermissionState.ChannelDisabled(
-                    NOTIFY_CHANNEL_ID_SENDING
+                    CHANNEL_ID_SENDING
                 )
             )
             return
         }
-        if (!notificationChecker.isNotificationChannelEnabled(NOTIFY_CHANNEL_ID_SEND_RESULT)) {
+        if (!notificationChecker.isNotificationChannelEnabled(CHANNEL_ID_SEND_RESULT)) {
             _uiState.value = _uiState.value.copy(
                 notificationPermission = SendImagesUiState.PermissionState.ChannelDisabled(
-                    NOTIFY_CHANNEL_ID_SEND_RESULT
+                    CHANNEL_ID_SEND_RESULT
                 )
             )
             return

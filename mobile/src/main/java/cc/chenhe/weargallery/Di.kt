@@ -29,6 +29,7 @@ import cc.chenhe.weargallery.ui.main.MainScreenViewModel
 import cc.chenhe.weargallery.ui.preference.PreferenceViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesViewModel
 import cc.chenhe.weargallery.utils.NotificationChecker
+import cc.chenhe.weargallery.utils.NotificationUtils
 import com.squareup.moshi.Moshi
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -39,6 +40,7 @@ val appModule = module {
     factory { Moshi.Builder().add(UriAdapter()).build() }
     factory { CheckUpdateRepo(androidContext(), get()) }
     factory { NotificationChecker(androidContext()) }
+    factory { NotificationUtils(androidContext()) }
 
     viewModel { MainScreenViewModel(androidApplication(), get()) }
     viewModel { SharedViewModel(androidApplication()) }
@@ -47,5 +49,5 @@ val appModule = module {
     viewModel { (bucketId: Int) -> FolderImagesViewModel(androidApplication(), bucketId) }
     viewModel { (bucketId: Int) -> ImageDetailViewModel(androidApplication(), bucketId) }
     viewModel { (intent: Intent) -> SendImagesViewModel(androidApplication(), get(), intent) }
-    viewModel { PreferenceViewModel(androidApplication(), get()) }
+    viewModel { PreferenceViewModel(androidApplication(), get(), get()) }
 }

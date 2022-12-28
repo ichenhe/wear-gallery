@@ -1,8 +1,13 @@
 package cc.chenhe.weargallery.ui.preference
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,7 +33,8 @@ import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.ui.theme.ContentAlpha
 import cc.chenhe.weargallery.ui.theme.WearGalleryTheme
-import cc.chenhe.weargallery.utils.NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE
+import cc.chenhe.weargallery.utils.NotificationUtils
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_FOREGROUND_SERVICE
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -98,15 +104,41 @@ private fun PreferenceScreenFrame(
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
+            Text(
+                text = stringResource(id = R.string.pref_category_regular),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.secondary
+            )
             RegularPreferenceGroup(
                 tipOnWatchOperating = uiState.tipWhenWatchOperating,
                 tipOnWatchOperatingChange = { onIntent(PreferenceIntent.SetTipWhenWatchOperating(it)) },
                 foregroundService = uiState.foregroundService,
                 foregroundServiceChange = { onIntent(PreferenceIntent.SetForegroundService(it)) },
+                overallNotification = uiState.overallNotification,
                 foregroundNotification = uiState.foregroundServiceNotification,
             )
             Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(id = R.string.pref_category_notification),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.secondary
+            )
+            NotificationPreferenceGroup(
+                overall = uiState.overallNotification,
+                recheckNotificationState = { onIntent(PreferenceIntent.RecheckNotificationState) },
+                sendImagesProgressChannel = uiState.sendImagesProgressNotification,
+                sendImagesResultChannel = uiState.sendImagesResultNotification,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             val ctx = LocalContext.current
+            Text(
+                text = stringResource(id = R.string.pref_category_other),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.secondary
+            )
             InfoPreferenceGroup(
                 versionText = stringResource(
                     R.string.pref_version, getVersionName(ctx), getVersionCode(ctx),
@@ -128,6 +160,7 @@ private fun RegularPreferenceGroup(
     tipOnWatchOperatingChange: (Boolean) -> Unit,
     foregroundService: Boolean,
     foregroundServiceChange: (Boolean) -> Unit,
+    overallNotification: Boolean,
     foregroundNotification: Boolean,
 ) {
     Card(modifier = Modifier.animateContentSize()) {
@@ -151,20 +184,116 @@ private fun RegularPreferenceGroup(
             PreferenceItem(
                 icon = null,
                 title = stringResource(id = R.string.pref_foreground_service_notification),
-                button = { Switch(checked = foregroundNotification, onCheckedChange = null) },
+                enabled = overallNotification,
+                button = {
+                    Switch(
+                        checked = overallNotification && foregroundNotification,
+                        onCheckedChange = null,
+                        enabled = overallNotification
+                    )
+                },
                 onClick = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        ctx.startActivity(Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+                    ctx.startNotificationChannelSettings(CHANNEL_ID_FOREGROUND_SERVICE)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun NotificationPreferenceGroup(
+    overall: Boolean,
+    recheckNotificationState: () -> Unit,
+    sendImagesProgressChannel: Boolean,
+    sendImagesResultChannel: Boolean,
+) {
+    val ctx = LocalContext.current
+    val notificationPermissionRequester =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { r ->
+            if (!r && ctx.getActivity()
+                    ?.isAlwaysDenied(Manifest.permission.READ_EXTERNAL_STORAGE) == true
+            ) {
+                ctx.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", ctx.packageName, null)
+                })
+            } else {
+                recheckNotificationState()
+            }
+        }
+    Card(modifier = Modifier.animateContentSize()) {
+        if (!overall) {
+            // show main notification switch only when notification permission is denied
+            PreferenceItem(
+                icon = Icons.Rounded.Notifications,
+                title = stringResource(id = R.string.pref_notification_overall),
+                button = { Switch(checked = false, onCheckedChange = null) },
+                onClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        notificationPermissionRequester.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        ctx.startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                             putExtra(Settings.EXTRA_APP_PACKAGE, ctx.packageName)
-                            putExtra(
-                                Settings.EXTRA_CHANNEL_ID,
-                                NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE
-                            )
+                        })
+                    } else {
+                        ctx.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", ctx.packageName, null)
                         })
                     }
                 }
             )
+            Divider(modifier = Modifier.padding(horizontal = 48.dp))
         }
+        NotificationChannelPreferenceItem(
+            icon = Icons.Rounded.Pending,
+            overall = overall,
+            title = stringResource(id = R.string.pref_notification_send_images_progress),
+            channelId = NotificationUtils.CHANNEL_ID_SENDING,
+            enabled = sendImagesProgressChannel
+        )
+        Divider(modifier = Modifier.padding(horizontal = 48.dp))
+        NotificationChannelPreferenceItem(
+            icon = Icons.Rounded.CheckCircle,
+            overall = overall,
+            title = stringResource(id = R.string.pref_notification_send_images_result),
+            channelId = NotificationUtils.CHANNEL_ID_SEND_RESULT,
+            enabled = sendImagesResultChannel
+        )
+    }
+}
+
+/**
+ * @param overall whether notification permission is granted
+ */
+@Composable
+private fun NotificationChannelPreferenceItem(
+    icon: ImageVector? = null,
+    overall: Boolean,
+    title: String,
+    channelId: String,
+    enabled: Boolean
+) {
+    val ctx = LocalContext.current
+    PreferenceItem(
+        icon = icon,
+        title = title,
+        enabled = overall,
+        button = {
+            Switch(
+                checked = overall && enabled,
+                onCheckedChange = null,
+                enabled = overall
+            )
+        },
+        onClick = { ctx.startNotificationChannelSettings(channelId) }
+    )
+}
+
+private fun Context.startNotificationChannelSettings(channelId: String) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        startActivity(Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+            putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            putExtra(Settings.EXTRA_CHANNEL_ID, channelId)
+        })
     }
 }
 
@@ -198,10 +327,11 @@ private fun PreferenceItem(
     message: String? = null,
     button: (@Composable RowScope.() -> Unit)? = null,
     onClick: () -> Unit = {},
+    enabled: Boolean = true,
 ) {
     Row(
         modifier = modifier
-            .clickable(onClick = onClick)
+            .run { if (enabled) this.clickable(onClick = onClick) else this }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

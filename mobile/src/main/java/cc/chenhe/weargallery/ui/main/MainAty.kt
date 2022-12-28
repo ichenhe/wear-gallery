@@ -33,7 +33,7 @@ import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.databinding.AtyMainBinding
 import cc.chenhe.weargallery.service.AppUpgradeService
 import cc.chenhe.weargallery.ui.IntroduceAty
-import cc.chenhe.weargallery.utils.NOTIFY_ID_PERMISSION
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_PERMISSION
 import cc.chenhe.weargallery.utils.checkStoragePermissions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

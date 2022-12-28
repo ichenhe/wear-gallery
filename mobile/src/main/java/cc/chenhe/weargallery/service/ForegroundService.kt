@@ -1,7 +1,5 @@
 package cc.chenhe.weargallery.service
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -15,9 +13,10 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.ui.main.MainAty
-import cc.chenhe.weargallery.utils.NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE
-import cc.chenhe.weargallery.utils.NOTIFY_ID_FOREGROUND_SERVICE
+import cc.chenhe.weargallery.utils.NotificationUtils
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_FOREGROUND_SERVICE
 import cc.chenhe.weargallery.utils.setForegroundService
+import org.koin.android.ext.android.get
 import timber.log.Timber
 
 class ForegroundService : Service() {
@@ -96,7 +95,7 @@ class ForegroundService : Service() {
     }
 
     private fun setForeground() {
-        registerNotificationChannel(this)
+        get<NotificationUtils>().registerNotificationChannel(CHANNEL_ID_FOREGROUND_SERVICE)
 
         val intent = PendingIntent.getActivity(
             applicationContext,
@@ -111,7 +110,7 @@ class ForegroundService : Service() {
                 0,
                 Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
                     putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-                    putExtra(Settings.EXTRA_CHANNEL_ID, NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE)
+                    putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID_FOREGROUND_SERVICE)
                 },
                 PendingIntent.FLAG_IMMUTABLE
             )
@@ -126,7 +125,7 @@ class ForegroundService : Service() {
         )
 
         val notification =
-            NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE)
+            NotificationCompat.Builder(this, CHANNEL_ID_FOREGROUND_SERVICE)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.notify_foreground_text))
                 .setSmallIcon(R.drawable.ic_notify_permission)
@@ -147,19 +146,7 @@ class ForegroundService : Service() {
                 it
             )
         }
-        startForeground(NOTIFY_ID_FOREGROUND_SERVICE, notification.build())
-    }
-
-    private fun registerNotificationChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE,
-                getString(R.string.notify_channel_foreground_name),
-                NotificationManager.IMPORTANCE_LOW
-            )
-            context.getSystemService(NotificationManager::class.java)!!
-                .createNotificationChannel(channel)
-        }
+        startForeground(NotificationUtils.NOTIFY_ID_FOREGROUND_SERVICE, notification.build())
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

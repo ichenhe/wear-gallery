@@ -16,6 +16,9 @@ data class PreferenceUiState(
     val tipWhenWatchOperating: Boolean = false,
     val foregroundService: Boolean = false,
     val foregroundServiceNotification: Boolean = false,
+    val overallNotification: Boolean = false,
+    val sendImagesProgressNotification: Boolean = false,
+    val sendImagesResultNotification: Boolean = false,
 )
 
 sealed class PreferenceIntent {
@@ -27,8 +30,14 @@ sealed class PreferenceIntent {
 class PreferenceViewModel(
     application: Application,
     private val notificationChecker: NotificationChecker,
+    notificationUtils: NotificationUtils,
 ) : AndroidViewModel(application) {
-    private var _uiState = mutableStateOf(PreferenceUiState())
+    private var _uiState = mutableStateOf(
+        PreferenceUiState(
+            tipWhenWatchOperating = isTipWithWatch(application),
+            foregroundService = isForegroundService(application),
+        )
+    )
     val uiState: State<PreferenceUiState> = _uiState
 
     private val uiIntents = MutableSharedFlow<PreferenceIntent>()
@@ -46,13 +55,9 @@ class PreferenceViewModel(
     init {
         PreferenceManager.getDefaultSharedPreferences(application)
             .registerOnSharedPreferenceChangeListener(onSpChangedListener)
-        _uiState.value = _uiState.value.copy(
-            tipWhenWatchOperating = isTipWithWatch(getApplication()),
-            foregroundService = isForegroundService(getApplication()),
-            foregroundServiceNotification = notificationChecker.isNotificationChannelEnabled(
-                NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE
-            )
-        )
+        notificationUtils.registerNotificationChannel(NotificationUtils.CHANNEL_ID_SENDING)
+        notificationUtils.registerNotificationChannel(NotificationUtils.CHANNEL_ID_SEND_RESULT)
+        recheckNotificationState()
         subscribeIntent()
     }
 
@@ -86,16 +91,24 @@ class PreferenceViewModel(
                         getApplication(),
                         intent.enable
                     )
-                    PreferenceIntent.RecheckNotificationState -> {
-                        _uiState.value = uiState.value.copy(
-                            foregroundServiceNotification = notificationChecker.isNotificationChannelEnabled(
-                                NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE
-                            )
-                        )
-                    }
+                    PreferenceIntent.RecheckNotificationState -> recheckNotificationState()
                 }
             }
         }
     }
 
+    private fun recheckNotificationState() {
+        _uiState.value = uiState.value.copy(
+            foregroundServiceNotification = notificationChecker.isNotificationChannelEnabled(
+                NotificationUtils.CHANNEL_ID_FOREGROUND_SERVICE
+            ),
+            overallNotification = notificationChecker.areNotificationsEnabled(),
+            sendImagesProgressNotification = notificationChecker.isNotificationChannelEnabled(
+                NotificationUtils.CHANNEL_ID_SENDING
+            ),
+            sendImagesResultNotification = notificationChecker.isNotificationChannelEnabled(
+                NotificationUtils.CHANNEL_ID_SEND_RESULT
+            ),
+        )
+    }
 }
