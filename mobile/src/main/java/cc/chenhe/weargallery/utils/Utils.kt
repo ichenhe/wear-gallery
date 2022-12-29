@@ -25,6 +25,10 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import cc.chenhe.weargallery.bean.RemoteImageFolder
 import cc.chenhe.weargallery.common.util.ImageUtil
@@ -90,3 +94,9 @@ fun generateRandomString(length: Int): String {
     return Array(length, nonceItem).joinToString("")
 }
 
+fun WindowSizeClass.shouldUseOneColumnLayout() = widthSizeClass == WindowWidthSizeClass.Compact
+        || heightSizeClass == WindowHeightSizeClass.Expanded
+
+fun Modifier.runIf(condition: Boolean, block: Modifier.() -> Modifier): Modifier {
+    return if (condition) then(block()) else this
+}

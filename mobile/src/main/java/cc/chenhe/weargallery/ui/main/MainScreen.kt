@@ -34,12 +34,15 @@ import androidx.lifecycle.LifecycleEventObserver
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.ui.theme.WearGalleryTheme
+import cc.chenhe.weargallery.utils.runIf
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun MainScreen(
     navToPreferences: () -> Unit,
     navToLegacy: () -> Unit,
+    oneColumnLayout: Boolean,
+    widthLooseLayout: Boolean,
     model: MainScreenViewModel = getViewModel()
 ) {
     val uiState by model.uiState
@@ -56,10 +59,12 @@ fun MainScreen(
         }
     }
     MainScreenFrame(
+        oneColumnLayout = oneColumnLayout,
         uiState = uiState,
         navToPreferences = navToPreferences,
         navToLegacy = navToLegacy,
-        onUiIntent = { model.sendUiIntent(it) }
+        onUiIntent = { model.sendUiIntent(it) },
+        widthLooseLayout = widthLooseLayout,
     )
 }
 
@@ -72,52 +77,140 @@ fun MainFramePreview() {
             updateInfo = MainScreenViewModel.UpdateInfo(GITHUB, "v6.5"),
             lackingNecessaryPermissions = listOf("android.permission.READ_EXTERNAL_STORAGE"),
         )
-        MainScreenFrame(uiState = uiState)
+        MainScreenFrame(uiState = uiState, oneColumnLayout = true, widthLooseLayout = false)
     }
 }
 
 @Composable
 private fun MainScreenFrame(
+    oneColumnLayout: Boolean,
+    widthLooseLayout: Boolean,
     uiState: MainUiState,
     navToPreferences: () -> Unit = {},
     navToLegacy: () -> Unit = {},
     onUiIntent: (MainUiIntent) -> Unit = {},
 ) {
     Scaffold { contentPadding ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(contentPadding)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Spacer(modifier = Modifier.height(64.dp))
-
-            ResourcesCompat.getDrawable(
-                LocalContext.current.resources,
-                R.mipmap.ic_launcher_round, LocalContext.current.theme
-            )?.let { drawable ->
-                Image(
-                    drawable.toBitmap().asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier.size(96.dp)
+        if (oneColumnLayout) {
+            OneColumnLayout(
+                navToPreferences = navToPreferences,
+                navToLegacy = navToLegacy,
+                uiState = uiState,
+                onUiIntent = onUiIntent,
+                modifier = Modifier
+                    .padding(contentPadding)
+                    .fillMaxWidth(),
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(contentPadding)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                TwoColumnsLayout(
+                    navToPreferences = navToPreferences,
+                    navToLegacy = navToLegacy,
+                    uiState = uiState,
+                    onUiIntent = onUiIntent,
+                    modifier = Modifier
+                        .padding(horizontal = if (widthLooseLayout) 128.dp else 32.dp)
+                        .fillMaxHeight(),
+                    looseLayout = widthLooseLayout,
                 )
             }
-            Text(
-                text = stringResource(id = R.string.app_name),
-                style = MaterialTheme.typography.displaySmall,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+}
+
+@Composable
+private fun OneColumnLayout(
+    navToPreferences: () -> Unit,
+    navToLegacy: () -> Unit,
+    uiState: MainUiState,
+    onUiIntent: (MainUiIntent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.verticalScroll(rememberScrollState()),
+    ) {
+        Spacer(modifier = Modifier.height(64.dp))
+        Header()
+        Spacer(modifier = Modifier.height(32.dp))
+        MessageCards(
+            uiState.updateInfo,
+            showTicTip = uiState.showTicTip,
+            lackingPermissions = uiState.lackingNecessaryPermissions,
+            recheckPermissions = { onUiIntent(MainUiIntent.RecheckPermissions) },
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Buttons(navToPreferences, navToLegacy)
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+private fun TwoColumnsLayout(
+    navToPreferences: () -> Unit,
+    navToLegacy: () -> Unit,
+    uiState: MainUiState,
+    onUiIntent: (MainUiIntent) -> Unit,
+    modifier: Modifier = Modifier,
+    looseLayout: Boolean,
+) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
+        // first column
+        Column(
+            modifier = Modifier
+                .runIf(looseLayout) {
+                    weight(0.25f)
+                }
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Header()
+            Spacer(modifier = Modifier.height(16.dp))
+            Buttons(navToPreferences, navToLegacy)
+        }
+        Spacer(modifier = Modifier.width(32.dp))
+        // second column
+        Box(modifier = Modifier
+            .runIf(looseLayout) {
+                weight(0.75f)
+            }
+            .verticalScroll(rememberScrollState())) {
             MessageCards(
                 uiState.updateInfo,
                 showTicTip = uiState.showTicTip,
                 lackingPermissions = uiState.lackingNecessaryPermissions,
                 recheckPermissions = { onUiIntent(MainUiIntent.RecheckPermissions) },
+                modifier = Modifier.padding(vertical = 16.dp),
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Buttons(navToPreferences, navToLegacy)
-            Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+}
+
+@Composable
+private fun Header(modifier: Modifier = Modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        ResourcesCompat.getDrawable(
+            LocalContext.current.resources,
+            R.mipmap.ic_launcher_round, LocalContext.current.theme
+        )?.let { drawable ->
+            Image(
+                drawable.toBitmap().asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier.size(96.dp)
+            )
+        }
+        Text(
+            text = stringResource(id = R.string.app_name),
+            style = MaterialTheme.typography.displaySmall,
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }
 
@@ -130,13 +223,14 @@ private fun MessageCards(
     showTicTip: Boolean,
     lackingPermissions: List<String>,
     recheckPermissions: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .animateContentSize()
+            .then(modifier)
     ) {
         val ctx = LocalContext.current
 

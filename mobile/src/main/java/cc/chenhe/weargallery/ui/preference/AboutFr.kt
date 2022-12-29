@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cc.chenhe.weargallery.ui.theme.WearGalleryTheme
+import cc.chenhe.weargallery.utils.shouldUseOneColumnLayout
 
 class AboutFr : Fragment() {
     private val navController by lazy { findNavController() }
@@ -29,8 +30,7 @@ class AboutFr : Fragment() {
                     navToLicenses = {
                         navController.navigate(AboutFrDirections.actionAboutFrToLicenseFr())
                     },
-                    oneColumnLayout = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
-                            || windowSizeClass.heightSizeClass == WindowHeightSizeClass.Expanded
+                    oneColumnLayout = windowSizeClass.shouldUseOneColumnLayout(),
                 )
             }
         }
