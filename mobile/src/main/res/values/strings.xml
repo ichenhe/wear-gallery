@@ -111,10 +111,9 @@
     <string name="share_image_label">Send to watch</string>
 
     <string name="about_slogan">An open source Wear OS gallery</string>
-    <string name="about_github" translatable="false"><u>github.com/ichenhe/wear-gallery</u></string>
-    <string name="about_tg" translatable="false"><u>t.me/weargallery_news</u></string>
-    <string name="about_qq" translatable="false">549321774</string>
-    <string name="about_licence"><u>Open Source Licenses</u></string>
+    <string name="about_github" translatable="false">github.com/ichenhe/wear-gallery</string>
+    <string name="about_tg" translatable="false">t.me/weargallery_news</string>
+    <string name="about_licence">Open Source Licenses</string>
 
     <string name="notify_channel_permission_name">Permissions</string>
     <string name="notify_channel_permission_description">Tips for requesting permissions.</string>

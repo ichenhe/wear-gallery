@@ -88,6 +88,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanist")
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("androidx.compose.material3:material3-window-size-class")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services")
     implementation("io.insert-koin:koin-android:3.2.0")

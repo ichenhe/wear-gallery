@@ -95,7 +95,7 @@
     <string name="share_image_label">Отправить на часы</string>
 
     <string name="about_slogan">Галерея Wear OS с открытым исходным кодом</string>
-    <string name="about_licence"><u>Лицензии с открытым исходным кодом</u></string>
+    <string name="about_licence">Лицензии с открытым исходным кодом</string>
 
     <string name="notify_channel_permission_name">Разрешения</string>
     <string name="notify_channel_permission_description">Советы по запросам разрешений.</string>

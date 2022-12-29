@@ -94,7 +94,7 @@
     <string name="share_image_label">Enviar al reloj</string>
 
     <string name="about_slogan">Una galería de código abierto en Wear OS</string>
-    <string name="about_licence"><u>Licencias Open Source</u></string>
+    <string name="about_licence">Licencias Open Source</string>
 
     <string name="notify_channel_permission_name">Permisos</string>
     <string name="notify_channel_permission_description">Consejos para pedir permisos.</string>

@@ -104,7 +104,7 @@
     <string name="share_image_label">发送到手表</string>
 
     <string name="about_slogan">现代化的开源手表相册</string>
-    <string name="about_licence"><u>开源许可证</u></string>
+    <string name="about_licence">开源许可证</string>
 
     <string name="notify_channel_permission_name">无权操作</string>
     <string name="notify_channel_permission_description">当没有权限完成请求时的提示。</string>
