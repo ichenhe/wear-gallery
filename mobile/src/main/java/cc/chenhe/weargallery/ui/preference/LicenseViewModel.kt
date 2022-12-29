@@ -20,12 +20,6 @@ class LicenseViewModel : ViewModel() {
         License("Coil", "coil-kt", APACHE_2, "https://github.com/coil-kt/coil"),
         License("Koin", "Koin", APACHE_2, "https://github.com/InsertKoinIO/koin"),
         License("Kotlin", "kotlinlang", APACHE_2, "https://github.com/Kotlin/"),
-        License(
-            "material-intro",
-            "heinrichreimer",
-            MIT,
-            "https://github.com/heinrichreimer/material-intro"
-        ),
         License("Moshi", "square", APACHE_2, "https://github.com/square/moshi"),
         License(
             "subsampling-scale-image-view",

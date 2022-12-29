@@ -47,9 +47,6 @@
             android:launchMode="singleTop"
             android:theme="@style/AppBaseTheme.Legacy" />
         <activity
-            android:name=".ui.IntroduceAty"
-            android:theme="@style/Theme.Intro" />
-        <activity
             android:name=".ui.sendimages.SendImagesAty"
             android:exported="true"
             android:label="@string/share_image_label">

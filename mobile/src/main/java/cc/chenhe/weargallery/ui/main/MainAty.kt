@@ -17,13 +17,10 @@
 
 package cc.chenhe.weargallery.ui.main
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import cc.chenhe.weargallery.R
@@ -32,33 +29,12 @@ import cc.chenhe.weargallery.common.util.checkHuaWei
 import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.databinding.AtyMainBinding
 import cc.chenhe.weargallery.service.AppUpgradeService
-import cc.chenhe.weargallery.ui.IntroduceAty
-import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_PERMISSION
-import cc.chenhe.weargallery.utils.checkStoragePermissions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class MainAty : AppCompatActivity() {
 
     private lateinit var binding: AtyMainBinding
-
-    private val introduceLauncher =
-        registerForActivityResult(object : ActivityResultContract<Unit, Unit>() {
-            override fun createIntent(context: Context, input: Unit): Intent {
-                return Intent(context, IntroduceAty::class.java)
-            }
-
-            override fun parseResult(resultCode: Int, intent: Intent?) {
-            }
-        }) {
-            if (!checkStoragePermissions(this)) {
-                finish()
-                return@registerForActivityResult
-            }
-            NotificationManagerCompat.from(this).cancel(NOTIFY_ID_PERMISSION)
-            init()
-        }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +62,7 @@ class MainAty : AppCompatActivity() {
         }
         if (AppUpgradeService.shouldRunUpgrade(this) && !AppUpgradeService.isRunning())
             ContextCompat.startForegroundService(this, Intent(this, AppUpgradeService::class.java))
-        if (!checkStoragePermissions(this)) {
-            introduceLauncher.launch(Unit)
-        } else {
-            init()
-        }
+        init()
     }
 
     private fun init() {

@@ -57,17 +57,16 @@ fun @receiver:ColorInt Int.setAlpha(@IntRange(from = 0, to = 255) alpha: Int): I
     return (alpha and 0xff).shl(24) and this
 }
 
-fun checkStoragePermissions(context: Context): Boolean = if (Build.VERSION.SDK_INT >= 33) {
-    ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.READ_MEDIA_IMAGES
-    ) == PackageManager.PERMISSION_GRANTED
+fun requiredStoragePermission(): String = if (Build.VERSION.SDK_INT >= 33) {
+    Manifest.permission.READ_MEDIA_IMAGES
 } else {
-    ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    ) == PackageManager.PERMISSION_GRANTED
+    Manifest.permission.READ_EXTERNAL_STORAGE
 }
+
+fun checkStoragePermissions(context: Context): Boolean = ContextCompat.checkSelfPermission(
+    context,
+    requiredStoragePermission()
+) == PackageManager.PERMISSION_GRANTED
 
 suspend fun queryImageFolders(context: Context): List<RemoteImageFolder> =
     withContext(Dispatchers.Default) {

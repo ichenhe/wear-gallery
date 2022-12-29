@@ -20,19 +20,14 @@
     <string name="app_hw_view">Aprender más</string>
     <string name="app_hw_exit">Salir</string>
 
-    <string name="intro_permission_title">PERMISOS</string>
-    <string name="intro_permission_content">Se necesitan permisos des escritura en el almacenaje para buscar imágenes.</string>
-    <string name="intro_install_title">INSTALAR en el RELOJ</string>
-    <string name="intro_install_content">Instalar aplicaciones en el reloj mediante bluetooth ya no es posible. Tienes que descargar manualmente WearGallery desde la Tienda del reloj. También puedes instalarla mediante ADB.</string>
-    <string name="intro_auto_run_title">AUTO RUN</string>
-    <string name="intro_auto_run_content">Por favor, asegúrese de que la aplicación pueda arrancar automáticamente, sino el reloj no podrá cargar las imágenes adecuadamente.</string>
-    <string name="intro_os_title">Open Source</string>
-    <string name="intro_os_content">Busca en GitHub: wear-gallery</string>
-
-    <string name="card_intro">Consejos</string>
-    <string name="card_intro_msg">La aplicación del teléfono solamente sirve datos al reloj y ya no ofrece la galleria de fotos en el mismo.\nPuedes pasar fotos del teléfono al reloj usando cualquier aplicación para ello.</string>
-    <string name="card_tic">Atención</string>
-    <string name="card_tic_msg">A Ticwear ya no se le da soporte.(TicWatch bajo WearOS no está afectado). Deberías desinstalar esta aplicación de su teléfono y usar un cable para la transmisión de datos si no tiene un reloj WearOS.</string>
+    <string name="main_card_intro">Consejos</string>
+    <string name="main_card_intro_msg">La aplicación del teléfono solamente sirve datos al reloj y ya no ofrece la galleria de fotos en el mismo.\nPuedes pasar fotos del teléfono al reloj usando cualquier aplicación para ello.</string>
+    <string name="main_card_tic">Atención</string>
+    <string name="main_card_tic_msg">A Ticwear ya no se le da soporte.(TicWatch bajo WearOS no está afectado). Deberías desinstalar esta aplicación de su teléfono y usar un cable para la transmisión de datos si no tiene un reloj WearOS.</string>
+    <string name="main_card_install_to_watch_title">INSTALAR en el RELOJ</string>
+    <string name="main_card_install_to_watch_message">Instalar aplicaciones en el reloj mediante bluetooth ya no es posible. Tienes que descargar manualmente WearGallery desde la Tienda del reloj. También puedes instalarla mediante ADB.</string>
+    <string name="main_card_auto_run_title">Auto run</string>
+    <string name="main_card_auto_run_message">Por favor, asegúrese de que la aplicación pueda arrancar automáticamente, sino el reloj no podrá cargar las imágenes adecuadamente.</string>
     <string name="card_update">Nuevo</string>
     <string name="card_update_msg">Una nueva versión está disponible. (%1$s)</string>
 

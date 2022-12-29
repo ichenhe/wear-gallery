@@ -21,19 +21,16 @@
     <string name="app_hw_view">了解更多</string>
     <string name="app_hw_exit">退出</string>
 
-    <string name="intro_permission_title">一些权限</string>
-    <string name="intro_permission_content">我们需要访问存储的权限来扫描图片。</string>
-    <string name="intro_install_title">安装到手表</string>
-    <string name="intro_install_content">从 Wear OS 开始，系统不再支持通过蓝牙自动同步安装应用，你必须手动从手表应用商店安装腕间图库。或者使用 ADB 来安装。</string>
-    <string name="intro_auto_run_title">自启动</string>
-    <string name="intro_auto_run_content">请务必允许本应用的自启动（后台运行）与关联唤醒，否则手表将无法正常加载图片。\n请放心，腕间图库绝无任何恶意后台驻留。</string>
-    <string name="intro_os_title">开放源代码</string>
-    <string name="intro_os_content">已在GitHub开源：wear-gallery\n同样请在 GitHub 提交 issues 或获取最新版本。</string>
-
-    <string name="card_intro">提示</string>
-    <string name="card_intro_msg">手机端现仅为手表端服务，不再提供图片浏览。\n您可以从其他应用中选中图片点击分享，然后选择「发送到手表」来激活原先的批量发送功能。</string>
-    <string name="card_tic">注意</string>
-    <string name="card_tic_msg">腕间图库已经不再支持 Ticwear 系统（不影响 Wear OS 的 TicWatch）。若您没有 Wear OS 设备建议卸载手机端应用，改用局域网传输功能。</string>
+    <string name="main_card_permission_title">无法正常工作</string>
+    <string name="main_card_permission_message">需要以下权限：\n- 访问存储：读取图片（必须）\n- 发送通知：显示图片发送进度与结果（推荐）\n\n腕间图库是开源应用，任何人都可以审查代码，我们不会滥用权限。</string>
+    <string name="main_card_intro">提示</string>
+    <string name="main_card_intro_msg">手机端现仅为手表端服务，不再提供图片浏览。\n您可以从其他应用中选中图片点击分享，然后选择「发送到手表」来激活原先的批量发送功能。</string>
+    <string name="main_card_tic">注意</string>
+    <string name="main_card_tic_msg">腕间图库已经不再支持 Ticwear 系统（不影响 Wear OS 的 TicWatch）。若您没有 Wear OS 设备建议卸载手机端应用，改用局域网传输功能。</string>
+    <string name="main_card_install_to_watch_title">安装到手表</string>
+    <string name="main_card_install_to_watch_message">从 Wear OS 开始，系统不再支持通过蓝牙自动同步安装应用，你必须手动从手表应用商店安装腕间图库。或者使用 ADB 来安装。</string>
+    <string name="main_card_auto_run_title">自启动</string>
+    <string name="main_card_auto_run_message">请务必允许本应用的自启动（后台运行）与关联唤醒，否则手表将无法正常加载图片。\n请放心，腕间图库绝无任何恶意后台驻留。</string>
     <string name="card_update">新版本</string>
     <string name="card_update_msg">发现新版本。(%1$s)</string>
     <string name="card_update_open_appstore">应用商店</string>

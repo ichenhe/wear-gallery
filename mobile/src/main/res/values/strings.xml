@@ -22,19 +22,16 @@
     <string name="app_hw_view">Learn more</string>
     <string name="app_hw_exit">Exit</string>
 
-    <string name="intro_permission_title">PERMISSION</string>
-    <string name="intro_permission_content">We need to access the stored permissions to scan the image.</string>
-    <string name="intro_install_title">INSTALL ON WATCH</string>
-    <string name="intro_install_content">Since Wear OS, installing watch apps through bluetooth was no more supported. You have to manually download and install WearGallery from the watch application market. Or you can install it with ADB.</string>
-    <string name="intro_auto_run_title">AUTO RUN</string>
-    <string name="intro_auto_run_content">Please be sure to allow the application to start automatically, otherwise the watch will not be able to load the pictures properly.</string>
-    <string name="intro_os_title">Open Source</string>
-    <string name="intro_os_content">Find on GitHub: wear-gallery</string>
-
-    <string name="card_intro">Tips</string>
-    <string name="card_intro_msg">The mobile client serves watch side only, and no longer offers picture viewing.\nYou can activate batch transmission by selecting pictures from another app and sharing to "Send to Watch".</string>
-    <string name="card_tic">Attention</string>
-    <string name="card_tic_msg">Ticwear is no longer supported (TicWatch with Wear OS is not affected). You should probably uninstall this app from your phone and use LAN transmission if you don\'t have a Wear OS watch.</string>
+    <string name="main_card_permission_title">Can not work properly</string>
+    <string name="main_card_permission_message">The following permissions are required:\n- Storage: Read pictures (required)\n- Notification: Show progress of sending pictures (recommended)\n\nWear Gallery is an open source application and anyone can review the code. We won\'t abuse permissions.</string>
+    <string name="main_card_intro">Tips</string>
+    <string name="main_card_intro_msg">The mobile client serves watch side only, and no longer offers picture viewing.\nYou can activate batch transmission by selecting pictures from another app and sharing to "Send to Watch".</string>
+    <string name="main_card_tic">Attention</string>
+    <string name="main_card_tic_msg">Ticwear is no longer supported (TicWatch with Wear OS is not affected). You should probably uninstall this app from your phone and use LAN transmission if you don\'t have a Wear OS watch.</string>
+    <string name="main_card_install_to_watch_title">Install on watch</string>
+    <string name="main_card_install_to_watch_message">Since Wear OS, installing watch apps through bluetooth was no more supported. You have to manually download and install WearGallery from the watch application market. Or you can install it with ADB.</string>
+    <string name="main_card_auto_run_title">Auto run</string>
+    <string name="main_card_auto_run_message">Please be sure to allow the application to start automatically, otherwise the watch will not be able to load the pictures properly.</string>
     <string name="card_update">New</string>
     <string name="card_update_msg">A new version has been released. (%1$s)</string>
     <string name="card_update_open_appstore">App store</string>
