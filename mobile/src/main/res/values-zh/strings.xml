@@ -16,11 +16,6 @@
     <string name="nav_menu_images">图片</string>
     <string name="nav_menu_folders">相册</string>
 
-    <string name="app_hw_title">错误</string>
-    <string name="app_hw_message">腕间图库拒绝在华为设备上运行！</string>
-    <string name="app_hw_view">了解更多</string>
-    <string name="app_hw_exit">退出</string>
-
     <string name="main_card_permission_title">无法正常工作</string>
     <string name="main_card_permission_message">需要以下权限：\n- 访问存储：读取图片（必须）\n- 发送通知：显示图片发送进度与结果（推荐）\n\n腕间图库是开源应用，任何人都可以审查代码，我们不会滥用权限。</string>
     <string name="main_card_intro">提示</string>
@@ -115,8 +110,6 @@
 
     <string name="notify_permission_title">需要权限</string>
     <string name="notify_permission_text">请在手机点击并授予必要的权限。</string>
-    <string name="notify_huawei_title">无法响应手表请求</string>
-    <string name="notify_huawei_text">腕间图库拒绝在华为设备上运行！点击了解更多。</string>
     <string name="notify_upgrading">正在迁移数据</string>
     <string name="notify_upgrading_content">请勿强制结束进程以免数据丢失。</string>
     <string name="notify_foreground_text">仅用于保活，可隐藏此通知。</string>

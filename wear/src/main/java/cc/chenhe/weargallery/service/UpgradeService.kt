@@ -22,9 +22,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.edit
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.preference.PreferenceManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.toMetadata
 import cc.chenhe.weargallery.common.util.ImageExifUtil
@@ -47,6 +49,7 @@ private const val TAG = "UpgradeService"
 
 private const val VERSION_5_1_1210 = 215010201L
 private const val VERSION_6_0_1 = 220600011L
+private const val VERSION_6_3_2 = 220603021L
 
 /**
  * Service for application upgrade and data migration. Make sure call [start] to start this service to ensure that all
@@ -130,9 +133,12 @@ class UpgradeService : LifecycleService() {
 
         if (oldVersion < VERSION_5_1_1210) {
             migrate_5_1_1210()
+        }
+        if (oldVersion < VERSION_6_0_1) {
             migrate_6_0_1()
-        } else if (oldVersion < VERSION_6_0_1) {
-            migrate_6_0_1()
+        }
+        if (oldVersion < VERSION_6_3_2) {
+            migrate_6_3_2()
         }
 
         complete()
@@ -176,6 +182,12 @@ class UpgradeService : LifecycleService() {
     private suspend fun migrate_6_0_1() = withContext(Dispatchers.Default) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getSystemService(NotificationManager::class.java)?.deleteNotificationChannel("wg.upgrade")
+        }
+    }
+
+    private suspend fun migrate_6_3_2() = withContext(Dispatchers.Main) {
+        PreferenceManager.getDefaultSharedPreferences(this@UpgradeService).edit {
+            remove("show_hw")
         }
     }
 

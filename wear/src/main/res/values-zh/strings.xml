@@ -6,9 +6,6 @@
     <string name="retry">重试</string>
     <string name="help">需要帮助？</string>
     <string name="empty">空空如也</string>
-    <string name="dont_show_again">不再显示</string>
-    <string name="app_hw_title">错误</string>
-    <string name="app_hw_message">腕间图库不想在华为设备上运行。扫码了解更多。</string>
     <string name="dialog_scan_to_visit">请扫码二维码来访问。</string>
 
     <string name="intro_gif_title">GIF</string>

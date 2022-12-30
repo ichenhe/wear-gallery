@@ -18,18 +18,13 @@
 package cc.chenhe.weargallery.ui.main
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.util.HUA_WEI
-import cc.chenhe.weargallery.common.util.checkHuaWei
 import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.databinding.AtyMainBinding
 import cc.chenhe.weargallery.service.AppUpgradeService
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class MainAty : AppCompatActivity() {
@@ -39,27 +34,6 @@ class MainAty : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        if (checkHuaWei()) {
-            MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.app_hw_title)
-                .setMessage(R.string.app_hw_message)
-                .setPositiveButton(R.string.app_hw_view) { _, _ ->
-                    val intent = Intent().apply {
-                        action = Intent.ACTION_VIEW
-                        data = Uri.parse(HUA_WEI)
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                    startActivity(intent)
-                    finish()
-                }
-                .setNegativeButton(R.string.app_hw_exit) { _, _ ->
-                    finish()
-                }
-                .setCancelable(false)
-                .show()
-            return
-        }
         if (AppUpgradeService.shouldRunUpgrade(this) && !AppUpgradeService.isRunning())
             ContextCompat.startForegroundService(this, Intent(this, AppUpgradeService::class.java))
         init()

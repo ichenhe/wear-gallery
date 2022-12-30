@@ -6,9 +6,6 @@
     <string name="retry">Retry</string>
     <string name="help">Need help?</string>
     <string name="empty">No content</string>
-    <string name="dont_show_again">Don\'t show again</string>
-    <string name="app_hw_title">Error</string>
-    <string name="app_hw_message">Wear Gallery does not want to run on HuaWei devices.\nScan the QR code to learn more.</string>
 
     <string name="dialog_scan_to_visit">Please scan the QR code to visit.</string>
 

@@ -33,17 +33,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
-import cc.chenhe.weargallery.common.util.HUA_WEI
-import cc.chenhe.weargallery.common.util.checkHuaWei
 import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.ui.UpgradingAty
 import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
-import cc.chenhe.weargallery.uilts.addQrCode
-import cc.chenhe.weargallery.uilts.showHuawei
 import kotlinx.coroutines.launch
-import me.chenhe.wearvision.dialog.AlertDialog
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -96,24 +91,6 @@ class MainAty : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // 1 Check Huawei
-        if (checkHuaWei() && showHuawei(this)) {
-            AlertDialog(this).apply {
-                setTitle(R.string.app_hw_title)
-                setMessage(R.string.app_hw_message)
-                skipText = getString(R.string.dont_show_again)
-                showSkipLayout = true
-                addQrCode(HUA_WEI)
-                setPositiveButtonIcon(R.drawable.ic_dialog_confirm) { _, _ ->
-                    showHuawei(this@MainAty, !isSkipChecked)
-                }
-                setOnDismissListener {
-                    checkPermission()
-                }
-            }.show()
-            return
-        }
         checkPermission()
     }
 

@@ -6,9 +6,6 @@
     <string name="retry">Reintentar</string>
     <string name="help">¿Necesitas ayuda</string>
     <string name="empty">No se ha encontrado nada</string>
-    <string name="dont_show_again">No mostrar de nuevo</string>
-    <string name="app_hw_title">Error</string>
-    <string name="app_hw_message">Wear Gallery no funciona en dispositivos Huawei.\nScan the QR code to learn more.</string>
 
     <string name="dialog_scan_to_visit">Escanee el código QR para ir al sitio.</string>
 

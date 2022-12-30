@@ -15,11 +15,6 @@
     <string name="nav_menu_images">Изображения</string>
     <string name="nav_menu_folders">Папки</string>
 
-    <string name="app_hw_title">Ошибка</string>
-    <string name="app_hw_message">Wear Галерея отказывается работать на устройствах Huawei!</string>
-    <string name="app_hw_view">Узнать больше</string>
-    <string name="app_hw_exit">Выйти</string>
-
     <string name="main_card_intro">Подсказки</string>
     <string name="main_card_intro_msg">Мобильный клиент только связывате приложения на часах и телефоне и больше не предлагает просмотр изображений.\nВы можете активировать пакетную передачу, выбрав изображения из другого приложения и отправив их в «Отправить на просмотр»..</string>
     <string name="main_card_tic">Внимание</string>
@@ -103,8 +98,6 @@
 
     <string name="notify_permission_title">Требуются Разрешения</string>
     <string name="notify_permission_text">Нажмите чтобы предоставить разрешения.</string>
-    <string name="notify_huawei_title">Нет ответа от часов</string>
-    <string name="notify_huawei_text">Wear Галерея отказывается работать на устройствах Huawei! Нажмите чтобы узнать больше.</string>
     <string name="notify_upgrading">Перенос Данных</string>
     <string name="notify_upgrading_content">Не завершайте процесс во избежание потери данных.</string>
 </resources>

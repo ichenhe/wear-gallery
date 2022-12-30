@@ -28,7 +28,6 @@ import java.io.File
 import java.util.*
 import kotlin.math.abs
 
-const val HUA_WEI = "https://weargallery.app/announcement/huawei/"
 const val GITHUB = "https://github.com/ichenhe/wear-gallery/"
 const val TELEGRAM = "https://t.me/weargallery_news"
 const val WEBSITE = "https://weargallery.app/"
@@ -47,10 +46,6 @@ fun xlogAppenderFlushSafely() {
     if (MLog.isInitialized()) {
         Mmap.flush()
     }
-}
-
-fun checkHuaWei(): Boolean {
-    return android.os.Build.MANUFACTURER.lowercase(Locale.getDefault()).contains("huawei")
 }
 
 fun getVersionCode(context: Context): Long {

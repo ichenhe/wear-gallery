@@ -94,34 +94,6 @@ class WearListenerService : WMListenerService() {
         return false
     }
 
-    /**
-     * Check the Huawei device, fire a notification if yes.
-     *
-     * @return Whether it is a Huawei device.
-     */
-    private fun checkHuaWeiDevice(): Boolean {
-        if (checkHuaWei()) {
-            val intent = Intent().apply {
-                action = Intent.ACTION_VIEW
-                data = Uri.parse(HUA_WEI)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            val pendingIntent =
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-            val notify = NotificationCompat.Builder(this, CHANNEL_ID_PERMISSION)
-                .setSmallIcon(R.drawable.ic_notify_permission)
-                .setContentTitle(getString(R.string.notify_huawei_title))
-                .setContentText(getString(R.string.notify_huawei_text))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build()
-            NotificationManagerCompat.from(this).notify(NOTIFY_ID_PERMISSION, notify)
-            return true
-        }
-        return false
-    }
-
     private suspend fun toastIfEnabled(@StringRes resId: Int) {
         if (isTipWithWatch(this)) {
             withContext(Dispatchers.Main) {
@@ -137,10 +109,6 @@ class WearListenerService : WMListenerService() {
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
         Timber.tag(TAG).d("onMessageReceived, path=${messageEvent.path}")
-        if (checkHuaWeiDevice()) {
-            Timber.tag(TAG).i("This is a Huawei device, discard msg request.")
-            return
-        }
         if (!checkPermissions()) {
             Timber.tag(TAG).w("Missing necessary permissions, discard msg request.")
             return

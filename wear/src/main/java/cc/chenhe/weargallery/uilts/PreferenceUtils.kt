@@ -28,8 +28,6 @@ import cc.chenhe.weargallery.common.util.SpFloatLiveData
 import cc.chenhe.weargallery.common.util.SpIntLiveData
 import cc.chenhe.weargallery.common.util.SpStringLiveData
 
-private const val PREFERENCE_SHOW_HW = "show_hw" // boolean
-
 /**
  * Whether folder mode should be used when displaying local pictures.
  *
@@ -44,13 +42,6 @@ private const val PREFERENCE_QUERY_SHOW_PHONE_IMAGES = "query_show_phone_images"
 
 private fun getSp(context: Context) = PreferenceManager.getDefaultSharedPreferences(context)
 
-fun showHuawei(context: Context): Boolean = getSp(context).getBoolean(PREFERENCE_SHOW_HW, true)
-
-fun showHuawei(context: Context, show: Boolean) {
-    getSp(context).edit {
-        putBoolean(PREFERENCE_SHOW_HW, show)
-    }
-}
 
 fun fetchFolderMode(context: Context) =
     SpBooleanLiveData(getSp(context), PREFERENCE_FOLDER_MODE, true, init = true)

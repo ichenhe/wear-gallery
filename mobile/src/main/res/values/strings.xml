@@ -17,11 +17,6 @@
     <string name="nav_menu_images">Images</string>
     <string name="nav_menu_folders">Folders</string>
 
-    <string name="app_hw_title">Error</string>
-    <string name="app_hw_message">Wear Gallery refuses to run on HuaWei devices!</string>
-    <string name="app_hw_view">Learn more</string>
-    <string name="app_hw_exit">Exit</string>
-
     <string name="main_card_permission_title">Can not work properly</string>
     <string name="main_card_permission_message">The following permissions are required:\n- Storage: Read pictures (required)\n- Notification: Show progress of sending pictures (recommended)\n\nWear Gallery is an open source application and anyone can review the code. We won\'t abuse permissions.</string>
     <string name="main_card_intro">Tips</string>
@@ -124,8 +119,6 @@
 
     <string name="notify_permission_title">Require Permissions</string>
     <string name="notify_permission_text">Click on the phone to grant permissions.</string>
-    <string name="notify_huawei_title">Unable to respond to watch</string>
-    <string name="notify_huawei_text">Wear Gallery refuses to run on HuaWei devices! Click to learn more.</string>
     <string name="notify_upgrading">Migrating Data</string>
     <string name="notify_upgrading_content">Do not end the process to avoid data loss.</string>
     <string name="notify_foreground_text">Feel free to hide this notification.</string>

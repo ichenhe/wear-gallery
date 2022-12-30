@@ -15,11 +15,6 @@
     <string name="nav_menu_images">Imñagenes</string>
     <string name="nav_menu_folders">Carpetas</string>
 
-    <string name="app_hw_title">Error</string>
-    <string name="app_hw_message">Wear Gallery no funciona en dispositivos Huawei!</string>
-    <string name="app_hw_view">Aprender más</string>
-    <string name="app_hw_exit">Salir</string>
-
     <string name="main_card_intro">Consejos</string>
     <string name="main_card_intro_msg">La aplicación del teléfono solamente sirve datos al reloj y ya no ofrece la galleria de fotos en el mismo.\nPuedes pasar fotos del teléfono al reloj usando cualquier aplicación para ello.</string>
     <string name="main_card_tic">Atención</string>
@@ -103,8 +98,6 @@
 
     <string name="notify_permission_title">Permisios requeridos</string>
     <string name="notify_permission_text">Haz tap en el teléfono para conceder permisos.</string>
-    <string name="notify_huawei_title">No ha sido posible conectar con el reloj</string>
-    <string name="notify_huawei_text">Wear Gallery no funciona en dispositivos Huawei! Haz click para saber más.</string>
     <string name="notify_upgrading">Migrando datos</string>
     <string name="notify_upgrading_content">No salgas para evitar pérdida de datos.</string>
     <string name="notify_foreground_text">Feel free to hide this notification.</string>
