@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 30
         versionCode = 220603011 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName = "v6.3.1"
 
