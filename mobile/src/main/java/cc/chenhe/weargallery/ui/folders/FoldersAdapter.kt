@@ -20,20 +20,20 @@ package cc.chenhe.weargallery.ui.folders
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cc.chenhe.weargallery.GlideApp
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.ImageFolder
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
+import coil.load
 
 private const val VIEW_TYPE_SMALL = 1 // linear
 private const val VIEW_TYPE_BIG = 2 // grid
 
-class FoldersAdapter(private val fragment: Fragment) :
+class FoldersAdapter :
     BaseListAdapter<ImageFolder, BaseViewHolder>(FoldersDiffCallback()) {
 
     private var layoutManager: GridLayoutManager? = null
@@ -52,7 +52,7 @@ class FoldersAdapter(private val fragment: Fragment) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (layoutManager?.spanCount ?: 1 > 1) VIEW_TYPE_BIG else VIEW_TYPE_SMALL
+        return if ((layoutManager?.spanCount ?: 1) > 1) VIEW_TYPE_BIG else VIEW_TYPE_SMALL
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -85,7 +85,7 @@ class FoldersAdapter(private val fragment: Fragment) :
                 )
             )
             setText(R.id.folderPath, data.path)
-            GlideApp.with(fragment).load(data.preview.uri).into(getView(R.id.folderPreview))
+            getView<ImageView>(R.id.folderPreview).load(data.preview.uri)
         }
     }
 
@@ -93,7 +93,7 @@ class FoldersAdapter(private val fragment: Fragment) :
         fun bind(data: ImageFolder) {
             setText(R.id.folderTitle, data.name)
             setText(R.id.folderImagesCount, data.imgNum.toString())
-            GlideApp.with(fragment).load(data.preview.uri).into(getView(R.id.folderPreview))
+            getView<ImageView>(R.id.folderPreview).load(data.preview.uri)
         }
     }
 }

@@ -72,7 +72,7 @@ class FolderImagesFr : Fragment() {
             )
         )
         binding.imagesRecyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
-        val adapter = FolderImagesAdapter(this)
+        val adapter = FolderImagesAdapter()
         binding.imagesRecyclerView.adapter = adapter
         adapter.itemClickListener = object : BaseListAdapter.SimpleItemClickListener() {
             override fun onItemClick(view: View, position: Int) {

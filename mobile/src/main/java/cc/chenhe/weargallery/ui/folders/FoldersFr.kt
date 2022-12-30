@@ -59,7 +59,7 @@ class FoldersFr : Fragment(), Toolbar.OnMenuItemClickListener {
         binding.header.root.setTitle(R.string.nav_menu_folders)
 
         // RecyclerView
-        adapter = FoldersAdapter(this)
+        adapter = FoldersAdapter()
         binding.foldersRecyclerView.addItemDecoration(
             SimpleItemDecoration(
                 requireContext(),

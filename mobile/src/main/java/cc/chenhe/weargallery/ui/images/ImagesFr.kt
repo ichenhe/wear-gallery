@@ -151,8 +151,7 @@ class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
         )
         adapter = ImagesAdapter(
             this,
-            model.getSelectionStatus(),
-            sharedModel.getGroupBasedCurrentPosition()
+            model.getSelectionStatus()
         )
         binding.imagesRecyclerView.adapter = adapter
         binding.imagesRecyclerView.post {

@@ -23,20 +23,18 @@ import android.view.*
 import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.adapter.StatefulAdapter
-import cc.chenhe.weargallery.GlideApp
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
 import cc.chenhe.weargallery.utils.MIME_GIF
+import coil.load
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import java.util.*
 
 class ImageDetailAdapter(
-        private val fr: ImageDetailFr,
-        private val shareAnimationName: String,
-        private val gestureDetector: GestureDetector
+    private val gestureDetector: GestureDetector
 ) : BaseListAdapter<Image, ImageDetailAdapter.PagerViewHolder>(ImageDetailDiffCallback()), StatefulAdapter {
 
     private val imageViews = WeakHashMap<Int, View>()
@@ -65,10 +63,6 @@ class ImageDetailAdapter(
 
     fun getItemData(position: Int): Image = currentList[position]
 
-    fun getCurrentImageView(currentPosition: Int): View? {
-        return imageViews[currentPosition]
-    }
-
     inner class PagerViewHolder(itemView: View) : BaseViewHolder(itemView) {
         private var imageView: ImageView? = null
 
@@ -84,7 +78,7 @@ class ImageDetailAdapter(
                 getImageView().let {
                     it.visibility = View.VISIBLE
                     it.setOnTouchListener(onTouchListener)
-                    GlideApp.with(fr).load(data.uri).into(it)
+                    it.load(data.uri)
                 }
             } else {
                 imageView?.let {

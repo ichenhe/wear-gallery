@@ -47,9 +47,6 @@
             android:launchMode="singleTop"
             android:theme="@style/AppBaseTheme.Legacy" />
         <activity
-            android:name=".ui.IntroduceAty"
-            android:theme="@style/Theme.Intro" />
-        <activity
             android:name=".ui.sendimages.SendImagesAty"
             android:exported="true"
             android:label="@string/share_image_label">
@@ -74,7 +71,9 @@
             android:exported="false" />
 
         <service android:name=".service.AppUpgradeService" />
-        <service android:name=".service.ForegroundService" />
+        <service
+            android:name=".service.ForegroundService"
+            android:exported="false" />
 
         <receiver
             android:name=".AppUpgradeReceiver"

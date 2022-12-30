@@ -18,8 +18,6 @@
 package cc.chenhe.weargallery.utils
 
 import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -27,8 +25,11 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
-import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.bean.RemoteImageFolder
 import cc.chenhe.weargallery.common.util.ImageUtil
 import kotlinx.coroutines.Dispatchers
@@ -38,24 +39,6 @@ import kotlinx.coroutines.withContext
 const val MIN_PAIRED_VERSION = 220601061L
 
 const val MIME_GIF = "image/gif"
-
-const val NOTIFY_CHANNEL_ID_PERMISSION = "wg.permission"
-const val NOTIFY_CHANNEL_ID_SENDING = "wg.send_images"
-const val NOTIFY_CHANNEL_ID_SEND_RESULT = "wg.send_images_result"
-
-/** Use to display important foreground service */
-const val NOTIFY_CHANNEL_ID_IMPORTANT_PROCESSING = "wg.important_processing"
-
-/** Use to prevent this application from being killed on some systems e.g. MiUI */
-const val NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE = "wg.foreground_service"
-
-const val NOTIFY_ID_PERMISSION = 1
-const val NOTIFY_ID_SENDING = 2
-const val NOTIFY_ID_SEND_RESULT = 3
-const val NOTIFY_ID_UPGRADING = 4
-
-/** See [NOTIFY_CHANNEL_ID_FOREGROUND_SERVICE] */
-const val NOTIFY_ID_FOREGROUND_SERVICE = 5
 
 
 /** LocalBroadcast with extra 'success' which is a boolean value.*/
@@ -68,7 +51,7 @@ fun Toolbar.getTitleTextView(): TextView? {
             field.isAccessible = true
             tv = field.get(this) as TextView?
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
     }
     return tv
 }
@@ -78,17 +61,16 @@ fun @receiver:ColorInt Int.setAlpha(@IntRange(from = 0, to = 255) alpha: Int): I
     return (alpha and 0xff).shl(24) and this
 }
 
-fun checkStoragePermissions(context: Context): Boolean = if (Build.VERSION.SDK_INT >= 33) {
-    ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.READ_MEDIA_IMAGES
-    ) == PackageManager.PERMISSION_GRANTED
+fun requiredStoragePermission(): String = if (Build.VERSION.SDK_INT >= 33) {
+    Manifest.permission.READ_MEDIA_IMAGES
 } else {
-    ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    ) == PackageManager.PERMISSION_GRANTED
+    Manifest.permission.READ_EXTERNAL_STORAGE
 }
+
+fun checkStoragePermissions(context: Context): Boolean = ContextCompat.checkSelfPermission(
+    context,
+    requiredStoragePermission()
+) == PackageManager.PERMISSION_GRANTED
 
 suspend fun queryImageFolders(context: Context): List<RemoteImageFolder> =
     withContext(Dispatchers.Default) {
@@ -112,16 +94,9 @@ fun generateRandomString(length: Int): String {
     return Array(length, nonceItem).joinToString("")
 }
 
-fun registerImportantPrecessingNotificationChannel(context: Context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val channel = NotificationChannel(
-            NOTIFY_CHANNEL_ID_IMPORTANT_PROCESSING,
-            context.getString(R.string.notify_channel_important_processing),
-            NotificationManager.IMPORTANCE_LOW
-        )
-        channel.description =
-            context.getString(R.string.notify_channel_important_processing_description)
-        context.getSystemService(NotificationManager::class.java)!!
-            .createNotificationChannel(channel)
-    }
+fun WindowSizeClass.shouldUseOneColumnLayout() = widthSizeClass == WindowWidthSizeClass.Compact
+        || heightSizeClass == WindowHeightSizeClass.Expanded
+
+fun Modifier.runIf(condition: Boolean, block: Modifier.() -> Modifier): Modifier {
+    return if (condition) then(block()) else this
 }

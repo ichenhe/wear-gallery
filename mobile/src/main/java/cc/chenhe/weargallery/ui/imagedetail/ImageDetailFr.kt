@@ -150,7 +150,7 @@ class ImageDetailFr : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ImageDetailAdapter(this, args.shareAnimationName, imageGestureDetector)
+        adapter = ImageDetailAdapter(imageGestureDetector)
         binding.imageDetailPager.adapter = adapter
         binding.imageDetailPager.registerOnPageChangeCallback(onPageChangeCallback)
 

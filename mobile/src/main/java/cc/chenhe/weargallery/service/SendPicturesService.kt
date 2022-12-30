@@ -18,7 +18,6 @@
 package cc.chenhe.weargallery.service
 
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
@@ -34,10 +33,12 @@ import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.comm.PATH_CHANNEL_BATCH_SEND
 import cc.chenhe.weargallery.common.comm.bean.SendItem
 import cc.chenhe.weargallery.common.util.toBytes
-import cc.chenhe.weargallery.utils.NOTIFY_CHANNEL_ID_SENDING
-import cc.chenhe.weargallery.utils.NOTIFY_CHANNEL_ID_SEND_RESULT
-import cc.chenhe.weargallery.utils.NOTIFY_ID_SENDING
-import cc.chenhe.weargallery.utils.NOTIFY_ID_SEND_RESULT
+import cc.chenhe.weargallery.utils.NotificationUtils
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_SENDING
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_SEND_RESULT
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_SENDING
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_SEND_RESULT
+import cc.chenhe.weargallery.utils.getParcelableArray
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Node
@@ -58,6 +59,7 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SendPicturesService : LifecycleService() {
+    private val notificationUtil: NotificationUtils by inject()
 
     @Parcelize
     data class Job(
@@ -174,15 +176,15 @@ class SendPicturesService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-        createSendingNotificationChannel()
-        createSendResultNotificationChannel()
+        notificationUtil.registerNotificationChannel(CHANNEL_ID_SENDING)
+        notificationUtil.registerNotificationChannel(CHANNEL_ID_SEND_RESULT)
     }
 
     private lateinit var nodeId: String
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        val jobs = intent?.getParcelableArrayExtra(EXTRA_JOBS)?.filterIsInstance<Job>()
+        val jobs = intent?.getParcelableArray<Job>(EXTRA_JOBS)
         nodeId = intent?.getStringExtra(EXTRA_NODE_ID) ?: ""
         if (jobs.isNullOrEmpty()) {
             Timber.tag(TAG).w("Can not find job information, drop this command.")
@@ -421,32 +423,8 @@ class SendPicturesService : LifecycleService() {
         stopSelf()
     }
 
-    private fun createSendingNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NOTIFY_CHANNEL_ID_SENDING,
-                getString(R.string.notify_channel_sending_name),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            channel.description = getString(R.string.notify_channel_sending_description)
-            getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
-        }
-    }
-
-    private fun createSendResultNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NOTIFY_CHANNEL_ID_SEND_RESULT,
-                getString(R.string.notify_channel_send_result_name),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            channel.description = getString(R.string.notify_channel_send_result_description)
-            getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
-        }
-    }
-
     private val sendingNotifyBuilder: NotificationCompat.Builder by lazy {
-        NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_SENDING)
+        NotificationCompat.Builder(this, CHANNEL_ID_SENDING)
             .setSmallIcon(R.drawable.ic_send)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setOngoing(true)
@@ -472,7 +450,7 @@ class SendPicturesService : LifecycleService() {
     }
 
     private fun notifySendFinish(sentCount: Int) {
-        val n = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_SEND_RESULT)
+        val n = NotificationCompat.Builder(this, CHANNEL_ID_SEND_RESULT)
             .setSmallIcon(R.drawable.ic_notify_done)
             .setContentTitle(getString(R.string.notify_send_images_success_title))
             .setContentText(getString(R.string.notify_send_images_success_content, sentCount))
@@ -486,7 +464,7 @@ class SendPicturesService : LifecycleService() {
         val text =
             getString(R.string.notify_send_images_failed_content, getString(message), sentCount)
 
-        val n = NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_SEND_RESULT)
+        val n = NotificationCompat.Builder(this, CHANNEL_ID_SEND_RESULT)
             .setSmallIcon(R.drawable.ic_notify_error)
             .setContentTitle(getString(R.string.notify_send_images_failed_title))
             .setContentText(text)

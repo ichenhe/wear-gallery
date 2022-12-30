@@ -19,25 +19,37 @@ package cc.chenhe.weargallery
 
 import android.content.Intent
 import cc.chenhe.weargallery.common.jsonadapter.UriAdapter
+import cc.chenhe.weargallery.repo.CheckUpdateRepo
 import cc.chenhe.weargallery.ui.folderimages.FolderImagesViewModel
 import cc.chenhe.weargallery.ui.folders.FoldersViewModel
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailViewModel
 import cc.chenhe.weargallery.ui.images.ImagesViewModel
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
+import cc.chenhe.weargallery.ui.main.MainScreenViewModel
+import cc.chenhe.weargallery.ui.preference.LicenseViewModel
+import cc.chenhe.weargallery.ui.preference.PreferenceViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesViewModel
+import cc.chenhe.weargallery.utils.NotificationChecker
+import cc.chenhe.weargallery.utils.NotificationUtils
 import com.squareup.moshi.Moshi
 import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
+    factory { Moshi.Builder().add(UriAdapter()).build() }
+    factory { CheckUpdateRepo(androidContext(), get()) }
+    factory { NotificationChecker(androidContext()) }
+    factory { NotificationUtils(androidContext()) }
 
+    viewModel { MainScreenViewModel(androidApplication(), get()) }
     viewModel { SharedViewModel(androidApplication()) }
     viewModel { ImagesViewModel(androidApplication()) }
     viewModel { FoldersViewModel(androidApplication()) }
     viewModel { (bucketId: Int) -> FolderImagesViewModel(androidApplication(), bucketId) }
     viewModel { (bucketId: Int) -> ImageDetailViewModel(androidApplication(), bucketId) }
-    viewModel { (intent: Intent) -> SendImagesViewModel(androidApplication(), intent) }
-
-    factory { Moshi.Builder().add(UriAdapter()).build() }
+    viewModel { (intent: Intent) -> SendImagesViewModel(androidApplication(), get(), intent) }
+    viewModel { PreferenceViewModel(androidApplication(), get(), get()) }
+    viewModel { LicenseViewModel() }
 }

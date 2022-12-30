@@ -11,6 +11,8 @@
     <string name="icon">Icon</string>
     <string name="main_preference">Preferences</string>
     <string name="main_legacy"><u>Legacy</u></string>
+    <string name="navup">Navigate up</string>
+    <string name="permission_grant">Grant</string>
 
     <string name="nav_menu_images">Images</string>
     <string name="nav_menu_folders">Folders</string>
@@ -20,22 +22,20 @@
     <string name="app_hw_view">Learn more</string>
     <string name="app_hw_exit">Exit</string>
 
-    <string name="intro_permission_title">PERMISSION</string>
-    <string name="intro_permission_content">We need to access the stored permissions to scan the image.</string>
-    <string name="intro_install_title">INSTALL ON WATCH</string>
-    <string name="intro_install_content">Since Wear OS, installing watch apps through bluetooth was no more supported. You have to manually download and install WearGallery from the watch application market. Or you can install it with ADB.</string>
-    <string name="intro_auto_run_title">AUTO RUN</string>
-    <string name="intro_auto_run_content">Please be sure to allow the application to start automatically, otherwise the watch will not be able to load the pictures properly.</string>
-    <string name="intro_os_title">Open Source</string>
-    <string name="intro_os_content">Find on GitHub: wear-gallery</string>
-
-    <string name="card_intro">Tips</string>
-    <string name="card_intro_msg">The mobile client serves watch side only, and no longer offers picture viewing.\nYou can activate batch transmission by selecting pictures from another app and sharing to "Send to Watch".</string>
-    <string name="card_tic">Attention</string>
-    <string name="card_tic_msg">Ticwear is no longer supported (TicWatch with Wear OS is not affected). You should probably uninstall this app from your phone and use LAN transmission if you don\'t have a Wear OS watch.</string>
+    <string name="main_card_permission_title">Can not work properly</string>
+    <string name="main_card_permission_message">The following permissions are required:\n- Storage: Read pictures (required)\n- Notification: Show progress of sending pictures (recommended)\n\nWear Gallery is an open source application and anyone can review the code. We won\'t abuse permissions.</string>
+    <string name="main_card_intro">Tips</string>
+    <string name="main_card_intro_msg">The mobile client serves watch side only, and no longer offers picture viewing.\nYou can activate batch transmission by selecting pictures from another app and sharing to "Send to Watch".</string>
+    <string name="main_card_tic">Attention</string>
+    <string name="main_card_tic_msg">Ticwear is no longer supported (TicWatch with Wear OS is not affected). You should probably uninstall this app from your phone and use LAN transmission if you don\'t have a Wear OS watch.</string>
+    <string name="main_card_install_to_watch_title">Install on watch</string>
+    <string name="main_card_install_to_watch_message">Since Wear OS, installing watch apps through bluetooth was no more supported. You have to manually download and install WearGallery from the watch application market. Or you can install it with ADB.</string>
+    <string name="main_card_auto_run_title">Auto run</string>
+    <string name="main_card_auto_run_message">Please be sure to allow the application to start automatically, otherwise the watch will not be able to load the pictures properly.</string>
     <string name="card_update">New</string>
     <string name="card_update_msg">A new version has been released. (%1$s)</string>
-    <string name="card_update_positive">Learn more</string>
+    <string name="card_update_open_appstore">App store</string>
+    <string name="card_update_open_url">Learn more</string>
 
     <string name="images_menu_check_all">Select ALL</string>
     <string name="images_selected_none">Select items</string>
@@ -58,21 +58,26 @@
 
     <string name="menu_send">Send to watch</string>
 
-    <string name="pref_category_general">General</string>
-    <string name="pref_category_information">Information</string>
-
     <string name="setting_check_update">Check for updates</string>
+    <string name="pref_category_regular">Regular</string>
+    <string name="pref_category_notification">Notification</string>
+    <string name="pref_category_other">Other</string>
     <string name="pref_about">About</string>
     <string name="pref_phone_show_tips_about_watch">Tip when watch is been operated</string>
     <string name="pref_foreground_service">Foreground service</string>
     <string name="pref_foreground_service_summary">Try to solve the problem of not being able to wake up in the background. Only recommended for Chinese systems.</string>
+    <string name="pref_foreground_service_notification">Foreground service notification</string>
     <string name="pref_title">Settings</string>
+    <string name="pref_notification_overall">Notification main switch</string>
+    <string name="pref_notification_send_images_progress">Image delivery progress</string>
+    <string name="pref_notification_send_images_result">Image delivery result</string>
 
     <string name="watch_operation_search_gallery_ing">Scanning albums</string>
     <string name="watch_operation_get_pics_list_ing">Loading pics list</string>
     <string name="watch_operation_send_hd_picture_ing">Loading HD version</string>
     <string name="watch_operation_send_hd_picture_fail">Read HD image failed</string>
 
+    <string name="send_images_title">Send to watch</string>
     <plurals name="send_images_subtitle">
         <item quantity="one">%d picture</item>
         <item quantity="other">%d pictures</item>
@@ -82,9 +87,10 @@
     <string name="send_images_directory_description">The relative directory based on the picture media library on the watch. Leave blank to save in the default directory.</string>
     <string name="send_images_directory_invalid">invalid path</string>
     <string name="send_images_device">Target device</string>
+    <string name="send_images_device_none">No connected watches with Wear Gallery installed.</string>
     <string name="send_images_select_device">Please select the target device. If the list is empty, please confirm:\n1. The watch has been connected via Bluetooth.\n2. Only Wear OS is supported.\n3. The app version must be consistent.</string>
-    <string name="send_images_need_notification_permission">Notification permission is required to show the progress and results of the transmission.</string>
-    <string name="send_images_need_notification_permission_skip">Ignore the result</string>
+    <string name="send_images_permission_card_notification_title">Delivery progress and results</string>
+    <string name="send_images_permission_card_notification_message">Notification permission is required to show the send status.</string>
     <string name="send_images_fail_cancel">Canceled.</string>
     <string name="send_images_fail_ack_failed">Watch ACK failed.</string>
     <string name="send_images_fail_file_not_found">Picture file not found.</string>
@@ -102,10 +108,9 @@
     <string name="share_image_label">Send to watch</string>
 
     <string name="about_slogan">An open source Wear OS gallery</string>
-    <string name="about_github" translatable="false"><u>github.com/ichenhe/wear-gallery</u></string>
-    <string name="about_tg" translatable="false"><u>t.me/weargallery_news</u></string>
-    <string name="about_qq" translatable="false">549321774</string>
-    <string name="about_licence"><u>Open Source Licenses</u></string>
+    <string name="about_github" translatable="false">github.com/ichenhe/wear-gallery</string>
+    <string name="about_tg" translatable="false">t.me/weargallery_news</string>
+    <string name="about_licence">Open Source Licenses</string>
 
     <string name="notify_channel_permission_name">Permissions</string>
     <string name="notify_channel_permission_description">Tips for requesting permissions.</string>
@@ -124,6 +129,6 @@
     <string name="notify_upgrading">Migrating Data</string>
     <string name="notify_upgrading_content">Do not end the process to avoid data loss.</string>
     <string name="notify_foreground_text">Feel free to hide this notification.</string>
-
-    <string name="links_chooser_browser">Choose browser</string>
+    <string name="notify_foreground_hide_button">Hide</string>
+    <string name="notify_foreground_disable_button">Shutdown</string>
 </resources>

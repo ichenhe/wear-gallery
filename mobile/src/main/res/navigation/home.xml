@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/mainFr"
         android:name="cc.chenhe.weargallery.ui.main.MainFr"
-        android:label="MainFr"
-        tools:layout="@layout/fr_main">
+        android:label="MainFr">
         <action
             android:id="@+id/action_mainFr_to_preferenceFr"
             app:destination="@id/preferenceFr"
@@ -33,8 +32,7 @@
     <fragment
         android:id="@+id/aboutFr"
         android:name="cc.chenhe.weargallery.ui.preference.AboutFr"
-        android:label=""
-        tools:layout="@layout/fr_about">
+        android:label="">
         <action
             android:id="@+id/action_aboutFr_to_licenseFr"
             app:destination="@id/licenseFr"

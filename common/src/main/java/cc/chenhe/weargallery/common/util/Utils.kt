@@ -17,7 +17,9 @@
 
 package cc.chenhe.weargallery.common.util
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import androidx.core.content.pm.PackageInfoCompat
 import cc.chenhe.weargallery.common.log.MLog
 import cc.chenhe.weargallery.common.log.Mmap
@@ -26,11 +28,12 @@ import java.io.File
 import java.util.*
 import kotlin.math.abs
 
-const val HUA_WEI = "https://wg.chenhe.me/announcement/huawei/"
+const val HUA_WEI = "https://weargallery.app/announcement/huawei/"
 const val GITHUB = "https://github.com/ichenhe/wear-gallery/"
 const val TELEGRAM = "https://t.me/weargallery_news"
-const val API_VER = "https://wg.chenhe.me/api/ver.json"
-const val LIVE_PREVIEW_HELP_URL = "https://wg.chenhe.me/tutorials/live-preview/"
+const val WEBSITE = "https://weargallery.app/"
+const val API_VER = "https://weargallery.app/api/ver.json"
+const val LIVE_PREVIEW_HELP_URL = "https://weargallery.app/tutorials/live-preview/"
 
 const val CHECK_UPDATE_INTERVAL = 24 * 3600 * 3
 
@@ -119,4 +122,13 @@ fun <T> JsonAdapter<T>.fromJsonQ(string: String): T? {
     } catch (e: Exception) {
         null
     }
+}
+
+/**
+ * Try to get the corresponding Activity。Usually used in Compose。
+ */
+fun Context.getActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
 }

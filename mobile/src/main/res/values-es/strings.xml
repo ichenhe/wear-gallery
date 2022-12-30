@@ -20,22 +20,16 @@
     <string name="app_hw_view">Aprender más</string>
     <string name="app_hw_exit">Salir</string>
 
-    <string name="intro_permission_title">PERMISOS</string>
-    <string name="intro_permission_content">Se necesitan permisos des escritura en el almacenaje para buscar imágenes.</string>
-    <string name="intro_install_title">INSTALAR en el RELOJ</string>
-    <string name="intro_install_content">Instalar aplicaciones en el reloj mediante bluetooth ya no es posible. Tienes que descargar manualmente WearGallery desde la Tienda del reloj. También puedes instalarla mediante ADB.</string>
-    <string name="intro_auto_run_title">AUTO RUN</string>
-    <string name="intro_auto_run_content">Por favor, asegúrese de que la aplicación pueda arrancar automáticamente, sino el reloj no podrá cargar las imágenes adecuadamente.</string>
-    <string name="intro_os_title">Open Source</string>
-    <string name="intro_os_content">Busca en GitHub: wear-gallery</string>
-
-    <string name="card_intro">Consejos</string>
-    <string name="card_intro_msg">La aplicación del teléfono solamente sirve datos al reloj y ya no ofrece la galleria de fotos en el mismo.\nPuedes pasar fotos del teléfono al reloj usando cualquier aplicación para ello.</string>
-    <string name="card_tic">Atención</string>
-    <string name="card_tic_msg">A Ticwear ya no se le da soporte.(TicWatch bajo WearOS no está afectado). Deberías desinstalar esta aplicación de su teléfono y usar un cable para la transmisión de datos si no tiene un reloj WearOS.</string>
+    <string name="main_card_intro">Consejos</string>
+    <string name="main_card_intro_msg">La aplicación del teléfono solamente sirve datos al reloj y ya no ofrece la galleria de fotos en el mismo.\nPuedes pasar fotos del teléfono al reloj usando cualquier aplicación para ello.</string>
+    <string name="main_card_tic">Atención</string>
+    <string name="main_card_tic_msg">A Ticwear ya no se le da soporte.(TicWatch bajo WearOS no está afectado). Deberías desinstalar esta aplicación de su teléfono y usar un cable para la transmisión de datos si no tiene un reloj WearOS.</string>
+    <string name="main_card_install_to_watch_title">INSTALAR en el RELOJ</string>
+    <string name="main_card_install_to_watch_message">Instalar aplicaciones en el reloj mediante bluetooth ya no es posible. Tienes que descargar manualmente WearGallery desde la Tienda del reloj. También puedes instalarla mediante ADB.</string>
+    <string name="main_card_auto_run_title">Auto run</string>
+    <string name="main_card_auto_run_message">Por favor, asegúrese de que la aplicación pueda arrancar automáticamente, sino el reloj no podrá cargar las imágenes adecuadamente.</string>
     <string name="card_update">Nuevo</string>
     <string name="card_update_msg">Una nueva versión está disponible. (%1$s)</string>
-    <string name="card_update_positive">Saber más</string>
 
     <string name="images_menu_check_all">Seleccionar TODO</string>
     <string name="images_selected_none">Seleccionar archivos</string>
@@ -55,9 +49,6 @@
 
     <string name="menu_send">Enviar al reloj</string>
 
-    <string name="pref_category_general">General</string>
-    <string name="pref_category_information">Información</string>
-
     <string name="setting_check_update">Comprobar actualizaciones</string>
     <string name="pref_about">Acerca de..</string>
     <string name="pref_phone_show_tips_about_watch">Aviso cuando se esté operando el reloj</string>
@@ -70,6 +61,7 @@
     <string name="watch_operation_send_hd_picture_ing">Cargando versión HD</string>
     <string name="watch_operation_send_hd_picture_fail">Fallo al leer imagen HD</string>
 
+    <string name="send_images_title">Enviar al reloj</string>
     <plurals name="send_images_subtitle">
         <item quantity="one">%d picture</item>
         <item quantity="other">%d pictures</item>
@@ -97,7 +89,7 @@
     <string name="share_image_label">Enviar al reloj</string>
 
     <string name="about_slogan">Una galería de código abierto en Wear OS</string>
-    <string name="about_licence"><u>Licencias Open Source</u></string>
+    <string name="about_licence">Licencias Open Source</string>
 
     <string name="notify_channel_permission_name">Permisos</string>
     <string name="notify_channel_permission_description">Consejos para pedir permisos.</string>
@@ -116,6 +108,4 @@
     <string name="notify_upgrading">Migrando datos</string>
     <string name="notify_upgrading_content">No salgas para evitar pérdida de datos.</string>
     <string name="notify_foreground_text">Feel free to hide this notification.</string>
-
-    <string name="links_chooser_browser">Elige navegador web</string>
 </resources>

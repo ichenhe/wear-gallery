@@ -20,20 +20,22 @@ package cc.chenhe.weargallery.ui.folderimages
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
-import cc.chenhe.weargallery.GlideApp
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.ui.BaseListAdapter
 import cc.chenhe.weargallery.common.ui.BaseViewHolder
+import coil.load
 
-class FolderImagesAdapter(private val fragment: Fragment)
-    : BaseListAdapter<Image, FolderImagesAdapter.FolderImagesViewHolder>(FolderImagesDiffCallback()) {
+class FolderImagesAdapter :
+    BaseListAdapter<Image, FolderImagesAdapter.FolderImagesViewHolder>(FolderImagesDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderImagesViewHolder {
-        return FolderImagesViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.rv_item_images_img, parent, false))
+        return FolderImagesViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.rv_item_images_img, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: FolderImagesViewHolder, position: Int) {
@@ -43,7 +45,7 @@ class FolderImagesAdapter(private val fragment: Fragment)
 
     inner class FolderImagesViewHolder(itemView: View) : BaseViewHolder(itemView) {
         fun bind(data: Image) {
-            GlideApp.with(fragment).load(data.uri).into(getView(R.id.itemImageView))
+            getView<ImageView>(R.id.itemImageView).load(data.uri)
         }
     }
 }

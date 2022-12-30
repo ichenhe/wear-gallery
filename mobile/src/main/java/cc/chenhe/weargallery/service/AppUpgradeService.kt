@@ -10,8 +10,14 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.getVersionCode
-import cc.chenhe.weargallery.utils.*
+import cc.chenhe.weargallery.utils.ACTION_APP_UPGRADE_COMPLETE
+import cc.chenhe.weargallery.utils.NotificationUtils
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_IMPORTANT_PROCESSING
+import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_UPGRADING
+import cc.chenhe.weargallery.utils.getLastStartVersion
+import cc.chenhe.weargallery.utils.setLastStartVersion
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 import timber.log.Timber
 
 class AppUpgradeService : LifecycleService() {
@@ -39,10 +45,10 @@ class AppUpgradeService : LifecycleService() {
     fun ping(): Boolean = true
 
     private fun setForeground() {
-        registerImportantPrecessingNotificationChannel(this)
+        get<NotificationUtils>().registerNotificationChannel(CHANNEL_ID_IMPORTANT_PROCESSING)
         val title = getString(R.string.notify_upgrading)
         val notification =
-            NotificationCompat.Builder(this, NOTIFY_CHANNEL_ID_IMPORTANT_PROCESSING)
+            NotificationCompat.Builder(this, CHANNEL_ID_IMPORTANT_PROCESSING)
                 .setContentTitle(title)
                 .setTicker(title)
                 .setContentText(getString(R.string.notify_upgrading_content))

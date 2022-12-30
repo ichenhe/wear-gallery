@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import cc.chenhe.weargallery.GlideApp
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.bean.ImageDateGroup
@@ -33,13 +32,14 @@ import cc.chenhe.weargallery.common.view.CircleCheckBox
 import cc.chenhe.weargallery.common.view.MaskImageView
 import cc.chenhe.weargallery.ui.common.GroupDifferCallback
 import cc.chenhe.weargallery.ui.common.GroupListAdapter
+import coil.load
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * @param selected Collection of selected images. Used to restore selection status.
  */
-internal class ImagesAdapter(private val fragment: Fragment, private val selected: Set<Image>?, private val currentPosition: Int)
+internal class ImagesAdapter(private val fragment: Fragment, private val selected: Set<Image>?)
     : GroupListAdapter<ImageDateGroup, Image, ImagesAdapter.StubViewHolder>(ImagesDiffCallback()) {
 
     var onSelectChangedCallback: ((selectedChildCount: Int) -> Unit)? = null
@@ -82,8 +82,7 @@ internal class ImagesAdapter(private val fragment: Fragment, private val selecte
         val data = getChildItem(groupIndex, childIndex)
         holder.getView<ImageView>(R.id.itemImageView).let {
             it.transitionName = data.uri.toString()
-
-            GlideApp.with(fragment).load(data.uri).into(it)
+            it.load(data.uri)
         }
     }
 
@@ -174,10 +173,6 @@ internal class ImagesAdapter(private val fragment: Fragment, private val selecte
     // -------------------------------------
     // APIs
     // -------------------------------------
-
-    fun getImageItem(position: Int) {
-        getItem(position) as Image
-    }
 
     fun getSelected(): Set<Image> {
         return selectedImages
