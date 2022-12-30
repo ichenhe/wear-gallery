@@ -242,7 +242,13 @@ class SendImagesViewModel(
         when (uri.scheme) {
             ContentResolver.SCHEME_CONTENT -> {
                 var img = querySignalImage(uri)
-                if (img != null) return img
+                if (img != null) {
+                    if (img.mime?.startsWith("image/") != true) {
+                        Timber.tag(TAG).d("Not a image, discard. mime=${img.mime}, uri=$uri")
+                        return null
+                    }
+                    return img
+                }
                 Timber.tag(TAG)
                     .d("Cannot find a record for shared uri, try to parse stream. uri=$uri")
                 img = ImageExifUtil.parseImageFromIns(getContext(), uri)
@@ -278,7 +284,13 @@ class SendImagesViewModel(
         )
 
         @Suppress("DEPRECATION") // We use `DATA` field to show file path information.
-        return@withContext getContext().contentResolver.query(uri, projection, null, null, null)
+        return@withContext getContext().contentResolver.query(
+            uri,
+            projection,
+            null,
+            null,
+            null
+        )
             ?.use { cursor ->
                 if (cursor.moveToFirst()) {
                     val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
