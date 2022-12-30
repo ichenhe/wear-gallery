@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material.ripple.rememberRipple
@@ -57,11 +59,13 @@ import org.koin.core.parameter.parametersOf
 fun SendImageScreen(
     napUp: () -> Unit,
     intent: Intent,
-    model: SendImagesViewModel = getViewModel { parametersOf(intent) }
+    model: SendImagesViewModel = getViewModel { parametersOf(intent) },
+    oneColumnLayout: Boolean,
 ) {
     val state by model.uiState
     SendImageScreenFrame(
         state,
+        oneColumnLayout = oneColumnLayout,
         navUp = napUp,
         sendIntent = model::sendIntent,
         targetFolderValidator = SendImagesViewModel::isFolderPathValid,
@@ -85,7 +89,7 @@ fun SendImageScreen(
 private fun SendImageScreenFramePreview() {
     WearGalleryTheme {
         SendImagesUiState(targetFolder = "custom").also { uiState ->
-            SendImageScreenFrame(uiState = uiState)
+            SendImageScreenFrame(uiState = uiState, oneColumnLayout = true)
         }
     }
 }
@@ -94,6 +98,7 @@ private fun SendImageScreenFramePreview() {
 @Composable
 private fun SendImageScreenFrame(
     uiState: SendImagesUiState,
+    oneColumnLayout: Boolean,
     navUp: () -> Unit = {},
     sendIntent: (SendImagesIntent) -> Unit = {},
     targetFolderValidator: (targetFolder: String?) -> Boolean = { true },
@@ -136,33 +141,22 @@ private fun SendImageScreenFrame(
             )
         }
     }) { contentPadding ->
-        val padding = PaddingValues(
-            top = contentPadding.calculateTopPadding(),
-            bottom = contentPadding.calculateBottomPadding(),
-            start = 16.dp,
-            end = 16.dp
-        )
-        Column(modifier = Modifier.padding(padding)) {
-            Options(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                targetFolder = uiState.targetFolder,
-                targetDevice = uiState.targetDevice,
-                devices = uiState.devices,
-                onTargetFolderChange = { sendIntent(SendImagesIntent.SelectTargetFolder(it)) },
-                onTargetDeviceChange = { sendIntent(SendImagesIntent.SetTargetDevice(it)) },
-                targetFolderValidator = targetFolderValidator,
-            )
-            AnimatedVisibility(
-                visible = uiState.notificationPermission != SendImagesUiState.PermissionState.Granted
-            ) {
-                NotificationPermissionCard(
-                    uiState.notificationPermission,
-                    modifier = Modifier.padding(top = 16.dp)
+        Box(modifier = Modifier.padding(contentPadding)) {
+            if (oneColumnLayout) {
+                OneColumnLayout(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    uiState = uiState,
+                    sendIntent = sendIntent,
+                    targetFolderValidator = targetFolderValidator,
+                )
+            } else {
+                TwoColumnsLayout(
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                    uiState = uiState,
+                    sendIntent = sendIntent,
+                    targetFolderValidator = targetFolderValidator,
                 )
             }
-            ImageList(uiState.images, modifier = Modifier.padding(top = 16.dp))
         }
 
         if (showSelectTargetTipDialog) {
@@ -177,6 +171,82 @@ private fun SendImageScreenFrame(
                 },
             )
         }
+    }
+}
+
+@Composable
+private fun OneColumnLayout(
+    modifier: Modifier = Modifier,
+    uiState: SendImagesUiState,
+    sendIntent: (SendImagesIntent) -> Unit,
+    targetFolderValidator: (targetFolder: String?) -> Boolean,
+) {
+    Column(modifier = modifier) {
+        Options(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            targetFolder = uiState.targetFolder,
+            targetDevice = uiState.targetDevice,
+            devices = uiState.devices,
+            onTargetFolderChange = { sendIntent(SendImagesIntent.SelectTargetFolder(it)) },
+            onTargetDeviceChange = { sendIntent(SendImagesIntent.SetTargetDevice(it)) },
+            targetFolderValidator = targetFolderValidator,
+        )
+        AnimatedVisibility(
+            visible = uiState.notificationPermission != SendImagesUiState.PermissionState.Granted
+        ) {
+            NotificationPermissionCard(
+                uiState.notificationPermission,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+        ImageList(uiState.images, modifier = Modifier.padding(top = 16.dp))
+    }
+}
+
+@Composable
+private fun TwoColumnsLayout(
+    modifier: Modifier = Modifier,
+    uiState: SendImagesUiState,
+    sendIntent: (SendImagesIntent) -> Unit,
+    targetFolderValidator: (targetFolder: String?) -> Boolean,
+) {
+    Row(modifier = modifier) {
+        // first column
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .weight(0.5f)
+                .padding(horizontal = 16.dp),
+        ) {
+            AnimatedVisibility(
+                visible = uiState.notificationPermission != SendImagesUiState.PermissionState.Granted
+            ) {
+                NotificationPermissionCard(
+                    uiState.notificationPermission,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+            }
+            Options(
+                modifier = Modifier.fillMaxWidth(),
+                targetFolder = uiState.targetFolder,
+                targetDevice = uiState.targetDevice,
+                devices = uiState.devices,
+                onTargetFolderChange = { sendIntent(SendImagesIntent.SelectTargetFolder(it)) },
+                onTargetDeviceChange = { sendIntent(SendImagesIntent.SetTargetDevice(it)) },
+                targetFolderValidator = targetFolderValidator,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        // second column
+        ImageList(
+            uiState.images,
+            modifier = Modifier.weight(0.5f),
+        )
     }
 }
 

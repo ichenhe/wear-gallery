@@ -20,18 +20,27 @@ package cc.chenhe.weargallery.ui.sendimages
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.view.WindowCompat
 import cc.chenhe.weargallery.ui.theme.WearGalleryTheme
+import cc.chenhe.weargallery.utils.shouldUseOneColumnLayout
 
 
 class SendImagesAty : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             WearGalleryTheme {
-                SendImageScreen(napUp = ::finish, intent = intent)
+                val windowSizeClass = calculateWindowSizeClass(this)
+                SendImageScreen(
+                    napUp = ::finish,
+                    intent = intent,
+                    oneColumnLayout = windowSizeClass.shouldUseOneColumnLayout(),
+                )
             }
         }
     }
