@@ -38,7 +38,7 @@ import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_SENDIN
 import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_SEND_RESULT
 import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_SENDING
 import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_SEND_RESULT
-import cc.chenhe.weargallery.utils.getParcelableArrayList
+import cc.chenhe.weargallery.utils.getParcelableArray
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.ChannelClient
 import com.google.android.gms.wearable.Node
@@ -184,7 +184,7 @@ class SendPicturesService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        val jobs = intent?.getParcelableArrayList<Job>(EXTRA_JOBS)
+        val jobs = intent?.getParcelableArray<Job>(EXTRA_JOBS)
         nodeId = intent?.getStringExtra(EXTRA_NODE_ID) ?: ""
         if (jobs.isNullOrEmpty()) {
             Timber.tag(TAG).w("Can not find job information, drop this command.")
