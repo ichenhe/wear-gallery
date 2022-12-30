@@ -98,6 +98,7 @@ dependencies {
     implementation("com.google.android.material:material:1.7.0")
     implementation("id.zelory:compressor:3.0.1")
     implementation("com.google.android.gms:play-services-wearable:18.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     val nav = rootProject.ext["nav"] as String
     implementation("androidx.navigation:navigation-fragment-ktx:$nav")

@@ -33,6 +33,7 @@ import cc.chenhe.weargallery.bean.RemoteImageFolder
 import cc.chenhe.weargallery.common.comm.*
 import cc.chenhe.weargallery.common.comm.bean.*
 import cc.chenhe.weargallery.common.util.*
+import cc.chenhe.weargallery.repo.PreferenceRepo
 import cc.chenhe.weargallery.ui.main.MainAty
 import cc.chenhe.weargallery.utils.*
 import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_PERMISSION
@@ -44,6 +45,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import id.zelory.compressor.constraint.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import me.chenhe.lib.wearmsger.BothWayHub
 import me.chenhe.lib.wearmsger.service.WMListenerService
 import org.koin.android.ext.android.get
@@ -59,6 +61,7 @@ class WearListenerService : WMListenerService() {
     }
 
     private val moshi: Moshi by inject()
+    private val preferenceRepo: PreferenceRepo by inject()
     private val context: Context get() = this
 
     // -------------------------------------------------------------------------------------------------
@@ -95,7 +98,7 @@ class WearListenerService : WMListenerService() {
     }
 
     private suspend fun toastIfEnabled(@StringRes resId: Int) {
-        if (isTipWithWatch(this)) {
+        if (preferenceRepo.shouldTipOnWatchOperating().first()) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@WearListenerService, resId, Toast.LENGTH_SHORT).show()
             }

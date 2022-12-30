@@ -12,11 +12,13 @@ import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import cc.chenhe.weargallery.R
+import cc.chenhe.weargallery.repo.PreferenceRepo
 import cc.chenhe.weargallery.ui.main.MainAty
 import cc.chenhe.weargallery.utils.NotificationUtils
 import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_FOREGROUND_SERVICE
-import cc.chenhe.weargallery.utils.setForegroundService
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class ForegroundService : Service() {
@@ -45,6 +47,7 @@ class ForegroundService : Service() {
         }
     }
 
+    private val preferenceRepo: PreferenceRepo by inject()
     private var localReceiver: LocalReceiver? = null
     private var disableReceiver: DisableReceiver? = null
 
@@ -58,7 +61,7 @@ class ForegroundService : Service() {
     private inner class DisableReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_DISABLE) {
-                setForegroundService(this@ForegroundService, false)
+                runBlocking { preferenceRepo.setKeepForegroundService(false) }
                 stopSelf()
             }
         }

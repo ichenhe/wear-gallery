@@ -20,6 +20,7 @@ package cc.chenhe.weargallery
 import android.content.Intent
 import cc.chenhe.weargallery.common.jsonadapter.UriAdapter
 import cc.chenhe.weargallery.repo.CheckUpdateRepo
+import cc.chenhe.weargallery.repo.PreferenceRepo
 import cc.chenhe.weargallery.ui.folderimages.FolderImagesViewModel
 import cc.chenhe.weargallery.ui.folders.FoldersViewModel
 import cc.chenhe.weargallery.ui.imagedetail.ImageDetailViewModel
@@ -31,6 +32,7 @@ import cc.chenhe.weargallery.ui.preference.PreferenceViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesViewModel
 import cc.chenhe.weargallery.utils.NotificationChecker
 import cc.chenhe.weargallery.utils.NotificationUtils
+import cc.chenhe.weargallery.utils.PreferenceDataStoreSingleton
 import com.squareup.moshi.Moshi
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -39,7 +41,9 @@ import org.koin.dsl.module
 
 val appModule = module {
     factory { Moshi.Builder().add(UriAdapter()).build() }
-    factory { CheckUpdateRepo(androidContext(), get()) }
+
+    factory { PreferenceRepo(PreferenceDataStoreSingleton.getInstance(androidContext())) }
+    factory { CheckUpdateRepo(androidContext(), get(), get()) }
     factory { NotificationChecker(androidContext()) }
     factory { NotificationUtils(androidContext()) }
 
@@ -50,6 +54,6 @@ val appModule = module {
     viewModel { (bucketId: Int) -> FolderImagesViewModel(androidApplication(), bucketId) }
     viewModel { (bucketId: Int) -> ImageDetailViewModel(androidApplication(), bucketId) }
     viewModel { (intent: Intent) -> SendImagesViewModel(androidApplication(), get(), intent) }
-    viewModel { PreferenceViewModel(androidApplication(), get(), get()) }
+    viewModel { PreferenceViewModel(androidApplication(), get(), get(), get()) }
     viewModel { LicenseViewModel() }
 }

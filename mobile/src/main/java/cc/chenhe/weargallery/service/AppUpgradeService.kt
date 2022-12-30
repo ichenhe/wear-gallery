@@ -10,16 +10,17 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.getVersionCode
+import cc.chenhe.weargallery.repo.PreferenceRepo
 import cc.chenhe.weargallery.utils.ACTION_APP_UPGRADE_COMPLETE
 import cc.chenhe.weargallery.utils.NotificationUtils
 import cc.chenhe.weargallery.utils.NotificationUtils.Companion.CHANNEL_ID_IMPORTANT_PROCESSING
 import cc.chenhe.weargallery.utils.NotificationUtils.Companion.NOTIFY_ID_UPGRADING
-import cc.chenhe.weargallery.utils.getLastStartVersion
-import cc.chenhe.weargallery.utils.setLastStartVersion
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
+@Suppress("FunctionName")
 class AppUpgradeService : LifecycleService() {
 
     companion object {
@@ -36,11 +37,12 @@ class AppUpgradeService : LifecycleService() {
         /**
          * 判断是否应该执行数据迁移。
          */
-        fun shouldRunUpgrade(context: Context): Boolean {
-            return getLastStartVersion(context) != getVersionCode(context)
+        fun shouldRunUpgrade(preferenceRepo: PreferenceRepo, context: Context): Boolean {
+            return preferenceRepo.getLastStartVersionSync() != getVersionCode(context)
         }
     }
 
+    private val preferenceRepo: PreferenceRepo by inject()
 
     fun ping(): Boolean = true
 
@@ -74,10 +76,10 @@ class AppUpgradeService : LifecycleService() {
         return START_NOT_STICKY
     }
 
-    private fun doWork() {
+    private suspend fun doWork() {
         val success = try {
             doWorkInternal()
-            setLastStartVersion(this, getVersionCode(this))
+            preferenceRepo.setLastStartVersion(getVersionCode(this))
             Timber.tag(TAG).i("Upgrade successful")
             true
         } catch (e: Exception) {
@@ -90,14 +92,25 @@ class AppUpgradeService : LifecycleService() {
         stopSelf()
     }
 
-    private fun doWorkInternal() {
+    private suspend fun doWorkInternal() {
+        val lastStartVersion = preferenceRepo.getLastStartVersionSync() ?: 0
+        Timber.tag(TAG).i("Upgrade process started: from $lastStartVersion")
+        if (lastStartVersion <= 220603010) { // v6.3.1
+            migrate_from_base()
+        }
+    }
 
-        if (getLastStartVersion(this) <= 220600010) { // v6.0.1-pre
-            // Delete GMS/MMS and preview compress preference
-            PreferenceManager.getDefaultSharedPreferences(this).edit {
-                remove("wear_mode")
-                remove("preview_compress")
-            }
+    private suspend fun migrate_from_base() {
+        Timber.tag(TAG).i("Upgrade migrate step: from base")
+        val sp = PreferenceManager.getDefaultSharedPreferences(this)
+        if (sp.contains("tip_with_watch")) {
+            preferenceRepo.setTipOnWatchOperating(sp.getBoolean("tip_with_watch", false))
+        }
+        if (sp.contains("foreground_service")) {
+            preferenceRepo.setKeepForegroundService(sp.getBoolean("foreground_service", false))
+        }
+        PreferenceManager.getDefaultSharedPreferences(this).edit {
+            clear()
         }
     }
 

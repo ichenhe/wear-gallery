@@ -24,18 +24,24 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.databinding.AtyMainBinding
+import cc.chenhe.weargallery.repo.PreferenceRepo
 import cc.chenhe.weargallery.service.AppUpgradeService
+import org.koin.android.ext.android.inject
 
 
 class MainAty : AppCompatActivity() {
 
     private lateinit var binding: AtyMainBinding
+    private val preferenceRepo: PreferenceRepo by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        if (AppUpgradeService.shouldRunUpgrade(this) && !AppUpgradeService.isRunning())
+        if (AppUpgradeService.shouldRunUpgrade(preferenceRepo, this)
+            && !AppUpgradeService.isRunning()
+        ) {
             ContextCompat.startForegroundService(this, Intent(this, AppUpgradeService::class.java))
+        }
         init()
     }
 

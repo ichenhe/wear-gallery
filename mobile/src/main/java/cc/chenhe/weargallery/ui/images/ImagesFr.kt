@@ -38,10 +38,10 @@ import cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr
 import cc.chenhe.weargallery.ui.legacy.PagerFrDirections
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesAty
-import cc.chenhe.weargallery.utils.calculateImageColumnCount
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
 
@@ -79,12 +79,6 @@ class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
             onBackPressedCallback
         )
         setupRecyclerView()
-
-        model.columnWidth.observe(viewLifecycleOwner) { itemWidth ->
-            if (binding.imagesRecyclerView.isLaidOut) {
-                setSpanCount(calculateImageColumnCount(binding.imagesRecyclerView.width, itemWidth))
-            }
-        }
 
         model.inSelectionMode.observe(viewLifecycleOwner) {
             onBackPressedCallback.isEnabled = it
@@ -127,22 +121,6 @@ class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupRecyclerView() {
-        // Zoom
-        val scaleGestureDetector = ScaleGestureDetector(requireContext(), object :
-            ScaleGestureDetector.SimpleOnScaleGestureListener() {
-            override fun onScaleEnd(detector: ScaleGestureDetector) {
-                when {
-                    abs(detector.scaleFactor) < 0.1 -> return
-                    detector.scaleFactor > 1 -> model.minusColumn()
-                    else -> model.addColumn()
-                }
-            }
-        })
-        binding.imagesRecyclerView.setOnTouchListener { _, event ->
-            scaleGestureDetector.onTouchEvent(event)
-            false
-        }
-
         binding.imagesRecyclerView.addItemDecoration(
             SimpleItemDecoration(
                 requireContext(),
@@ -158,7 +136,7 @@ class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
             setSpanCount(
                 calculateImageColumnCount(
                     binding.imagesRecyclerView.width,
-                    model.columnWidth.value!!
+                    calculateImageColumnWidth(),
                 )
             )
         }
@@ -245,4 +223,16 @@ class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
         return true
     }
 
+    private fun calculateImageColumnCount(listWidth: Int, itemWidth: Int): Int {
+        var r = (listWidth.toFloat() / itemWidth).roundToInt()
+        if (r < 2) {
+            r = 2
+        }
+        return r
+    }
+
+    private fun calculateImageColumnWidth(): Int {
+        val m = resources.displayMetrics
+        return min(m.widthPixels, m.heightPixels) / 3
+    }
 }

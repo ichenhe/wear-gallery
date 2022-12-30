@@ -21,13 +21,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import cc.chenhe.weargallery.common.bean.Image
-import cc.chenhe.weargallery.utils.addImageColumnCount
-import cc.chenhe.weargallery.utils.fetchImageColumnWidth
-import cc.chenhe.weargallery.utils.minusImageColumnCount
 
 class ImagesViewModel(application: Application) : AndroidViewModel(application) {
-
-    val columnWidth = fetchImageColumnWidth(application)
 
     val inSelectionMode = MutableLiveData(false)
 
@@ -41,13 +36,4 @@ class ImagesViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun getSelectionStatus(): Set<Image>? = selectedImages
-
-    fun addColumn() {
-        addImageColumnCount(getApplication())
-    }
-
-    fun minusColumn() {
-        minusImageColumnCount(getApplication())
-    }
-
 }
