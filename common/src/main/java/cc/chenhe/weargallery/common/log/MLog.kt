@@ -28,32 +28,43 @@ object MLog {
     }
 
     fun v(tag: String?, message: String, t: Throwable? = null) {
-        if (Log.DEBUG >= logLevel) {
-            Mmap.write(buildLog('V', tag, message, t))
-        }
+        log(Log.VERBOSE, tag, message, t)
     }
 
     fun d(tag: String?, message: String, t: Throwable? = null) {
-        if (Log.DEBUG >= logLevel) {
-            Mmap.write(buildLog('D', tag, message, t))
-        }
+        log(Log.DEBUG, tag, message, t)
     }
 
     fun i(tag: String?, message: String, t: Throwable? = null) {
-        if (Log.INFO >= logLevel) {
-            Mmap.write(buildLog('I', tag, message, t))
-        }
+        log(Log.INFO, tag, message, t)
     }
 
     fun w(tag: String?, message: String, t: Throwable? = null) {
-        if (Log.INFO >= logLevel) {
-            Mmap.write(buildLog('W', tag, message, t))
-        }
+        log(Log.WARN, tag, message, t)
     }
 
     fun e(tag: String?, message: String, t: Throwable?) {
-        if (Log.INFO >= logLevel) {
-            Mmap.write(buildLog('E', tag, message, t))
+        log(Log.ERROR, tag, message, t)
+    }
+
+    @Synchronized
+    private fun log(
+        level: Int,
+        tag: String? = null,
+        message: String,
+        throwable: Throwable? = null
+    ) {
+        if (level >= logLevel) {
+            val levelChar = when (level) {
+                Log.VERBOSE -> 'V'
+                Log.DEBUG -> 'D'
+                Log.INFO -> 'I'
+                Log.WARN -> 'W'
+                Log.ERROR -> 'E'
+                Log.ASSERT -> 'A'
+                else -> 'U'
+            }
+            Mmap.write(buildLog(levelChar, tag, message, throwable))
         }
     }
 
