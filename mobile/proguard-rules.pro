@@ -24,7 +24,7 @@
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
 
--dontobfuscate
+#-dontobfuscate
 
 -keepattributes *Annotation*
 -keep public class * extends java.lang.Exception
