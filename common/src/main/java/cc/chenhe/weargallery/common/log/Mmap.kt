@@ -233,10 +233,6 @@ internal object Mmap {
                     if (writtenLength <= 0) {
                         throw IllegalStateException("Still no remaining space in cache file after flush. capacity: ${mappedByteBuffer.capacity()}")
                     }
-                    Log.w(
-                        "MMAP",
-                        "writeLength:$writtenLength, remaining:${mappedByteBuffer.remainingForCache()}"
-                    )
                     mappedByteBuffer.writeData(data, offset, writtenLength, currentLength)
                     offset += writtenLength
                 }
