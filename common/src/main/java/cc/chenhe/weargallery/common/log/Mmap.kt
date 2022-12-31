@@ -2,13 +2,14 @@ package cc.chenhe.weargallery.common.log
 
 import android.annotation.SuppressLint
 import android.util.Log
+import cc.chenhe.weargallery.common.log.Mmap.readContentLength
 import cc.chenhe.weargallery.common.util.isSameDay
 import java.io.File
-import java.io.FileWriter
 import java.io.IOException
 import java.io.RandomAccessFile
 import java.nio.BufferOverflowException
 import java.nio.BufferUnderflowException
+import java.nio.ByteBuffer
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.text.SimpleDateFormat
@@ -30,8 +31,6 @@ internal object Mmap {
     private lateinit var logDir: String
     private var maxSize = 5 * MB
     private var cacheSize = 2 * KB
-
-    private val cacheContentSize get() = cacheSize - HEADER_SIZE
 
     /** The expiration time of the log files. (days) */
     private var expiration: Int = 0
@@ -69,6 +68,10 @@ internal object Mmap {
         this.cacheSize = cacheSize
         this.expiration = expiration
         this.minKeepFileCount = minKeepFileCount
+        if (this.cacheSize <= HEADER_SIZE) {
+            throw IllegalArgumentException("cacheSize must be greater than $HEADER_SIZE")
+        }
+
         // flush legacy cache and write init block
         write(
             """
@@ -84,68 +87,96 @@ internal object Mmap {
     }
 
     fun flush(time: Long = System.currentTimeMillis()) {
-        flush(logFileNameFormat.format(Date(time)))
+        getMappedByteBuffer()?.also { mappedByteBuffer ->
+            flush(logFileNameFormat.format(Date(time)), mappedByteBuffer = mappedByteBuffer)
+        }
     }
 
-    private fun flush(fileName: String, extName: String? = "log") {
+    private fun flush(time: Long = System.currentTimeMillis(), mappedByteBuffer: MappedByteBuffer) {
+        flush(logFileNameFormat.format(Date(time)), mappedByteBuffer = mappedByteBuffer)
+    }
+
+    /**
+     * Flush the cache to the real log file. Reset the cache file to contain header only and ready
+     * for next write.
+     */
+    private fun flush(
+        fileName: String,
+        extName: String? = "log",
+        mappedByteBuffer: MappedByteBuffer,
+    ) {
         val cacheFile = getCacheFile()
         if (!cacheFile.exists()) {
             return
         }
         val logFile = determineLogFileName(fileName, extName)
-
-        var rafi: RandomAccessFile? = null
-        var rafo: RandomAccessFile? = null
-        var fci: FileChannel? = null
-        var fco: FileChannel? = null
+        var randomAccessLogFile: RandomAccessFile? = null
+        var logFileChannel: FileChannel? = null
         try {
+            val contentLen = mappedByteBuffer.readContentLength()
+            if (contentLen <= HEADER_SIZE) {
+                // cache is empty
+                return
+            }
+
             if (!logFile.exists()) {
                 logFile.parentFile!!.mkdirs()
                 logFile.createNewFile()
             }
-            rafi = RandomAccessFile(cacheFile, "rw")
-            rafo = RandomAccessFile(logFile, "rw")
-            fci = rafi.channel
-            fco = rafo.channel
-            val cacheSize = fci.size()
-            if (cacheSize == 0L) {
-                return
-            }
-
-            val mbbi = fci.map(FileChannel.MapMode.READ_WRITE, 0, cacheSize)
-            val contentLen = mbbi.readContentLength()
-            mbbi.position(HEADER_SIZE)
-            if (contentLen > 0) {
-                val mbbo = fco.map(
-                    FileChannel.MapMode.READ_WRITE,
-                    fco.size(),
-                    contentLen.toLong() - HEADER_SIZE
-                )
-                for (i in 0 until contentLen.toLong() - HEADER_SIZE) {
-                    mbbo.put(mbbi.get())
-                }
-            }
+            randomAccessLogFile = RandomAccessFile(logFile, "rw")
+            logFileChannel = randomAccessLogFile.channel
+            logFileChannel.position(logFileChannel.size())
+            mappedByteBuffer.copyTo(logFileChannel, HEADER_SIZE, contentLen - HEADER_SIZE)
 
             // clear cache file
-            FileWriter(cacheFile).use { writer ->
-                writer.write("")
-                writer.flush()
-            }
-            mappedByteBuffer = null
+            mappedByteBuffer.writeContentLength(HEADER_SIZE)
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
-            fci?.close()
-            fco?.close()
-            rafi?.close()
-            rafo?.close()
+            logFileChannel?.close()
+            randomAccessLogFile?.close()
         }
     }
 
     /**
+     * Copy data `[startPosition, startPosition + length)` from [MappedByteBuffer] to file to [dst].
+     *
+     * It is caller's responsibility to set [dst]'s position to where want to write to.
+     */
+    private fun MappedByteBuffer.copyTo(
+        dst: FileChannel,
+        startPosition: Int,
+        length: Int,
+        bufferSize: Int = 8 * KB
+    ) {
+        val buffer = ByteBuffer.allocate(bufferSize)
+        position(startPosition)
+        var copied = 0
+        while (copied < length) {
+            if (!buffer.hasRemaining()) {
+                buffer.flip()
+                dst.write(buffer)
+                buffer.clear()
+            }
+            buffer.put(get())
+            copied++
+        }
+        if (buffer.position() > 0) {
+            buffer.flip()
+            dst.write(buffer)
+        }
+    }
+
+    /**
+     * Calculate remaining space for new content. Use [readContentLength] as current length.
+     */
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun MappedByteBuffer.remainingForCache(): Int = capacity() - readContentLength()
+
+    /**
      * Read the content length from the custom header.
      *
-     * @return Content length. Return 0 if failed to read.
+     * @return Content length (including header itself). Return 0 if failed to read.
      */
     private fun MappedByteBuffer.readContentLength(): Int {
         return try {
@@ -156,6 +187,15 @@ internal object Mmap {
         } catch (e: BufferUnderflowException) {
             0
         }
+    }
+
+    /**
+     * Write header representing the length of cache file.
+     * @param length The length of cache file (including header itself.
+     */
+    private fun MappedByteBuffer.writeContentLength(length: Int) {
+        position(0)
+        put(length.toBytes())
     }
 
     private fun determineLogFileName(fileName: String, ext: String?): File {
@@ -172,12 +212,6 @@ internal object Mmap {
 
     @SuppressLint("LogNotTimber") // intent behavior
     fun write(data: ByteArray) {
-        if (data.size > cacheContentSize) {
-            Log.e(
-                "MMAP",
-                "data size cannot be larger than cacheSize. Excess data will be discarded.",
-            )
-        }
         val currentTime = System.currentTimeMillis()
         if (!isSameDay(lastOpTime, currentTime)) {
             deleteExpiredFiles()
@@ -185,22 +219,43 @@ internal object Mmap {
         }
         lastOpTime = currentTime
         try {
-            getMappedByteBuffer()?.writeData(data, length = min(data.size, cacheContentSize))
+            getMappedByteBuffer()?.also { mappedByteBuffer ->
+                var offset = 0
+                while (offset < data.size) {
+                    if (mappedByteBuffer.remainingForCache() <= 0) {
+                        flush(mappedByteBuffer = mappedByteBuffer)
+                    }
+                    val currentLength = mappedByteBuffer.readContentLength()
+                    val writtenLength = min(
+                        data.size - offset,
+                        mappedByteBuffer.capacity() - currentLength
+                    )
+                    if (writtenLength <= 0) {
+                        throw IllegalStateException("Still no remaining space in cache file after flush. capacity: ${mappedByteBuffer.capacity()}")
+                    }
+                    Log.w(
+                        "MMAP",
+                        "writeLength:$writtenLength, remaining:${mappedByteBuffer.remainingForCache()}"
+                    )
+                    mappedByteBuffer.writeData(data, offset, writtenLength, currentLength)
+                    offset += writtenLength
+                }
+                flush(mappedByteBuffer = mappedByteBuffer)
+            }
         } catch (e: BufferOverflowException) {
-            // flush and clear the cache
-            flush(currentTime)
-            // retry
-            getMappedByteBuffer()?.writeData(data, length = min(data.size, cacheContentSize))
+            Log.e("MMAP", "No remaining space in cache file", e)
         }
     }
 
     /**
-     * Write data to buffer and update the header.
+     * Append data to buffer and update the header. The length of data should be less than
+     * [MappedByteBuffer.remainingForCache].
      *
      * @param offset The offset within the [data] of the first byte to be read; must be non-negative
      * and no larger than data.size.
      * @param length The number of bytes to be read from the given array; must be non-negative and
      * no larger than data.size - offset.
+     * @param currentLength The length of cache file (including header itself).
      *
      * @throws BufferUnderflowException
      * @throws IllegalArgumentException
@@ -208,16 +263,14 @@ internal object Mmap {
     private fun MappedByteBuffer.writeData(
         data: ByteArray,
         offset: Int = 0,
-        length: Int = data.size
+        length: Int = data.size,
+        currentLength: Int,
     ) {
-        // read file header
-        val len = readContentLength()
         // must write data first, otherwise if the write fails (such as out of bounds),
         // the data length will be changed incorrectly
-        position(len)
+        position(currentLength)
         put(data, offset, length)
-        position(0)
-        put((len + length).toBytes())
+        writeContentLength(currentLength + length)
     }
 
     private fun deleteExpiredFiles() {
@@ -243,10 +296,6 @@ internal object Mmap {
 
     private var mappedByteBuffer: MappedByteBuffer? = null
 
-    /**
-     * This method ensures that the returned buffer's pointer location is at the end and readies
-     * to write.
-     */
     private fun getMappedByteBuffer(): MappedByteBuffer? {
         mappedByteBuffer?.let { return it }
         var raf: RandomAccessFile? = null
@@ -260,15 +309,15 @@ internal object Mmap {
             raf = RandomAccessFile(cacheFile, "rw")
             fc = raf.channel
 
-            // in case there is legacy data
-            flush(System.currentTimeMillis())
-
             fc.map(FileChannel.MapMode.READ_WRITE, 0, cacheSize.toLong()).also {
                 mappedByteBuffer = it
-                if (it.readContentLength() == 0) {
-                    // write header if the file is totally empty
-                    it.position(0)
-                    it.put(HEADER_SIZE.toBytes())
+
+                val contentSize = it.readContentLength()
+                if (contentSize > HEADER_SIZE) {
+                    // there is legacy data
+                    flush(System.currentTimeMillis(), mappedByteBuffer = it)
+                } else {
+                    it.writeContentLength(HEADER_SIZE)
                 }
             }
         } catch (e: IOException) {

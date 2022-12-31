@@ -25,13 +25,14 @@
 
     <application
         android:name=".MyApplication"
-        android:allowBackup="true"
-        android:fullBackupContent="@xml/my_backup_rules"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme.AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="DataExtractionRules"
+        tools:targetApi="s">
         <activity
             android:name=".ui.main.MainAty"
             android:exported="true"

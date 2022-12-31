@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -22,6 +24,12 @@ android {
                 arg("room.schemaLocation", "$projectDir/schemas")
             }
         }
+
+        buildConfigField(
+            type = "String",
+            name = "APPCENTER_SECRET",
+            value = "\"${gradleLocalProperties(rootProject.projectDir)["wear.appcenter.secret"] ?: ""}\""
+        )
     }
     signingConfigs {
         Signing(rootDir).readConfig()?.also { config ->
