@@ -60,6 +60,9 @@
     <string name="pref_notification_overall">通知总开关</string>
     <string name="pref_notification_send_images_progress">图片发送进度</string>
     <string name="pref_notification_send_images_result">图片发送结果</string>
+    <string name="pref_send_debug_log">导出调试日志</string>
+    <string name="pref_save_debug_log">保存调试日志</string>
+    <string name="pref_export_debug_log_empty">无日志</string>
 
     <string name="watch_operation_search_gallery_ing">正在扫描图库</string>
     <string name="watch_operation_get_pics_list_ing">正在获取图片列表</string>

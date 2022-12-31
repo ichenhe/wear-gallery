@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- this file defines all the directories
+    that allow FileProvider to share to other applications -->
+    <cache-path
+        name="exported_log"
+        path="./exported_log" />
+    <external-cache-path
+        name="exported_log"
+        path="./exported_log" />
+</paths>

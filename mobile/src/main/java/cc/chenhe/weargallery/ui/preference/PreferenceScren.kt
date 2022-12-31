@@ -62,6 +62,18 @@ fun PreferenceScreen(
         uiState = uiState,
         onIntent = { viewModel.sendIntent(it) },
     )
+
+    val exportLogState = uiState.exportLogState
+    if (exportLogState is PreferenceUiState.ExportLogState.Prepared) {
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, exportLogState.uri)
+            type = "application/zip"
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        LocalContext.current.startActivity(Intent.createChooser(shareIntent, null))
+        viewModel.sendIntent(PreferenceIntent.ResetExportLogState)
+    }
 }
 
 @Composable
@@ -71,7 +83,7 @@ private fun PreferenceScreenFramePreview() {
         PreferenceScreenFrame(
             navUp = {},
             navToAbout = {},
-            uiState = PreferenceUiState(),
+            uiState = PreferenceUiState(exportLogState = PreferenceUiState.ExportLogState.Preparing),
             onIntent = {},
         )
     }
@@ -149,6 +161,9 @@ private fun PreferenceScreenFrame(
                     }
                 },
                 navToAbout = navToAbout,
+                sendLog = { onIntent(PreferenceIntent.SendLog) },
+                saveLog = { onIntent(PreferenceIntent.SaveLog(it)) },
+                exportLogState = uiState.exportLogState,
             )
         }
     }
@@ -302,6 +317,9 @@ private fun InfoPreferenceGroup(
     versionText: String,
     onCheckUpdate: () -> Unit,
     navToAbout: () -> Unit,
+    sendLog: () -> Unit,
+    saveLog: (uri: Uri) -> Unit,
+    exportLogState: PreferenceUiState.ExportLogState,
 ) {
     Card {
         PreferenceItem(
@@ -315,6 +333,39 @@ private fun InfoPreferenceGroup(
             icon = Icons.Rounded.Info,
             title = stringResource(id = R.string.pref_about),
             onClick = navToAbout,
+        )
+        Divider(modifier = Modifier.padding(horizontal = 48.dp))
+        PreferenceItem(
+            icon = Icons.Rounded.Code,
+            title = stringResource(id = R.string.pref_send_debug_log),
+            onClick = sendLog,
+            enabled = exportLogState != PreferenceUiState.ExportLogState.Preparing,
+            button = {
+                when (exportLogState) {
+                    PreferenceUiState.ExportLogState.Empty -> {
+                        Text(
+                            text = stringResource(id = R.string.pref_export_debug_log_empty),
+                            color = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
+                        )
+                    }
+                    PreferenceUiState.ExportLogState.Preparing -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 3.dp,
+                        )
+                    }
+                    else -> {
+                        val launcher = rememberLauncherForActivityResult(
+                            ActivityResultContracts.CreateDocument("application/zip")
+                        ) { uri ->
+                            if (uri != null) saveLog(uri)
+                        }
+                        IconButton(onClick = { launcher.launch("weargallery_log.zip") }) {
+                            Icon(Icons.Rounded.SaveAs, stringResource(R.string.pref_save_debug_log))
+                        }
+                    }
+                }
+            }
         )
     }
 }

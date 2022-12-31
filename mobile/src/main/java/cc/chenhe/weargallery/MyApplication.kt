@@ -46,6 +46,7 @@ class MyApplication : Application(), ImageLoaderFactory {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            Timber.plant(MmapLogTree(this, Log.DEBUG))
         } else {
             Timber.plant(MmapLogTree(this, Log.DEBUG))
         }

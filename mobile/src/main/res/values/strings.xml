@@ -66,6 +66,9 @@
     <string name="pref_notification_overall">Notification main switch</string>
     <string name="pref_notification_send_images_progress">Image delivery progress</string>
     <string name="pref_notification_send_images_result">Image delivery result</string>
+    <string name="pref_send_debug_log">Export debug log</string>
+    <string name="pref_save_debug_log">Save debug log as</string>
+    <string name="pref_export_debug_log_empty">No log</string>
 
     <string name="watch_operation_search_gallery_ing">Scanning albums</string>
     <string name="watch_operation_get_pics_list_ing">Loading pics list</string>
