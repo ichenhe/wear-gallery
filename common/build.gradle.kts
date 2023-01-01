@@ -4,6 +4,11 @@ plugins {
     id("com.google.devtools.ksp")
 
     id("kotlin-parcelize")
+    id("cc.chenhe.weargallery.copy-outs")
+}
+
+copyOuts {
+    copyApk = false
 }
 
 android {
@@ -24,6 +29,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+    lint {
+        textReport = false
+        xmlReport = false
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

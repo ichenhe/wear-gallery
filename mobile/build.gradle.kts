@@ -7,6 +7,7 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("cc.chenhe.weargallery.copy-outs")
 }
 
 android {
@@ -53,6 +54,11 @@ android {
         dataBinding = true
         compose = true
     }
+    lint {
+        textReport = false
+        xmlReport = false
+        disable += "MissingTranslation"
+    }
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.composeKotlinCompilerExtension
     }
@@ -62,19 +68,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-
-    afterEvaluate {
-        tasks.register<Copy>("copyApk") {
-            val apkOutDir = android.applicationVariants.first {
-                !it.buildType.isDebuggable
-            }.outputs.first().outputFile.parentFile
-            from(apkOutDir)
-            into(File(rootProject.buildDir, "outs"))
-            include("*.apk")
-        }
-        tasks.getByName("assembleRelease").finalizedBy("copyApk")
-        tasks.getByName("copyApk").dependsOn("assembleRelease")
     }
 }
 

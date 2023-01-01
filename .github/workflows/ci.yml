@@ -23,14 +23,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew test
+        run: ./gradlew test && ./gradlew copyReports
 
       - name: Upload reports
         uses: actions/upload-artifact@v2.2.4
         if: ${{ always() }}
         with:
           name: Test reports
-          path: build/reports
+          path: "build/uni-outs/report"
           if-no-files-found: warn
 
   android-lint:
@@ -47,16 +47,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew lint
+        run: ./gradlew lint && ./gradlew copyReports
 
       - name: Upload reports
         uses: actions/upload-artifact@v2.2.4
         if: ${{ always() }}
         with:
           name: Lint reports
-          path: build/reports
+          path: "build/uni-outs/report"
           if-no-files-found: warn
-          
+
   web-build:
     runs-on: ubuntu-latest
     env:

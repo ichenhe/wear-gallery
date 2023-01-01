@@ -22,28 +22,6 @@ buildscript {
     }
 }
 
-subprojects {
-    // copy lint and test reports to /build/reports
-    val projName = name
-    tasks.register<Copy>("copyReports") {
-        val reportDir = File(project.buildDir, "reports")
-        onlyIf {
-            reportDir.isDirectory && !reportDir.list().isNullOrEmpty()
-        }
-        from(reportDir)
-        into(File(rootProject.buildDir, "reports" + File.separator + projName))
-    }
-    afterEvaluate {
-        (extensions.findByType(com.android.build.gradle.LibraryExtension::class)
-            ?: extensions.findByType(com.android.build.gradle.AppExtension::class))?.apply {
-            afterEvaluate {
-                tasks.findByName("lint")?.finalizedBy("copyReports")
-                tasks.findByName("test")?.finalizedBy("copyReports")
-            }
-        }
-    }
-}
-
 tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 }
