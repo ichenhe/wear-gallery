@@ -98,5 +98,5 @@ jobs:
           artifactErrorsFailBuild: true
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "build/uni-outs/mobile-release.apk,build/uni-outs/wear-release.apk"
+          artifacts: "build/uni-outs/apk/mobile-release.apk,build/uni-outs/apk/wear-release.apk"
           prerelease: ${{ endsWith(github.ref_name, '-pre') || endsWith(github.ref_name, '-preview') }}
