@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -26,7 +26,7 @@ jobs:
         run: ./gradlew test && ./gradlew copyReports
 
       - name: Upload reports
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: Test reports
@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -50,7 +50,7 @@ jobs:
         run: ./gradlew lint && ./gradlew copyReports
 
       - name: Upload reports
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: Lint reports
@@ -66,7 +66,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Check file existence
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: ${{ env.WEB_DIR }}
 
@@ -86,7 +86,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Check file existence
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: ${{ env.WEB_DIR }}
 
