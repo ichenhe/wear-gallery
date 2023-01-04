@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -24,7 +24,7 @@ jobs:
         run: ./gradlew test && ./gradlew copyReports
 
       - name: Upload reports
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: Test reports
@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -48,7 +48,7 @@ jobs:
         run: ./gradlew lint && ./gradlew copyReports
 
       - name: Upload reports
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: Lint reports
@@ -65,11 +65,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set output
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -85,21 +82,21 @@ jobs:
         run: ./gradlew assembleRelease && ./gradlew copyApk && ./gradlew copyMapping
 
       - name: Upload Apks
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3
         with:
           name: apks
           path: "build/uni-outs/apk"
       - name: Upload Mappings
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3
         with:
           name: mappings
           path: "build/uni-outs/mapping"
       - name: Create release
-        uses: ncipollo/release-action@v1.8.8
+        uses: ncipollo/release-action@v1.12.0
         with:
           allowUpdates: false
           artifactErrorsFailBuild: true
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "build/uni-outs/mobile-release.apk,build/uni-outs/wear-release.apk"
-          prerelease: ${{ endsWith(steps.vars.outputs.tag, '-pre') || endsWith(steps.vars.outputs.tag, '-preview') }}
+          prerelease: ${{ endsWith(github.ref_name, '-pre') || endsWith(github.ref_name, '-preview') }}
