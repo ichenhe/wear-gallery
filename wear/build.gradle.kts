@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
@@ -16,6 +17,8 @@ android {
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
         minSdk = 21
+        @SuppressLint("ExpiredTargetSdkVersion")
+        // wear os has its own limitation: https://support.google.com/googleplay/android-developer/answer/11926878
         targetSdk = 30
         versionCode = 220603021 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName = "v6.3.2"
@@ -68,6 +71,11 @@ android {
         textReport = false
         xmlReport = false
         disable += "MissingTranslation"
+    }
+    bundle {
+        storeArchive {
+            enable = false
+        }
     }
 }
 
