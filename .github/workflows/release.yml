@@ -65,9 +65,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set output
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: set up JDK 11
         uses: actions/setup-java@v3
         with:
@@ -102,4 +99,4 @@ jobs:
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: "build/uni-outs/mobile-release.apk,build/uni-outs/wear-release.apk"
-          prerelease: ${{ endsWith(steps.vars.outputs.tag, '-pre') || endsWith(steps.vars.outputs.tag, '-preview') }}
+          prerelease: ${{ endsWith(github.ref_name, '-pre') || endsWith(github.ref_name, '-preview') }}
