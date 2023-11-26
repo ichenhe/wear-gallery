@@ -44,57 +44,57 @@ class DigitalPainter(context: Context, capacity: Capacity, observeConfig: Boolea
 
     private lateinit var timeXLiveData: LiveData<Float>
     private val timeXObserver = object : Observer<Float> {
-        override fun onChanged(timeX: Float?) {
+        override fun onChanged(value: Float) {
             if (!observeConfig) {
                 timeXLiveData.removeObserver(this)
             }
-            x = if (timeX == null || timeX == -1f) {
+            x = if (value == -1f) {
                 if (centerX != 0f) centerX else -1f
             } else {
-                timeX
+                value
             }
         }
     }
 
     private lateinit var timeYLiveData: LiveData<Float>
     private val timeYObserver = object : Observer<Float> {
-        override fun onChanged(timeY: Float?) {
+        override fun onChanged(value: Float) {
             if (!observeConfig) {
                 timeYLiveData.removeObserver(this)
             }
-            y = if (timeY == null || timeY == -1f) {
+            y = if (value == -1f) {
                 if (centerY != 0f) centerY else -1f
             } else {
-                timeY
+                value
             }
         }
     }
 
     private lateinit var timeTextSize: LiveData<Float>
     private val timeTextSizeObserver = object : Observer<Float> {
-        override fun onChanged(textSize: Float?) {
+        override fun onChanged(value: Float) {
             if (!observeConfig) {
                 timeYLiveData.removeObserver(this)
             }
-            paint.textSize = textSize ?: 0f
+            paint.textSize = value
         }
     }
 
     private lateinit var timeTextColor: LiveData<Int>
     private val timeTextColorObserver = object : Observer<Int> {
-        override fun onChanged(t: Int?) {
+        override fun onChanged(value: Int) {
             if (!observeConfig) {
                 timeTextColor.removeObserver(this)
             }
             if (!isInAmbientMode) {
-                t?.let { paint.color = it }
+                value.let { paint.color = it }
             }
         }
     }
 
     private lateinit var timeFormat: LiveData<String?>
     private val timeFormatObserver = object : Observer<String?> {
-        override fun onChanged(t: String?) {
+        override fun onChanged(value: String?) {
             if (!observeConfig) {
                 timeFormat.removeObserver(this)
             }
