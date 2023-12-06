@@ -5,14 +5,13 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
-    id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("cc.chenhe.weargallery.copy-outs")
 }
 
 android {
     namespace = "cc.chenhe.weargallery"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
         minSdk = 23
@@ -50,8 +49,8 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         viewBinding = true
-        dataBinding = true
         compose = true
     }
     lint {
@@ -80,7 +79,7 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2022.12.00"))
     androidTestImplementation(platform("androidx.compose:compose-bom:2022.12.00"))
     // sync to compose version: https://github.com/google/accompanist#compose-versions
-    val accompanist = "0.28.0"
+    val accompanist = "0.32.0"
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")

@@ -23,10 +23,8 @@ android {
         versionCode = 220603021 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName = "v6.3.2"
 
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
 
         buildConfigField(
@@ -57,6 +55,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         viewBinding = true
         dataBinding = true
     }
@@ -110,7 +109,7 @@ dependencies {
 
     val moshi = rootProject.extra["moshi"] as String
     implementation("com.squareup.moshi:moshi:$moshi")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
 
     val appcenter = "5.0.0"
     implementation("com.microsoft.appcenter:appcenter-analytics:$appcenter")
