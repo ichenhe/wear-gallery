@@ -72,7 +72,7 @@ jobs:
           distribution: 'adopt'
 
       - name: base64-to-file
-        uses: RollyPeres/base64-to-path@v1
+        uses: narcodico/base64-to-path@v1
         with:
           filePath: keystore/release.jks
           encodedString: ${{ secrets.SIGNING_KEYSTORE }}
