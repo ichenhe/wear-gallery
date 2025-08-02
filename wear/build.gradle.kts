@@ -1,5 +1,5 @@
 import android.annotation.SuppressLint
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -10,6 +10,8 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("cc.chenhe.weargallery.copy-outs")
 }
+
+val localProps = Properties().apply { load(rootProject.file("local.properties").inputStream()) }
 
 android {
     namespace = "cc.chenhe.weargallery"
@@ -23,14 +25,10 @@ android {
         versionCode = 220603021 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName = "v6.3.2"
 
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-
         buildConfigField(
             type = "String",
             name = "APPCENTER_SECRET",
-            value = "\"${gradleLocalProperties(rootProject.projectDir)["wear.appcenter.secret"] ?: ""}\""
+            value = "\"${localProps["wear.appcenter.secret"] ?: ""}\""
         )
     }
     signingConfigs {
@@ -78,6 +76,10 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":common"))
@@ -120,7 +122,7 @@ dependencies {
     implementation("me.panpf:sketch-gif:$sketch")
     implementation("me.chenhe:wearvision:0.1.1")
 
-    val coil = "2.2.2"
+    val coil = "2.4.0"
     implementation("io.coil-kt:coil:$coil")
     implementation("io.coil-kt:coil-gif:$coil")
 

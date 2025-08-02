@@ -1,12 +1,12 @@
 object Versions {
     /**
      * Related to
-     * - [composeKotlinCompilerExtension]
+     * - [ksp]
      */
-    const val kotlin = "1.9.20"
+    const val kotlin = "2.0.21"
 
-    /**
-     * Related to [kotlin], see [version map](https://developer.android.com/jetpack/androidx/releases/compose-kotlin).
-     */
-    const val composeKotlinCompilerExtension = "1.5.5"
+    // See https://github.com/google/ksp/releases for version mapping
+    const val ksp = "$kotlin-1.0.28"
+
+    const val agp = "8.11.0"
 }

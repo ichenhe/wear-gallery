@@ -2,7 +2,6 @@ import com.android.build.api.variant.AndroidComponentsExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
-import java.io.File
 
 private const val TARGET_APK_FOLDER = "uni-outs/apk/"
 private const val TARGET_REPORT_FOLDER = "uni-outs/report/"
@@ -21,20 +20,20 @@ class CopyOutsPlugin : Plugin<Project> {
             if (ext.copyApk) {
                 project.tasks.register("copyApk", Copy::class.java) {
                     from(apkDir)
-                    into(File(project.rootProject.buildDir, TARGET_APK_FOLDER))
+                    into(project.rootProject.layout.buildDirectory.dir(TARGET_APK_FOLDER))
                     include("*.apk")
                 }
             }
 
             project.tasks.register("copyMapping", Copy::class.java) {
-                from(File(project.buildDir, "outputs/mapping/${variant.buildType}/mapping.txt"))
-                into(File(project.rootProject.buildDir, TARGET_MAPPING_FOLDER + project.name))
+                from(project.layout.buildDirectory.file("outputs/mapping/${variant.buildType}/mapping.txt"))
+                into(project.rootProject.layout.buildDirectory.dir(TARGET_MAPPING_FOLDER + project.name))
                 include("mapping.txt")
             }
 
             project.tasks.register("copyReports", Copy::class.java) {
-                from(File(project.buildDir, "reports"))
-                into(File(project.rootProject.buildDir, TARGET_REPORT_FOLDER + project.name))
+                from(project.layout.buildDirectory.dir("reports"))
+                into(project.rootProject.layout.buildDirectory.dir(TARGET_REPORT_FOLDER + project.name))
             }
         }
 

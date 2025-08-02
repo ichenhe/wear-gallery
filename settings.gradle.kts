@@ -13,7 +13,10 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://jitpack.io")
-        jcenter()
+        // has some dependencies in legacy jcenter, will remove them as soon as possible.
+        // jcenter has 301 to maven central which doesn't include required packages,
+        // use a mirror as temporary workaround.
+        maven("https://maven.aliyun.com/repository/jcenter")
     }
 }
 

@@ -1,13 +1,16 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
     id("cc.chenhe.weargallery.copy-outs")
 }
+
+val localProps = Properties().apply { load(rootProject.file("local.properties").inputStream()) }
 
 android {
     namespace = "cc.chenhe.weargallery"
@@ -24,7 +27,7 @@ android {
         buildConfigField(
             type = "String",
             name = "APPCENTER_SECRET",
-            value = "\"${gradleLocalProperties(rootProject.projectDir)["mobile.appcenter.secret"] ?: ""}\""
+            value = "\"${localProps["mobile.appcenter.secret"] ?: ""}\""
         )
     }
     signingConfigs {
@@ -57,9 +60,6 @@ android {
         textReport = false
         xmlReport = false
         disable += "MissingTranslation"
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.composeKotlinCompilerExtension
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
