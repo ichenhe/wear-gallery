@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     id("kotlin-kapt")
@@ -15,10 +16,10 @@ val localProps = Properties().apply { load(rootProject.file("local.properties").
 
 android {
     namespace = "cc.chenhe.weargallery"
-    compileSdk = 33
+    compileSdk = 35
     defaultConfig {
         applicationId = "cc.chenhe.weargallery"
-        minSdk = 21
+        minSdk = 26
         @SuppressLint("ExpiredTargetSdkVersion")
         // wear os has its own limitation: https://support.google.com/googleplay/android-developer/answer/11926878
         targetSdk = 30
@@ -56,6 +57,7 @@ android {
         buildConfig = true
         viewBinding = true
         dataBinding = true
+        compose = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -95,6 +97,15 @@ dependencies {
     implementation("org.nanohttpd:nanohttpd:2.3.1")
     implementation("com.github.zhpanvip:viewpagerindicator:1.2.1")
 
+    val composeBom = platform("androidx.compose:compose-bom:2025.05.00")
+    val wearComposeVersion = "1.5.0-rc01"
+    implementation(composeBom)
+    implementation("androidx.wear.compose:compose-material3:$wearComposeVersion")
+    implementation("androidx.wear.compose:compose-ui-tooling:$wearComposeVersion")
+    implementation("androidx.wear:wear-tooling-preview:1.0.0")
+    implementation("com.google.android.horologist:horologist-compose-layout:0.7.15")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
 
     val nav = rootProject.ext["nav"] as String
     implementation("androidx.navigation:navigation-fragment-ktx:$nav")
